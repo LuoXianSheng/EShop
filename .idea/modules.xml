@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/EShop.iml" filepath="$PROJECT_DIR$/EShop.iml" />
+      <module fileurl="file://$PROJECT_DIR$/MaterialEditText/MaterialEditText.iml" filepath="$PROJECT_DIR$/MaterialEditText/MaterialEditText.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/photoview/photoview.iml" filepath="$PROJECT_DIR$/photoview/photoview.iml" />
     </modules>
