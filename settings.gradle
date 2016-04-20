@@ -1,1 +1,1 @@
-include ':app', 'photoview', 'MaterialEditText'
+include 'photoview', 'MaterialEditText', ':app'
