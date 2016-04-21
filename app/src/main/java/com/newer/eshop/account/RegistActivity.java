@@ -11,6 +11,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.newer.eshop.R;
 import com.newer.eshop.bean.User;
@@ -49,6 +51,17 @@ public class RegistActivity extends AppCompatActivity implements View.OnClickLis
 
                 Gson gson =new Gson();
                 JsonParser parser= new JsonParser();
+                JsonElement element= parser.parse(s);
+                JsonArray jsonarray =element.getAsJsonArray();
+                for(int i=0;i< jsonarray.size();i++){
+                    element =jsonarray.get(i);
+                    User user =gson.fromJson(element,User.class);
+                    user.setName(user.getName());
+                    user.setPassword(user.getPassword());
+                    user.setPhone(user.getPhone());
+                    data.add(user);
+                }
+
 
             }
         }, new Response.ErrorListener() {
