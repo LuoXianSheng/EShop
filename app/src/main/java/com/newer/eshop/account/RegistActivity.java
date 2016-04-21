@@ -2,6 +2,7 @@ package com.newer.eshop.account;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -44,7 +45,7 @@ public class RegistActivity extends AppCompatActivity implements View.OnClickLis
 
     public  void  RegistToServer(){
             String url="http://192.168.191.1:8080/Eshop/regist";//服务器地址
-      StringRequest   registRequest= new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
+      StringRequest   registRequest= new StringRequest(Request.Method.GET, url + "?phone=11331&password=24422&time", new Response.Listener<String>() {
             @Override
             public void onResponse(String s) {
                 ArrayList<User> data =new ArrayList<>();
