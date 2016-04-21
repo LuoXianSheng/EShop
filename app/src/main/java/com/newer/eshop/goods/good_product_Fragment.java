@@ -11,9 +11,11 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.PopupWindow;
 import com.newer.eshop.R;
+import com.newer.eshop.net.HttpDataListener;
+import com.newer.eshop.net.NetConnection;
 
 
-public class good_product_Fragment extends Fragment implements C{
+public class good_product_Fragment extends Fragment implements HttpDataListener{
 
      GoodsActivity good;
      ViewPager pager;
@@ -58,14 +60,13 @@ public class good_product_Fragment extends Fragment implements C{
                 }
             }
         });
-        good_Request_Internet internet=new good_Request_Internet(this);
-        internet.GetInternet(path);
+        NetConnection.getOneGoods(path, this);
         return view;
     }
 
     @Override
-    public void SuccesefuGet(String str) {
-       System.out.println(str);
+    public void succeseful(String str) {
+        System.out.println(str);
     }
 
     @Override
