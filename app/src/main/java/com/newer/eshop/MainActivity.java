@@ -48,6 +48,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         resetAllSelector();
         switch (v.getId()) {
             case R.id.main_tv_index:
+                tv_index.setSelected(true);
                 if (fragmentIndex == null) {
                     fragmentIndex = new FragmentIndex();
                     transaction.add(R.id.main_frameLayout, fragmentIndex);
@@ -56,6 +57,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
                 break;
             case R.id.main_tv_classify:
+                tv_classify.setSelected(true);
                 if (fragmentClassify == null) {
                     fragmentClassify = new FragmentClassify();
                     transaction.add(R.id.main_frameLayout, fragmentClassify);
@@ -64,6 +66,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
                 break;
             case R.id.main_tv_shopingcart:
+                tv_shopingcart.setSelected(true);
                 if (fragmentShopingCart == null) {
                     fragmentShopingCart = new FragmentShopingCart();
                     transaction.add(R.id.main_frameLayout, fragmentShopingCart);
@@ -72,6 +75,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
                 break;
             case R.id.main_tv_me:
+                tv_me.setSelected(true);
                 if (fragmentMe == null) {
                     fragmentMe = new FragmentMe();
                     transaction.add(R.id.main_frameLayout, fragmentMe);
@@ -88,10 +92,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * @param transaction 碎片事物
      */
     public void hideAllFragment(FragmentTransaction transaction) {
-        if (fragmentIndex != null) transaction.hide(fragmentIndex).commit();
-        if (fragmentClassify != null) transaction.hide(fragmentClassify).commit();
-        if (fragmentShopingCart != null) transaction.hide(fragmentShopingCart).commit();
-        if (fragmentMe != null) transaction.hide(fragmentMe).commit();
+        if (fragmentIndex != null) transaction.hide(fragmentIndex);
+        if (fragmentClassify != null) transaction.hide(fragmentClassify);
+        if (fragmentShopingCart != null) transaction.hide(fragmentShopingCart);
+        if (fragmentMe != null) transaction.hide(fragmentMe);
     }
 
     /**
