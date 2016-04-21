@@ -1,20 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+  android:orientation="vertical"
+    tools:context="com.newer.eshop.account.RegistActivity">
 
-
-
-    <!--<com.rengwuxian.materialedittext.MaterialEditText-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="50dp"-->
-        <!--android:hint="用户名"-->
-        <!--/>-->
-    <!--<com.rengwuxian.materialedittext.MaterialEditText-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="50dp"-->
-        <!--android:hint="请输入密码"-->
-        <!--/>-->
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -39,7 +30,7 @@
             android:gravity="center"
             android:layout_weight="1"
             android:singleLine="true"
-            android:text="用户登录"
+            android:text="用户注册"
 
             android:textSize="20dp" />
 
@@ -48,51 +39,39 @@
 
 
     <EditText
+        android:id="@+id/edt_username"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="账号/用户名/邮箱"
         />
 
     <EditText
+        android:id="@+id/edt_password"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="请输入密码"
         />
 
+    <EditText
+        android:id="@+id/edt_password2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="请再次输入密码"
+        />
+    <EditText
+        android:id="@+id/edt_phone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="请输入手机"
+        />
+
+
+
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="登录"
-        android:id="@+id/button"
+        android:text="注册"
+        android:id="@+id/btn_regist"
         android:layout_gravity="center_horizontal" />
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        >
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/tv_regist"
-            android:text="手机快速登录"
-            />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="180dp"
-            android:gravity="right"
-            android:text="找回密码"
-            />
-
-
-
-
-    </LinearLayout>
-
-
-
-
 
 </LinearLayout>

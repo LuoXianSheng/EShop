@@ -5,10 +5,11 @@ package com.newer.eshop.bean;
  */
 public class User {
 
-   private Integer ID;
+
    private String name;
    private String password;
    private String address;
+    private  long phone;
    private String token;
 
 
@@ -46,11 +47,12 @@ public class User {
         this.token = token;
     }
 
-    public Integer getID() {
-        return ID;
+
+    public long getPhone() {
+        return phone;
     }
 
-    public void setID(Integer ID) {
-        this.ID = ID;
+    public void setPhone(long phone) {
+        this.phone = phone;
     }
 }
