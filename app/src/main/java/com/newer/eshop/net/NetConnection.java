@@ -12,4 +12,14 @@ import com.android.volley.toolbox.Volley;
  */
 public class NetConnection {
 
+    public  static RequestQueue queue;//请求队列
+
+
+    public  static  RequestQueue getInstance(Context contextnt){
+        if (queue==null){
+            queue= Volley.newRequestQueue(contextnt);
+            queue.start();
+        }
+     return  queue;
+    }
 }

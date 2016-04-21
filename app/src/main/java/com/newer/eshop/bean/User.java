@@ -6,11 +6,11 @@ package com.newer.eshop.bean;
 public class User {
 
     private int id;
-    private String token;
     private String name;
-    private int phone;
     private String password;
     private String address;
+    private long phone;
+    private String token;
 
     public int getId() {
         return id;
@@ -20,9 +20,6 @@ public class User {
         this.id = id;
     }
 
-    public int getPhone() {
-        return phone;
-    }
 
     public void setPhone(int phone) {
         this.phone = phone;
@@ -58,5 +55,14 @@ public class User {
 
     public void setToken(String token) {
         this.token = token;
+    }
+
+
+    public long getPhone() {
+        return phone;
+    }
+
+    public void setPhone(long phone) {
+        this.phone = phone;
     }
 }
