@@ -1,51 +1,60 @@
 package com.newer.eshop.bean;
 
+import java.util.List;
+
 /**
  * Created by Mr_LUO on 2016/4/20.
  */
 public class Goods {
+
+    //商品的类型
+    String type;
+
+    //商品ID
+    int id;
+
     //商品名称
     String name;
-
-    //商品图片(返回图片的路径)
-    String image_path;
 
     //商品价格
     float price;
 
-    //商品快递费
-    float express;
-
     //商品销售量
-    double sell;
+    int sell;
 
-    //商品地址
-    String path;
+    //商品图片(返回图片的路径)
+    List<String> image_path;
 
-    public Goods(String name,String image_path, float price, float express
-                        ,double sell,String path){
-        this.name=name;
-        this.image_path=image_path;
-        this.price=price;
-        this.express=express;
-        this.sell=sell;
-        this.path=path;
+    //商品的所有评论
+    List<Conment> list;
+
+    public Goods() {
     }
 
-    public float getExpress() {
-        return express;
-    }
-
-    public void setExpress(float express) {
-        this.express = express;
-    }
-
-    public String getImage_path() {
-        return image_path;
-    }
-
-    public void setImage_path(String image_path) {
+    public Goods(String type, int id, String name, float price, int sell, List<String> image_path, List<Conment> list) {
+        this.type = type;
+        this.id = id;
+        this.name = name;
+        this.price = price;
+        this.sell = sell;
         this.image_path = image_path;
+        this.list = list;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -56,39 +65,36 @@ public class Goods {
         this.name = name;
     }
 
-    public String getPath() {
-        return path;
-    }
-
-    public void setPath(String path) {
-        this.path = path;
-    }
-
     public float getPrice() {
         return price;
+    }
+
+    public int getSell() {
+        return sell;
+    }
+
+    public void setSell(int sell) {
+        this.sell = sell;
     }
 
     public void setPrice(float price) {
         this.price = price;
     }
 
-    public double getSell() {
-        return sell;
+
+    public List<String> getImage_path() {
+        return image_path;
     }
 
-    public void setSell(double sell) {
-        this.sell = sell;
+    public void setImage_path(List<String> image_path) {
+        this.image_path = image_path;
     }
 
-    @Override
-    public String toString() {
-        return "Goods{" +
-                "express=" + express +
-                ", name='" + name + '\'' +
-                ", image_path='" + image_path + '\'' +
-                ", price=" + price +
-                ", sell=" + sell +
-                ", path='" + path + '\'' +
-                '}';
+    public List<Conment> getList() {
+        return list;
+    }
+
+    public void setList(List<Conment> list) {
+        this.list = list;
     }
 }

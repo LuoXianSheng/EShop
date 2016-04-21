@@ -100,7 +100,10 @@
     <orderEntry type="library" exported="" name="gson-2.2.2" level="project" />
     <orderEntry type="library" exported="" name="okhttp3" level="project" />
     <orderEntry type="library" exported="" name="volley" level="project" />
+<<<<<<< Updated upstream
     <orderEntry type="library" exported="" scope="TEST" name="hamcrest-core-1.3" level="project" />
+=======
+>>>>>>> Stashed changes
     <orderEntry type="library" exported="" name="eventbus-3.0.0" level="project" />
     <orderEntry type="library" exported="" name="support-v4-23.0.1" level="project" />
     <orderEntry type="library" exported="" name="universal-image-loader-1.9.3" level="project" />
