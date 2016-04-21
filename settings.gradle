@@ -1,1 +1,1 @@
-include 'photoview', 'MaterialEditText', ':app'
+include 'photoview', 'MaterialEditText', ':app', 'staggeredgrid'

@@ -13,6 +13,7 @@
             <option value="$PROJECT_DIR$/MaterialEditText" />
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/photoview" />
+            <option value="$PROJECT_DIR$/staggeredgrid" />
           </set>
         </option>
       </GradleProjectSettings>
