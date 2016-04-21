@@ -1,11 +1,13 @@
 package com.newer.eshop;
 
-import android.support.v7.app.AppCompatActivity;
+import android.content.Intent;
 import android.os.Bundle;
-import android.widget.GridView;
-import android.widget.ListView;
+import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 
-public class MainActivity extends AppCompatActivity {
+import com.newer.eshop.account.LoginActivity;
+
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -15,5 +17,16 @@ public class MainActivity extends AppCompatActivity {
 //        GridView mGridView;
 //        ListView mListView;
 //        mListView.add
+
+        findViewById(R.id.btn_login).setOnClickListener(this);
+    }
+
+    /**
+     * 按钮事件
+     * @param  v
+     */
+    @Override
+    public void onClick(View v) {
+           startActivity(new Intent(this, LoginActivity.class));
     }
 }
