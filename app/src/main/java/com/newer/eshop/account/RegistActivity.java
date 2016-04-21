@@ -75,7 +75,7 @@ public class RegistActivity extends AppCompatActivity implements View.OnClickLis
       );
 
         registRequest.setTag("GET");
-        NetConnection.getInstance(this).add(registRequest);
+//        NetConnection.getInstance(this).add(registRequest);
 
 
 

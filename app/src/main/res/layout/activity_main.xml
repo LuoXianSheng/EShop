@@ -24,7 +24,7 @@
         android:orientation="horizontal">
 
         <TextView
-            android:id="@+id/main_tv_recom"
+            android:id="@+id/main_tv_index"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -37,7 +37,7 @@
             android:textSize="@dimen/tab_menu_textsize"/>
 
         <TextView
-            android:id="@+id/main_tv_bbs"
+            android:id="@+id/main_tv_classify"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
