@@ -24,7 +24,7 @@ public class AdvFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.index_adv_fragment, null);
-        ImageLoader.getInstance().displayImage(imgPath, (ImageView) view);
+        ImageLoader.getInstance().displayImage(imgPath, (ImageView) view, App.initOptions());
         return view;
     }
 }

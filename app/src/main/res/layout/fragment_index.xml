@@ -1,27 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:background="#FFF"
               android:layout_width="match_parent"
-              android:layout_height="match_parent">
+              android:layout_height="match_parent"
+              android:background="#FFF"
+              android:orientation="vertical">
 
-    <!--<android.support.v4.widget.SwipeRefreshLayout-->
-        <!--android:id="@+id/refresh"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent">-->
-
-        <!--<ListView-->
-            <!--android:id="@+id/index_listview"-->
-            <!--android:layout_weight="1"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="0dp" />-->
-
-    <!--</android.support.v4.widget.SwipeRefreshLayout>-->
-    <com.etsy.android.grid.StaggeredGridView
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/grid_view"
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/refresh"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:column_count="2"
-        app:item_margin="8dp"/>
+        android:layout_height="match_parent">
+
+        <com.etsy.android.grid.StaggeredGridView
+            android:id="@+id/grid_view"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:column_count="2"
+            app:item_margin="8dp"/>
+
+    </android.support.v4.widget.SwipeRefreshLayout>
 </LinearLayout>

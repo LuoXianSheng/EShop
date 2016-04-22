@@ -2,11 +2,15 @@ package com.newer.eshop;
 
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
@@ -35,35 +39,48 @@ public class FragmentIndex extends Fragment {
             "http://192.168.191.1:8080/Eshop/images/image3.jpg"};
 
     private StaggeredGridView gridView;
-
+    private Handler handler;
     private ArrayList<String> data;
+    private int viewPagerIndex = 0;
 
-    public static DisplayImageOptions initOptions() {
-        //初始化显示图片的配置
-        return new DisplayImageOptions.Builder()
-                .cacheInMemory(true)
-                .cacheOnDisk(true)
-                .imageScaleType(ImageScaleType.EXACTLY_STRETCHED)
-                .bitmapConfig(Bitmap.Config.RGB_565)
-                .build();
-    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_index, null);
-//        refresh = (SwipeRefreshLayout) view.findViewById(R.id.refresh);
+        refresh = (SwipeRefreshLayout) view.findViewById(R.id.refresh);
         gridView = (StaggeredGridView) view.findViewById(R.id.grid_view);
         data = new ArrayList<>();
-        for (int i = 0; i < 20; i++) {
+        for (int i = 0; i < 20 ; i++) {
             data.add("http://192.168.191.1:8080/Eshop/images/q.jpg");
             data.add("http://192.168.191.1:8080/Eshop/images/w.jpg");
             data.add("http://192.168.191.1:8080/Eshop/images/e.jpg");
         }
+        gridView.addHeaderView(setListViewHander());
         MyAdapter adapter = new MyAdapter();
         gridView.setAdapter(adapter);
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Toast.makeText(getContext(), "" + position, Toast.LENGTH_SHORT).show();
+            }
+        });
+        gridView.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+//                switch (scrollState) {
+//                    case AbsListView.OnScrollListener.SCROLL_STATE_IDLE:
+//                        if (gridView.getFirstVisiblePosition() == 0) {
+//                            isTop = true;
+//                            new Thread(new A()).start();
+//                        } else {
+//                            isTop = false;
+//                        }
+//                        break;
+//                }
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+
             }
         });
         return view;
@@ -102,7 +119,7 @@ public class FragmentIndex extends Fragment {
             } else {
                 holder.img.setHeightRatio(1.5);
             }
-            ImageLoader.getInstance().displayImage(data.get(position), holder.img, initOptions());
+            ImageLoader.getInstance().displayImage(data.get(position), holder.img, App.initOptions());
             return convertView;
         }
     }
@@ -110,40 +127,66 @@ public class FragmentIndex extends Fragment {
         public DynamicHeightImageView img;
     }
 
-//    private View setListViewHander() {
-//        advList = new ArrayList<>();
-//        advList.add(new AdvFragment(advPaths[0]));
-//        advList.add(new AdvFragment(advPaths[1]));
-//        advList.add(new AdvFragment(advPaths[2]));
-//        View view = LayoutInflater.from(getContext()).inflate(R.layout.index_adv_viewpager, null);
-//        ViewPager mViewPager = (ViewPager) view.findViewById(R.id.advVPager);
-//        mViewPager.getParent().requestDisallowInterceptTouchEvent(false);
-//        mViewPager.setLayoutParams(new ListView.LayoutParams(ListView.LayoutParams.MATCH_PARENT, 600));
-//        mViewPager.setAdapter(new AdvVPagerAdapter(getFragmentManager(), advList));
-//        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener()  {
+    private View setListViewHander() {
+        advList = new ArrayList<>();
+        advList.add(new AdvFragment(advPaths[0]));
+        advList.add(new AdvFragment(advPaths[1]));
+        advList.add(new AdvFragment(advPaths[2]));
+        View view = LayoutInflater.from(getContext()).inflate(R.layout.index_adv_viewpager, null);
+        final ViewPager mViewPager = (ViewPager) view.findViewById(R.id.advVPager);
+        mViewPager.getParent().requestDisallowInterceptTouchEvent(false);
+        mViewPager.setLayoutParams(new StaggeredGridView.LayoutParams(StaggeredGridView.LayoutParams.MATCH_PARENT, 600));
+        mViewPager.setAdapter(new AdvVPagerAdapter(getFragmentManager(), advList));
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+                switch (state) {
+                    case 0:
+                    case 2:
+                        refresh.setEnabled(true);
+                        break;
+                    case 1:
+                        refresh.setEnabled(false);
+                        break;
+                }
+            }
+        });
+//        handler = new Handler() {
 //            @Override
-//            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-//
-//            }
-//
-//            @Override
-//            public void onPageSelected(int position) {
-//
-//            }
-//
-//            @Override
-//            public void onPageScrollStateChanged(int state) {
-//                switch (state) {
-//                    case 0:
-//                    case 2:
-//                        refresh.setEnabled(true);
-//                        break;
-//                    case 1:
-//                        refresh.setEnabled(false);
-//                        break;
+//            public void handleMessage(Message msg) {
+//                if (++viewPagerIndex >= 3) {
+//                    viewPagerIndex = 0;
 //                }
+//                mViewPager.setCurrentItem(viewPagerIndex);
 //            }
-//        });
-//        return mViewPager;
-//    }
+//        };
+//        new Thread(new A()).start();
+        return mViewPager;
+    }
+
+    boolean isTop = true;
+    class A implements Runnable {
+
+        @Override
+        public void run() {
+            while (isTop) {
+                handler.sendEmptyMessage(1);
+                try {
+                    Thread.sleep(3000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
 }
