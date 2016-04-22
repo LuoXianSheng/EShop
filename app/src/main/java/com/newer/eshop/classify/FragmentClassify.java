@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.newer.eshop.R;
 
@@ -54,10 +53,8 @@ public class FragmentClassify extends Fragment implements AdapterView.OnItemClic
         transaction = manager.beginTransaction();
         hideAll(transaction);
         if (fragments.containsKey(position)) {
-            Toast.makeText(getContext(), "已经建了", Toast.LENGTH_SHORT).show();
             transaction.show(fragments.get(position));
         } else {
-            Toast.makeText(getContext(), "新创建", Toast.LENGTH_SHORT).show();
             rightFragment = new RightFragment(position + 1);
             fragments.put(position, rightFragment);
             transaction.add(R.id.classify_right_layout, rightFragment);
