@@ -23,6 +23,7 @@ public class GoodsActivity extends AppCompatActivity{
         setContentView(R.layout.activity_goods);
         initId();
         good_FragmentManger manger=new good_FragmentManger(getSupportFragmentManager());
+        pager.setOffscreenPageLimit(3);
         pager.setAdapter(manger);
 
     }
