@@ -116,20 +116,18 @@ public class good_product_Fragment extends Fragment implements HttpDataListener{
             }
         });
         NetConnection.getOneGoods(path, this);
-        System.out.println("---oncreateview()---");
         return view;
     }
 
     @Override
     public void succeseful(String str) {
-        System.out.println("---jiekou()---");
+        System.out.println(str);
         Gson gson;
         try {
             JSONObject object=new JSONObject(str);
             if(object.getString("status").equals(App.STATUS_SUCCESS)){
                 gson=new Gson();
                 goods=gson.fromJson(object.getString("data"), Goods.class);
-
                 String[] src=goods.getImage_path().split(",");
                 for(int i=0;i<src.length;i++){
                     list.add("http://192.168.191.1:8080/Eshop/images/"+src[i]+".jpg");

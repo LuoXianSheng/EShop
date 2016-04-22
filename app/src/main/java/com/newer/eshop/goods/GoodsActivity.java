@@ -1,9 +1,12 @@
 package com.newer.eshop.goods;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.newer.eshop.R;
@@ -17,6 +20,7 @@ public class GoodsActivity extends AppCompatActivity{
     TextView textview1;
     TextView textview2;
     TextView textview3;
+    ImageButton button;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,7 +29,6 @@ public class GoodsActivity extends AppCompatActivity{
         good_FragmentManger manger=new good_FragmentManger(getSupportFragmentManager());
         pager.setOffscreenPageLimit(3);
         pager.setAdapter(manger);
-
     }
 
     /**
@@ -36,6 +39,7 @@ public class GoodsActivity extends AppCompatActivity{
         textview1=(TextView)findViewById(R.id.good_text_product);
         textview2=(TextView)findViewById(R.id.good_text_detail);
         textview3=(TextView)findViewById(R.id.good_text_comment);
+        button=(ImageButton)findViewById(R.id.goods_shopcar);
     }
 
     /**
@@ -49,6 +53,10 @@ public class GoodsActivity extends AppCompatActivity{
             pager.setCurrentItem(1);
         }else if(view.getId()==R.id.good_text_comment){
             pager.setCurrentItem(2);
+        }else if(view.getId()==R.id.goods_shopcar){
+            Intent intent=new Intent(GoodsActivity.this,GoodsCarActivity.class);
+            startActivity(intent);
         }
     }
+
 }

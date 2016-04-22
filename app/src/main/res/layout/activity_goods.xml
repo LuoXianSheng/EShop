@@ -25,6 +25,8 @@
             android:layout_marginTop="5dp"
             android:background="@mipmap/goods_car"
             android:layout_marginRight="5dp"
+            android:id="@+id/goods_shopcar"
+            android:onClick="changes"
             android:layout_alignParentRight="true"/>
     </RelativeLayout>
     <LinearLayout
