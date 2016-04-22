@@ -24,13 +24,13 @@ public class GoodsActivity extends AppCompatActivity{
      TextView textview3;
      ImageButton button;
      ArrayList<Fragment> list;
-     String path;
+     int goodsId;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_goods);
         Intent intent=getIntent();
-        path=intent.getStringExtra("goodsID");
+        goodsId=intent.getIntExtra("goodsId", -1);
         initId();
         good_FragmentManger manger=new good_FragmentManger(getSupportFragmentManager()
                 ,list);
@@ -48,9 +48,9 @@ public class GoodsActivity extends AppCompatActivity{
         textview3=(TextView)findViewById(R.id.good_text_comment);
         button=(ImageButton)findViewById(R.id.goods_shopcar);
         list=new ArrayList<>();
-        list.add(new good_conmemt_Fragment());
+        list.add(new good_product_Fragment(goodsId));
         list.add(new good_detail_Fragment());
-        list.add(new good_product_Fragment(path));
+        list.add(new good_conmemt_Fragment());
     }
 
     /**

@@ -40,7 +40,7 @@ public class good_product_Fragment extends Fragment implements HttpDataListener{
 
      GoodsActivity good;
      ViewPager pager;
-     String path;
+     int path;
      TextView good_name;
      TextView good_price;
      TextView good_type;
@@ -69,7 +69,7 @@ public class good_product_Fragment extends Fragment implements HttpDataListener{
         }
     };
 
-    public good_product_Fragment(String path){
+    public good_product_Fragment(int path){
         this.path=path;
     }
     @Override
@@ -120,7 +120,7 @@ public class good_product_Fragment extends Fragment implements HttpDataListener{
                 }
             }
         });
-        NetConnection.getOneGoods("http://192.168.191.1:8080/Eshop/images/"+path , this);
+        NetConnection.getOneGoods("http://192.168.191.1:8080/Eshop/onegoods?goodsId="+path , this);
         return view;
     }
 
@@ -134,8 +134,8 @@ public class good_product_Fragment extends Fragment implements HttpDataListener{
                 gson=new Gson();
                 goods=gson.fromJson(object.getString("data"), Goods.class);
                 String[] src=goods.getImage_path().split(",");
-                for(int i=0;i<src.length;i++){
-                    list.add("http://192.168.191.1:8080/Eshop/images/"+src[i]+".jpg");
+                for (int i = 1; i < src.length; i++) {
+                    list.add("http://192.168.191.1:8080/Eshop/images/" + src[i] + ".jpg");
                 }
                 Message message=new Message();
                 message.obj=list;

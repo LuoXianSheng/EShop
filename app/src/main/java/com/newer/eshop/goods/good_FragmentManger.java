@@ -19,17 +19,7 @@ public class good_FragmentManger extends FragmentPagerAdapter{
     }
     @Override
     public Fragment getItem(int position) {
-        if(position==0){
-
-            return list.get(0);
-
-        }else if(position==1){
-
-            return list.get(1);
-
-        }else{
-            return list.get(2);
-        }
+        return list.get(position);
     }
     @Override
     public int getCount() {
