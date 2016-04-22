@@ -23,6 +23,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 /**
  * Created by Mr_LUO on 2016/4/21.
@@ -115,9 +116,15 @@ public class FragmentIndex extends Fragment {
                 holder = (ViewHolder) convertView.getTag();
             }
             if (position % 2 == 0) {
-                holder.img.setHeightRatio(1);
-            } else {
+                holder.img.setHeightRatio(0.8);
+            } else if (position % 3 == 0){
                 holder.img.setHeightRatio(1.5);
+            } else if (position % 1.5 == 1) {
+                holder.img.setHeightRatio(1.2);
+            } else if (position % 1.1 == 1) {
+                holder.img.setHeightRatio(0.9);
+            } else {
+                holder.img.setHeightRatio(1);
             }
             ImageLoader.getInstance().displayImage(data.get(position), holder.img, App.initOptions());
             return convertView;

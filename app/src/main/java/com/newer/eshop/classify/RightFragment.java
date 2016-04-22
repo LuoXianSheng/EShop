@@ -1,12 +1,14 @@
 package com.newer.eshop.classify;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.GridView;
 
 import com.newer.eshop.App;
@@ -24,11 +26,11 @@ import java.util.ArrayList;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class RightFragment extends Fragment implements HttpDataListener {
+public class RightFragment extends Fragment implements HttpDataListener, AdapterView.OnItemClickListener {
 
     private int type_1;
     private ArrayList<GoodsClassify> list;
-    private GridAdapter adapter;
+    private ClassifyGridAdapter adapter;
     private Handler handler = new Handler();
 
     public RightFragment(int type_1) {
@@ -41,9 +43,9 @@ public class RightFragment extends Fragment implements HttpDataListener {
         View view = inflater.inflate(R.layout.fragment_right, container, false);
         GridView gridView = (GridView) view.findViewById(R.id.right_gridview);
         list = new ArrayList<>();
-        adapter = new GridAdapter(getContext(), list);
+        adapter = new ClassifyGridAdapter(getContext(), list);
         gridView.setAdapter(adapter);
-
+        gridView.setOnItemClickListener(this);
         getClassifyData();
         return view;
     }
@@ -80,4 +82,11 @@ public class RightFragment extends Fragment implements HttpDataListener {
 
     }
 
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Intent intent = new Intent(getActivity(), ClassifyResultActivity.class);
+        intent.putExtra("type_1", type_1);
+        intent.putExtra("type_2", position + 1);
+        startActivity(intent);
+    }
 }

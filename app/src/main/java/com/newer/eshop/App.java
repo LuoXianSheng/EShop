@@ -21,7 +21,8 @@ import java.io.File;
 public class App extends Application {
 
     public static final String SERVICE_URL = "http://192.168.191.1:8080/Eshop";
-    public static final String SERVICE_CLASSIFY_IMAGES_URL = "http://192.168.191.1:8080/Eshop/images/classify";
+    public static final String SERVICE_CLASSIFY_IMAGES_URL = SERVICE_URL + "/images/classify";
+    public static final String SERVICE_IMAGES_URL = SERVICE_URL + "/images/";
 
     public static final String STATUS_SUCCESS = "1";//请求成功码
     public static final String STATUS_LOSE = "0";//失败状态码

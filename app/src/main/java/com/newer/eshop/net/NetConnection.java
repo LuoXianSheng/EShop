@@ -51,6 +51,12 @@ public class NetConnection {
         });
     }
 
+    /**
+     * 获取分类信息
+     * @param url
+     * @param type_1
+     * @param listener
+     */
     public static void getClassifyData(String url, int type_1, final HttpDataListener listener) {
         client = getOkHttpClientInstance();
         FormBody body = new FormBody.Builder()
@@ -64,6 +70,36 @@ public class NetConnection {
             @Override
             public void onFailure(Call call, IOException e) {
                 listener.loser("请求失败！");
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                listener.succeseful(response.body().string());
+            }
+        });
+    }
+
+    /**
+     * 获取分类的所有商品
+     * @param url
+     * @param type_1
+     * @param type_2
+     * @param listener
+     */
+    public static void getClassifyResult(String url, int type_1, int type_2, final HttpDataListener listener) {
+        client = getOkHttpClientInstance();
+        FormBody body = new FormBody.Builder()
+                .add("type_1", type_1 + "")
+                .add("type_2", type_2 + "")
+                .build();
+        final Request request = new Request.Builder()
+                .url(url)
+                .post(body)
+                .build();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                listener.loser("失败！");
             }
 
             @Override
