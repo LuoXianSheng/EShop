@@ -1,5 +1,6 @@
 package com.newer.eshop;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -24,7 +25,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         initView();
     }
 
@@ -91,6 +91,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     /**
      * 隐藏所有Fragment
+     *
      * @param transaction 碎片事物
      */
     public void hideAllFragment(FragmentTransaction transaction) {
@@ -108,6 +109,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         tv_classify.setSelected(false);
         tv_shopingcart.setSelected(false);
         tv_me.setSelected(false);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Intent it=getIntent();
+        System.out.println(it.getIntExtra("fragment", 0));
     }
 
 }

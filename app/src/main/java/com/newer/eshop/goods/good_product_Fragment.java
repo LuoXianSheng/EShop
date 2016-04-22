@@ -1,6 +1,7 @@
 package com.newer.eshop.goods;
 
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -39,7 +40,7 @@ public class good_product_Fragment extends Fragment implements HttpDataListener{
 
      GoodsActivity good;
      ViewPager pager;
-     final String path="http://192.168.191.1:8080/Eshop/onegoods?goodsId=1001";
+     String path;
      TextView good_name;
      TextView good_price;
      TextView good_type;
@@ -67,6 +68,10 @@ public class good_product_Fragment extends Fragment implements HttpDataListener{
             }
         }
     };
+
+    public good_product_Fragment(String path){
+        this.path=path;
+    }
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -115,7 +120,7 @@ public class good_product_Fragment extends Fragment implements HttpDataListener{
                 }
             }
         });
-        NetConnection.getOneGoods(path, this);
+        NetConnection.getOneGoods("http://192.168.191.1:8080/Eshop/images/"+path , this);
         return view;
     }
 
