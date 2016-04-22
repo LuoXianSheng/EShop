@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.view.PagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,7 +41,7 @@ public class FragmentClassify extends Fragment implements AdapterView.OnItemClic
         for (int i = 0; i < 10; i++) {
             data.add("test" + i);
         }
-        adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, data);
+        adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, data);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(this);
 
@@ -66,6 +65,10 @@ public class FragmentClassify extends Fragment implements AdapterView.OnItemClic
         transaction.commit();
     }
 
+    /**
+     * 隐藏所有碎片
+     * @param transaction
+     */
     public void hideAll(FragmentTransaction transaction) {
         Set<Integer> set = fragments.keySet();
         for (Integer i : set) {
