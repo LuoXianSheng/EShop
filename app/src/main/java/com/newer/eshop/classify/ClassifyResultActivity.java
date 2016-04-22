@@ -52,7 +52,9 @@ public class ClassifyResultActivity extends AppCompatActivity implements HttpDat
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                startActivity(new Intent(ClassifyResultActivity.this, GoodsActivity.class));
+                Intent intent = new Intent(ClassifyResultActivity.this, GoodsActivity.class);
+                intent.putExtra("goodsId", list.get(position).getId());
+                startActivity(intent);
             }
         });
         getData();// 请求网络数据
