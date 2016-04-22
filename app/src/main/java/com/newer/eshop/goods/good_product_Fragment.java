@@ -56,7 +56,7 @@ public class good_product_Fragment extends Fragment implements HttpDataListener{
             if(msg.what==0) {
                 good_name.setText("商品名称:" + goods.getName());
                 good_price.setText("商品价格:" + goods.getPrice());
-                good_type.setText("商品类型:" + goods.getType());
+                good_type.setText("商品类型:" + goods.getTypeId());
                 good_sell.setText("商品售量:" + goods.getSell());
                 good_id.setText("商品编号:" + goods.getId());
                 for (int i = 0; i < list.size(); i++) {

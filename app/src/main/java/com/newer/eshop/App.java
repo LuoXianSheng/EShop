@@ -11,6 +11,8 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.utils.StorageUtils;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.io.File;
 
 /**
@@ -18,8 +20,12 @@ import java.io.File;
  */
 public class App extends Application {
 
+    public static final String SERVICE_URL = "http://192.168.191.1:8080/Eshop";
+    public static final String SERVICE_CLASSIFY_IMAGES_URL = "http://192.168.191.1:8080/Eshop/images/classify";
+
     public static final String STATUS_SUCCESS = "1";//请求成功码
     public static final String STATUS_LOSE = "0";//失败状态码
+    public static final String GOODSCLASSIFY_URL = SERVICE_URL + "/goodsclassify";
 
     @Override
     public void onCreate() {
@@ -43,4 +49,5 @@ public class App extends Application {
                 .bitmapConfig(Bitmap.Config.RGB_565)
                 .build();
     }
+
 }

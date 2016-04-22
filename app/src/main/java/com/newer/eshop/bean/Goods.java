@@ -8,9 +8,7 @@ import java.util.List;
 public class Goods {
 
     //商品的类型
-    String type_1;
-
-    String type_2;
+    int typeId;
 
     //商品ID
     int id;
@@ -33,9 +31,8 @@ public class Goods {
     public Goods() {
     }
 
-    public Goods(String type_1, String type_2, int id, String name, float price, int sell, String image_path, List<Conment> list) {
-        this.type_1 = type_1;
-        this.type_2 = type_2;
+    public Goods(int typeId, int id, String name, float price, int sell, String image_path, List<Conment> list) {
+        this.typeId = typeId;
         this.id = id;
         this.name = name;
         this.price = price;
@@ -44,20 +41,12 @@ public class Goods {
         this.list = list;
     }
 
-    public String getType_1() {
-        return type_1;
+    public int getTypeId() {
+        return typeId;
     }
 
-    public void setType_1(String type_1) {
-        this.type_1 = type_1;
-    }
-
-    public String getType_2() {
-        return type_2;
-    }
-
-    public void setType_2(String type_2) {
-        this.type_2 = type_2;
+    public void setTypeId(int typeId) {
+        this.typeId = typeId;
     }
 
     public int getId() {

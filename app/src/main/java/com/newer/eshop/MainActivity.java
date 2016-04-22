@@ -12,6 +12,8 @@ import com.newer.eshop.classify.FragmentClassify;
 import com.newer.eshop.me.FragmentMe;
 import com.newer.eshop.shopingcat.FragmentShopingCart;
 
+import org.greenrobot.eventbus.EventBus;
+
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private TextView tv_index, tv_classify, tv_shopingcart, tv_me;
@@ -107,4 +109,5 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         tv_shopingcart.setSelected(false);
         tv_me.setSelected(false);
     }
+
 }

@@ -4,10 +4,13 @@
              android:layout_height="match_parent"
              tools:context="com.newer.eshop.classify.RightFragment">
 
-    <TextView
-        android:id="@+id/classify_right_tv"
-        android:textSize="20sp"
+    <GridView
+        android:id="@+id/right_gridview"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:layout_weight="1"
+        android:horizontalSpacing="10dp"
+        android:numColumns="3"/>
 
 </FrameLayout>

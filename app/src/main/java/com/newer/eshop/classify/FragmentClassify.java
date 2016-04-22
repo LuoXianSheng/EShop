@@ -58,7 +58,7 @@ public class FragmentClassify extends Fragment implements AdapterView.OnItemClic
             transaction.show(fragments.get(position));
         } else {
             Toast.makeText(getContext(), "新创建", Toast.LENGTH_SHORT).show();
-            rightFragment = new RightFragment("Test" + position);
+            rightFragment = new RightFragment(position + 1);
             fragments.put(position, rightFragment);
             transaction.add(R.id.classify_right_layout, rightFragment);
         }
