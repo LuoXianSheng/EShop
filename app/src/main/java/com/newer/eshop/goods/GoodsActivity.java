@@ -21,7 +21,6 @@ public class GoodsActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_goods);
-        this.getSupportActionBar().hide();
         initId();
         good_FragmentManger manger=new good_FragmentManger(getSupportFragmentManager());
         pager.setAdapter(manger);

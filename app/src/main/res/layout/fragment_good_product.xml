@@ -18,6 +18,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="NewText"
+            android:id="@+id/goods_produt_name"
             android:layout_weight="1"
             />
         <TextView
@@ -35,11 +36,13 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="30dp"
-            android:text="你好"/>
+            android:text="你好"
+            android:id="@+id/goods_produt_price"/>
           <TextView
               android:layout_width="match_parent"
               android:layout_height="30dp"
-              android:text="真的!"/>
+              android:text="真的!"
+              android:id="@+id/goods_produt_id"/>
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
@@ -50,13 +53,15 @@
              android:layout_height="wrap_content"
              android:text="快递费"
              android:layout_weight="1"
-             android:gravity="center"/>
+             android:gravity="center"
+             android:id="@+id/goods_produt_type"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="销售量"
             android:layout_weight="1"
-            android:gravity="center"/>
+            android:gravity="center"
+            android:id="@+id/goods_produt_sell"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
