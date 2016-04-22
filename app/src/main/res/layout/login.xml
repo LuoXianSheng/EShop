@@ -19,17 +19,19 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
+        android:background="#fff"
         android:orientation="horizontal"
         >
-        <Button
-            android:id="@+id/back"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:background="#00c3f9"
-            android:gravity="center"
-            android:text="&lt;返回"
 
-            android:textSize="20dp"
+        <ImageButton
+
+            android:id="@+id/login_btn_back"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:src="@drawable/login_top_back"
+            android:gravity="center"
+
+            android:background="@android:color/transparent"
             />
         <TextView
             android:id="@+id/t_title"
@@ -37,7 +39,7 @@
             android:layout_height="match_parent"
             android:ellipsize="marquee"
             android:gravity="center"
-            android:layout_weight="1"
+            android:layout_weight="0.91"
             android:singleLine="true"
             android:text="用户登录"
 
@@ -46,26 +48,44 @@
 
     </LinearLayout>
 
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="168dp"
+        android:src="@drawable/login_top_im"
+        />
+
 
     <EditText
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="账号/用户名/邮箱"
+        android:layout_height="50dp"
+        android:background="#fff"
+        android:drawableLeft="@drawable/regist_phone_im"
+        android:id="@+id/edt_name"
+        android:hint="|请输入手机号"
+        android:inputType="phone"
         />
 
     <EditText
+        android:layout_marginTop="2dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="请输入密码"
+        android:layout_height="50dp"
+        android:drawableLeft="@drawable/login_psw_im"
+        android:background="#fff"
+        android:id="@+id/edt_psw"
+        android:inputType="textPassword"
+        android:hint="|请输入密码"
         />
 
     <Button
-        android:layout_width="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
+
         android:text="登录"
-        android:id="@+id/button"
+        android:id="@+id/btn_login"
         android:layout_gravity="center_horizontal" />
     <LinearLayout
+        android:layout_marginTop="20dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -75,13 +95,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/tv_regist"
-            android:text="手机快速登录"
+            android:textColor="#e78a42"
+            android:textSize="20dp"
+            android:text="立即注册>"
             />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_marginLeft="180dp"
+            android:layout_marginLeft="150dp"
+            android:textSize="20dp"
             android:gravity="right"
             android:text="找回密码"
             />
@@ -91,8 +114,23 @@
 
     </LinearLayout>
 
+    <TextView
+        android:layout_marginTop="30dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20dp"
+        android:layout_gravity="center"
+        android:text="其他方式登录"
+        />
 
-
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/login_qq_login"
+        android:text="New Button"
+        android:layout_gravity="center"
+        android:background="@android:color/transparent"
+        android:id="@+id/btn_login_qq" />
 
 
 </LinearLayout>

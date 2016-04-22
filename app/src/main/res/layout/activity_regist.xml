@@ -12,16 +12,20 @@
         android:layout_height="50dp"
         android:orientation="horizontal"
         >
-        <Button
-            android:id="@+id/back"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:background="#00c3f9"
-            android:gravity="center"
-            android:text="&lt;返回"
 
-            android:textSize="20dp"
+
+
+        <ImageButton
+
+            android:id="@+id/regist_btn_back"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:src="@drawable/regist_top_back"
+            android:gravity="center"
+
+            android:background="@android:color/transparent"
             />
+
         <TextView
             android:id="@+id/t_title"
             android:layout_width="wrap_content"
@@ -41,34 +45,46 @@
     <EditText
         android:id="@+id/edt_username"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
+        android:background="#fff"
+        android:drawableLeft="@drawable/login_user_im"
         android:hint="账号/用户名/邮箱"
         />
 
     <EditText
+        android:layout_marginTop="2dp"
         android:id="@+id/edt_password"
+        android:drawableLeft="@drawable/login_psw_im"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
+        android:background="#fff"
         android:hint="请输入密码"
         />
 
     <EditText
+        android:layout_marginTop="2dp"
         android:id="@+id/edt_password2"
+        android:drawableLeft="@drawable/login_psw_im"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
+        android:background="#fff"
         android:hint="请再次输入密码"
         />
     <EditText
+        android:layout_marginTop="2dp"
         android:id="@+id/edt_phone"
+        android:drawableLeft="@drawable/regist_phone_im"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
+        android:background="#fff"
         android:hint="请输入手机"
         />
 
 
 
     <Button
-        android:layout_width="wrap_content"
+        android:layout_marginTop="50dp"
+        android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:text="注册"
         android:id="@+id/btn_regist"

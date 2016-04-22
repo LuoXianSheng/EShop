@@ -2,24 +2,21 @@ package com.newer.eshop.account;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
 import com.newer.eshop.R;
 import com.newer.eshop.bean.User;
-import com.newer.eshop.net.NetConnection;
 
-import java.util.ArrayList;
+import java.io.IOException;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.FormBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 public class RegistActivity extends AppCompatActivity implements View.OnClickListener {
         EditText edt_username,edt_password,edt_password2,edt_phone;
@@ -38,47 +35,41 @@ public class RegistActivity extends AppCompatActivity implements View.OnClickLis
         edt_password2= (EditText) findViewById(R.id.edt_password2);
         edt_phone= (EditText) findViewById(R.id.edt_phone);
         findViewById(R.id.btn_regist).setOnClickListener(this);
+        findViewById(R.id.regist_btn_back).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
 
     }
     User user =new User();
 
     public  void  RegistToServer(){
-            String url="http://192.168.191.1:8080/Eshop/regist";//服务器地址
-      StringRequest   registRequest= new StringRequest(Request.Method.GET, url + "?phone=11331&password=24422&time", new Response.Listener<String>() {
+        OkHttpClient  okHttpClient =new OkHttpClient();
+        String url="http://192.168.191.1:8080/Eshop/reigst";
+        FormBody body =new FormBody.Builder()
+                .add("name",edt_username.getText().toString())
+                .add("password",edt_password.getText().toString())
+                .add("phone", edt_phone.getText().toString())
+                .add("time",System.currentTimeMillis()+"")
+                .build();
+        Request request =new Request.Builder()
+                .url(url)
+                .post(body)
+                .build();
+        okHttpClient.newCall(request).enqueue(new Callback() {
             @Override
-            public void onResponse(String s) {
-                ArrayList<User> data =new ArrayList<>();
-
-                Gson gson =new Gson();
-                JsonParser parser= new JsonParser();
-                JsonElement element= parser.parse(s);
-                JsonArray jsonarray =element.getAsJsonArray();
-                for(int i=0;i< jsonarray.size();i++){
-                    element =jsonarray.get(i);
-                    User user =gson.fromJson(element,User.class);
-                    user.setName(user.getName());
-                    user.setPassword(user.getPassword());
-                    user.setPhone(user.getPhone());
-                    data.add(user);
-                }
-
-
+            public void onFailure(Call call, IOException e) {
+                System.out.println("失败");
             }
-        }, new Response.ErrorListener() {
-          @Override
-          public void onErrorResponse(VolleyError volleyError) {
-              Toast.makeText(RegistActivity.this, "注册失败", Toast.LENGTH_SHORT).show();
-          }
-      }
 
-      );
-
-        registRequest.setTag("GET");
-//        NetConnection.getInstance(this).add(registRequest);
-
-
-
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+              System.out.println("成功");
+            }
+        });
     }
 
     @Override

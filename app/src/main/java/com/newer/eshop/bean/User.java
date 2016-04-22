@@ -5,20 +5,13 @@ package com.newer.eshop.bean;
  */
 public class User {
 
-    private int id;
+
     private String name;
     private String password;
     private String address;
     private long phone;
     private String token;
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
 
 
     public void setPhone(int phone) {
