@@ -38,6 +38,7 @@
         </activity>
         <activity android:name=".account.RegistActivity" />
         <activity android:name=".classify.ClassifyResultActivity" />
+        <activity android:name=".goods.GoodsCarActivity"/>
     </application>
 
 </manifest>

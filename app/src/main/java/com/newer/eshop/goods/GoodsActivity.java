@@ -65,7 +65,7 @@ public class GoodsActivity extends AppCompatActivity{
         }else if(view.getId()==R.id.good_text_comment){
             pager.setCurrentItem(2);
         }else if(view.getId()==R.id.goods_shopcar){
-            Intent intent=new Intent(GoodsActivity.this,MainActivity.class);
+            Intent intent=new Intent(GoodsActivity.this,GoodsCarActivity.class);
             startActivity(intent);
         }
 

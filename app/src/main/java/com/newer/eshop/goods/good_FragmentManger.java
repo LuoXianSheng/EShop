@@ -23,6 +23,6 @@ public class good_FragmentManger extends FragmentPagerAdapter{
     }
     @Override
     public int getCount() {
-        return 3;
+        return list.size();
     }
 }
