@@ -1,20 +1,26 @@
 package com.newer.eshop.bean;
 
+import java.util.ArrayList;
+
 /**
  * Created by Administrator on 2016/4/23.
  */
 public class ShaoCar {
     //价格
-    String price;
+    private String price;
 
     //商品图片
-    String image_path;
+    private String image_path;
 
     //商品名字
-    String name;
+    private String name;
 
     //商品ID
-    int shapid;
+    private int shapid;
+
+    public ShaoCar() {
+
+    }
 
     public ShaoCar(String image_path, String name, String price, int shapid) {
         this.image_path = image_path;
