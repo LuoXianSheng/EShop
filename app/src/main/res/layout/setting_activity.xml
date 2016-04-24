@@ -3,10 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-  android:orientation="vertical"
-    tools:context="com.newer.eshop.account.RegistActivity">
-
-
+     android:orientation="vertical"
+    tools:context="com.newer.eshop.account.SettingActivity">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
@@ -17,7 +15,7 @@
 
         <ImageButton
 
-            android:id="@+id/regist_btn_back"
+            android:id="@+id/setting_btn_back"
             android:layout_width="50dp"
             android:layout_height="match_parent"
             android:src="@drawable/regist_top_back"
@@ -34,7 +32,7 @@
             android:gravity="center"
             android:layout_weight="1"
             android:singleLine="true"
-            android:text="用户注册"
+            android:text="系统设置"
 
             android:textSize="20dp" />
 
@@ -42,54 +40,43 @@
     </LinearLayout>
 
 
-    <EditText
-        android:id="@+id/edt_username"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="#fff"
-        android:drawableLeft="@drawable/login_user_im"
-        android:hint="账号/用户名/邮箱"
-        />
-
-    <EditText
+、
+    <TextView
         android:layout_marginTop="2dp"
-        android:id="@+id/edt_password"
-        android:drawableLeft="@drawable/login_psw_im"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:background="#fff"
-        android:hint="请输入密码"
-        />
-
-    <EditText
-        android:layout_marginTop="2dp"
-        android:id="@+id/edt_password2"
-        android:drawableLeft="@drawable/login_psw_im"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="#fff"
-        android:hint="请再次输入密码"
-        />
-    <EditText
-        android:layout_marginTop="2dp"
-        android:id="@+id/edt_phone"
-        android:drawableLeft="@drawable/regist_phone_im"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="#fff"
-
-        android:hint="请输入手机"
-        />
-
-
-
-    <Button
-        android:layout_marginTop="50dp"
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
-        android:text="注册"
+        android:drawableLeft="@drawable/setting_clean_im"
+        android:id="@+id/tv_phone"
+        android:textSize="25dp"
         android:gravity="center"
-        android:id="@+id/btn_regist"
-        android:layout_gravity="center_horizontal" />
+        android:text="清除缓存"
+        />
+
+    <TextView
+        android:layout_marginTop="2dp"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="#fff"
+        android:drawableLeft="@drawable/setting_checkupdate_im"
+        android:textSize="25dp"
+        android:id="@+id/tv_address"
+        android:gravity="center"
+        android:text="检查更新"
+        />
+
+    <TextView
+        android:layout_marginTop="2dp"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="#fff"
+        android:drawableLeft="@drawable/setting_about_us"
+        android:textSize="25dp"
+        android:gravity="center"
+        android:id="@+id/tv_report"
+        android:text="关于我们"
+        />
+
+
 
 </LinearLayout>

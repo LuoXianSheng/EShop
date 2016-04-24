@@ -10,12 +10,13 @@ import android.widget.Button;
 
 import com.newer.eshop.R;
 import com.newer.eshop.account.LoginActivity;
+import com.newer.eshop.account.SettingActivity;
 import com.newer.eshop.goods.GoodsActivity;
 
 /**
  * Created by Mr_LUO on 2016/4/21.
  */
-public class FragmentMe extends Fragment {
+public class FragmentMe extends Fragment implements View.OnClickListener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_me, null);
@@ -33,7 +34,23 @@ public class FragmentMe extends Fragment {
                 startActivity(new Intent(getContext(), GoodsActivity.class));
             }
         });
+        view.findViewById(R.id.me_top_setting).setOnClickListener(this);
+        view.findViewById(R.id.me_top_login).setOnClickListener(this);
+
         return view;
+
     }
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case  R.id.me_top_setting:
+                startActivity(new Intent(getContext(), SettingActivity.class));
+                break;
+            case R.id.me_top_login:
+                startActivity(new Intent(getContext(),LoginActivity.class));
+                break;
+        }
+
+    }
 }
