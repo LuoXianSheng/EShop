@@ -36,60 +36,65 @@ import okhttp3.Response;
 /**
  * Created by Mr_LUO on 2016/4/20.
  */
-public class LoginActivity  extends AppCompatActivity implements View.OnClickListener {
+public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
+    //    private static final String APP_ID = "1105291740";
     private static final String APP_ID = "1105291740";
-    private EditText edt_name,edt_psw;
+    private EditText edt_name, edt_psw;
+    public static String openid;
+    public static String access_token;
+    public static String time;
+    String Key = "Mytoken";
+    public static String Appid;
+    SharedPreferences preferences;
+    SharedPreferences.Editor editor;
+
     private Tencent mTencent;
-    public  static  String openid;
-    public  static  String access_token;
-    public  static  String time;
-    String Key ="Mytoken";
-        public static String Appid;
-        SharedPreferences preferences;
-        SharedPreferences.Editor editor;
+    private MyListener iUiListener;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.login);
-        preferences =getSharedPreferences("login_user_im",App.MODE_PRIVATE);
-        editor =preferences.edit();
-        initView();
-
         EventBus.getDefault().register(this);
 
-        blistener =new BaseUiListener();
-        mTencent =Tencent.createInstance(APP_ID,getApplicationContext());
+        preferences = getSharedPreferences("login_user_im", App.MODE_PRIVATE);
+        editor = preferences.edit();
+        initView();
+
+
+        mTencent = Tencent.createInstance(APP_ID, getApplicationContext());
+        iUiListener = new MyListener();
     }
 
-    public  void  initView(){
+    public void initView() {
         findViewById(R.id.login_btn_back).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-              finish();
+                finish();
             }
         });
         findViewById(R.id.tv_regist).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(LoginActivity.this,RegistActivity.class));
+                startActivity(new Intent(LoginActivity.this, RegistActivity.class));
             }
         });
         findViewById(R.id.btn_login).setOnClickListener(this);
         findViewById(R.id.btn_login_qq).setOnClickListener(this);
-        edt_name= (EditText) findViewById(R.id.edt_name);
-        edt_psw= (EditText) findViewById(R.id.edt_psw);
+        edt_name = (EditText) findViewById(R.id.edt_name);
+        edt_psw = (EditText) findViewById(R.id.edt_psw);
 
     }
 
-    public  void  LoginToServer() {
-        OkHttpClient okHttpClient =new OkHttpClient();
-        String url="http://192.168.191.1:8080/Eshop/login";
-        FormBody body =new FormBody.Builder()
-                .add("phone",edt_name.getText().toString())
-                .add("password",edt_psw.getText().toString())
+    public void LoginToServer() {
+        OkHttpClient okHttpClient = new OkHttpClient();
+        String url = "http://192.168.191.1:8080/Eshop/login";
+        FormBody body = new FormBody.Builder()
+                .add("phone", edt_name.getText().toString())
+                .add("password", edt_psw.getText().toString())
                 .build();
-        Request request =new Request.Builder()
+        Request request = new Request.Builder()
                 .url(url)
                 .post(body)
                 .build();
@@ -103,18 +108,18 @@ public class LoginActivity  extends AppCompatActivity implements View.OnClickLis
             @Override
             public void onResponse(Call call, Response response) throws IOException {
 //              System.out.println("登录成功");
-              String data =response.body().string();
+                String data = response.body().string();
                 System.out.println("++++++++" + data);
                 try {
-                    JSONObject jsonObject =new JSONObject(data);
-                    if (jsonObject.getString("status").equals(App.STATUS_SUCCESS)){
-                        Gson gson =new Gson();
-                        User user =gson.fromJson(jsonObject.getString("data"),User.class);
-                        System.out.println("---------------"+user.getToken());
+                    JSONObject jsonObject = new JSONObject(data);
+                    if (jsonObject.getString("status").equals(App.STATUS_SUCCESS)) {
+                        Gson gson = new Gson();
+                        User user = gson.fromJson(jsonObject.getString("data"), User.class);
+                        System.out.println("---------------" + user.getToken());
 
-                        editor.putString(Key,user.getToken());
-                        editor.putString("name",user.getName());
-                        editor.putString("address",user.getAddress());
+                        editor.putString(Key, user.getToken());
+                        editor.putString("name", user.getName());
+                        editor.putString("address", user.getAddress());
                         editor.putString("phone", String.valueOf(user.getPhone()));
                         editor.commit();
                     }
@@ -122,7 +127,7 @@ public class LoginActivity  extends AppCompatActivity implements View.OnClickLis
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                    LoginActivity.this.finish();
+                LoginActivity.this.finish();
             }
 
 
@@ -130,79 +135,79 @@ public class LoginActivity  extends AppCompatActivity implements View.OnClickLis
 
     }
 
-            @Subscribe(threadMode = ThreadMode.MAIN)
-            public  void  exit(String xxx){
-                EventBus.getDefault().unregister(this);
-                LoginActivity.this.finish();
-            }
-
-    BaseUiListener blistener;
-    public  void  LoginToqq(){
-            Appid= APP_ID;
-
-            mTencent.login(LoginActivity.this,"all",blistener);
-
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void exit(String xxx) {
+        EventBus.getDefault().unregister(this);
+        LoginActivity.this.finish();
     }
-
-
-    private class  BaseUiListener implements IUiListener{
-
-        @Override
-        public void onComplete(Object response) {
-
-//            try {
-//                System.out.println("---------"+response.toString());
-//
-//                openid =((JSONObject)response).getString("openid");
-//                System.out.println("---------"+openid);
-//                access_token=((JSONObject)response).getString("access_token");
-//                System.out.println("---------"+access_token);
-//                time =((JSONObject)response).getString("expires_in");
-//
-//            } catch (JSONException e) {
-//                e.printStackTrace();
-//            }
-//            Toast.makeText(LoginActivity.this, "登录成功", Toast.LENGTH_SHORT).show();
-            String msg=" 登录成功";
-            Log.e("1111111111111111111111",msg);
-                EventBus.getDefault().post("xxx");
-        }
-
-        @Override
-        public void onError(UiError uiError) {
-            Toast.makeText(LoginActivity.this, "登录失败", Toast.LENGTH_SHORT).show();
-            Log.e("dsfsadfdsadsafsdf", "失败");
-
-        }
-
-        @Override
-        public void onCancel() {
-            Log.e("取消士大夫撒旦", "取消了");
-            EventBus.getDefault().post("xxx");
-        }
-    }
-
 
 
     @Override
     public void onClick(View v) {
 
 
-        switch (v.getId()){
+        switch (v.getId()) {
 
-            case  R.id.btn_login:
-                if (TextUtils.isEmpty(edt_name.getText().toString())||TextUtils.isEmpty(edt_psw.getText().toString())){
+            case R.id.btn_login:
+                if (TextUtils.isEmpty(edt_name.getText().toString()) || TextUtils.isEmpty(edt_psw.getText().toString())) {
                     Toast.makeText(LoginActivity.this, "用户名或者密码不能为空", Toast.LENGTH_SHORT).show();
                 }
                 LoginToServer();
 
 
                 break;
-            case  R.id.btn_login_qq:
+            case R.id.btn_login_qq:
                 LoginToqq();
                 break;
 
         }
+    }
+
+    private void LoginToqq() {
+        mTencent.login(this, "all", iUiListener);
+    }
+
+    private class MyListener implements IUiListener {
+
+        @Override
+        public void onComplete(Object o) {
+            //成功以后回调的方法
+            /*{登录成功后调用public void onComplete(JSONObject arg0) 回传的JsonObject， 其中包含OpenId， AccessToken等重要数据。
+                "ret":0,
+                    "pay_token":"xxxxxxxxxxxxxxxx",
+                    "pf":"openmobile_android",
+                    "expires_in":"7776000",
+                    "openid":"xxxxxxxxxxxxxxxxxxx",
+                    "pfkey":"xxxxxxxxxxxxxxxxxxx",
+                    "msg":"sucess",
+                    "access_token":"xxxxxxxxxxxxxxxxxxxxx"
+            }*/
+            JSONObject object = (JSONObject) o;
+            try {
+                Log.w("用户信息：", object.toString());
+                String openid = object.getString("openid");
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        @Override
+        public void onError(UiError e) {
+            System.out.println("onError:code:" + e.errorCode + ", msg:"
+                    + e.errorMessage + ", detail:" + e.errorDetail);
+        }
+        @Override
+        public void onCancel() {
+            System.out.println("onCancel");
+        }
+    }
+
+    //应用调用Andriod_SDK接口时，如果要成功接收到回调，需要在调用接口的Activity的onActivityResult方法中增加如下代码：
+    //其中onActivityResultData接口中的listener为当前调用的Activity所实现的相应回调UIListener。
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Tencent.onActivityResultData(requestCode,resultCode,data,iUiListener);
     }
 
     @Override
@@ -211,8 +216,4 @@ public class LoginActivity  extends AppCompatActivity implements View.OnClickLis
         EventBus.getDefault().unregister(this);
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Tencent.onActivityResultData(requestCode,requestCode,data,blistener);
-    }
 }
