@@ -63,8 +63,6 @@ public class ClassifyResultActivity extends AppCompatActivity implements HttpDat
     private void initToolbar() {
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
-        setTitle(getString(R.string.app_name));
-        mToolbar.setTitleTextColor(getResources().getColor(android.R.color.white));
     }
 
     private void initRecyclerView() {

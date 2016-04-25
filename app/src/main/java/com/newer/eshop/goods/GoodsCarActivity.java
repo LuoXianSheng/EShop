@@ -33,6 +33,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import java.security.PublicKey;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Set;
 
 public class GoodsCarActivity extends AppCompatActivity implements HttpDataListener{
 
@@ -145,24 +146,25 @@ public class GoodsCarActivity extends AppCompatActivity implements HttpDataListe
                      if (isChecked == true) {
                          map.remove(position);
                          map.put(position, true);
-                         viewHolder.box.setChecked(map.get(position));
-                         text_count.add(list.get(position).getPrice());
-                         float s=0;
-                         for(int i=0;i<text_count.size();i++){
-                            s+=text_count.get(i);
-                         }
-                         shopcar_count.setText(s+"元");
+//                         viewHolder.box.setChecked(map.get(position));
+//                         text_count.add(list.get(position).getPrice());
+//                         float s=0;
+//                         for(int i=0;i<text_count.size();i++){
+//                            s+=text_count.get(i);
+//                         }
+//                         shopcar_count.setText(s+"元");
                      } else {
                          map.remove(position);
                          map.put(position, false);
-                         viewHolder.box.setChecked(map.get(position));
-                         text_count.remove(list.get(position).getPrice());
-                         float s=0;
-                         for(int i=0;i<text_count.size();i++){
-                             s+=text_count.get(i);
-                         }
-                         shopcar_count.setText(s+"元");
+//                         viewHolder.box.setChecked(map.get(position));
+//                         text_count.remove(list.get(position).getPrice());
+//                         float s=0;
+//                         for(int i=0;i<text_count.size();i++){
+//                             s+=text_count.get(i);
+//                         }
+//                         shopcar_count.setText(s+"元");
                      }
+                     total();//每一次checkBox变化的时候都去统计下钱
                  }
              });
              /**
@@ -176,9 +178,33 @@ public class GoodsCarActivity extends AppCompatActivity implements HttpDataListe
                  return view;
          }
 
-       public void ischecke(){
+        private void total() {
+            //map中为true的值来找到对应的key，这个key就是checkbox中选中的那项，有了这个key就可以去list中拿到price
+            Set<Integer> set = map.keySet();
+            float sum = 0;
+            for (Integer i : set) {
+                if (map.get(i) == true) {
+                    sum += list.get(i).getPrice();
+                }
+            }
+            shopcar_count.setText(sum+"元");
+        }
 
+       public void ischecke(){
+           map.clear();
+           for (int i = 0; i < list.size(); i++) {
+               map.put(i, true);
+           }
+           notifyDataSetChanged();
        }
+
+        public void unIscheck() {
+            map.clear();
+            for (int i = 0; i < list.size(); i++) {
+                map.put(i, false);
+            }
+            notifyDataSetChanged();
+        }
         /**
          * 保存所有控件的ID
          */
@@ -191,6 +217,7 @@ public class GoodsCarActivity extends AppCompatActivity implements HttpDataListe
              CheckBox box;
         }
      }
+
     /**
      * 请求成功
      * @param str
@@ -274,12 +301,22 @@ public class GoodsCarActivity extends AppCompatActivity implements HttpDataListe
      * checkBox的点击事件
      */
      public void check_text(View view){
-        //如果点击了的话就所有的checkbox所有的选项选中，否则就不选中
-         if(checkBox.isChecked()){
-             System.out.println(map.size());
-
-         }else{
-             System.out.println(map.size());
+//        //如果点击了的话就所有的checkbox所有的选项选中，否则就不选中
+//         if(checkBox.isChecked()){
+//             System.out.println(map.size());
+//
+//         }else{
+//             System.out.println(map.size());
+//         }
+         if (!isCheckAll) {
+             shaoMyadapter.ischecke();
+             isCheckAll = true;
+         } else {
+             shaoMyadapter.unIscheck();//取消全选
+             isCheckAll = false;
          }
+
      }
+
+    boolean isCheckAll = false;//判断全选状态
 }

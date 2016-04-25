@@ -1,13 +1,12 @@
 package com.newer.eshop;
 
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.util.DisplayMetrics;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,12 +18,9 @@ import android.widget.Toast;
 
 import com.etsy.android.grid.StaggeredGridView;
 import com.etsy.android.grid.util.DynamicHeightImageView;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 /**
  * Created by Mr_LUO on 2016/4/21.
@@ -44,7 +40,7 @@ public class FragmentIndex extends Fragment {
     private Handler handler;
     private ArrayList<String> data;
     private int viewPagerIndex = 0;
-
+    private Toolbar mToolbar;
     private int heightPixels;
 
     public FragmentIndex(int heightPixels) {
@@ -54,6 +50,15 @@ public class FragmentIndex extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_index, null);
+        mToolbar = (Toolbar) view.findViewById(R.id.toolbar);
+        ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
+        mToolbar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getContext(), "点击了ToolBar", Toast.LENGTH_SHORT).show();
+            }
+        });
+
         refresh = (SwipeRefreshLayout) view.findViewById(R.id.refresh);
         gridView = (StaggeredGridView) view.findViewById(R.id.grid_view);
         data = new ArrayList<>();
