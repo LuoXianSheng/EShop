@@ -99,7 +99,7 @@ public class GoodsActivity extends AppCompatActivity implements HttpDataListener
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void a(Integer count) {
-        NetConnection.SendService("http://192.168.191.1:8080/Eshop/tocart", String.valueOf(goodsId), name, this);
+        NetConnection.SendService(GoodsActivity.this,"http://192.168.191.1:8080/Eshop/tocart", String.valueOf(goodsId), name, this);
     }
 
     @Override

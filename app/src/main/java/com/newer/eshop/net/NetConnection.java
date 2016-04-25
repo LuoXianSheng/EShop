@@ -9,6 +9,7 @@ import com.newer.eshop.myview.MyProDialog;
 
 import java.io.IOException;
 import java.util.Timer;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -32,7 +33,9 @@ public class NetConnection {
         if (client == null) {
             synchronized (new String()) {
                 if (client == null) {
-                    client = new OkHttpClient();
+                    client = new OkHttpClient().newBuilder()
+                            .connectTimeout(5000, TimeUnit.MILLISECONDS)
+                            .build();
                 }
             }
         }

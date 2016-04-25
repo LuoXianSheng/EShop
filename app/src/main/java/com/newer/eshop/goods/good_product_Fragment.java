@@ -115,7 +115,7 @@ public class good_product_Fragment extends Fragment implements HttpDataListener,
                              Bundle savedInstanceState) {
         final View view=inflater.inflate(R.layout.fragment_good_product, container, false);
         initID(view);
-        NetConnection.getOneGoods("http://192.168.191.1:8080/Eshop/onegoods?goodsId=" + path, this);
+        NetConnection.getOneGoods(getContext(),"http://192.168.191.1:8080/Eshop/onegoods?goodsId=" + path, this);
         return view;
     }
 

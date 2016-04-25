@@ -10,6 +10,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -49,6 +50,7 @@ public class GoodsCarActivity extends AppCompatActivity implements HttpDataListe
            if(msg.what==0){
                ShaoMyadapter shaoMyadapter=new ShaoMyadapter(list,GoodsCarActivity.this);
                listView.setAdapter(shaoMyadapter);
+
            }
         }
     };
@@ -67,6 +69,12 @@ public class GoodsCarActivity extends AppCompatActivity implements HttpDataListe
      */
     private void initID() {
         listView=(ListView)findViewById(R.id.goods_shopcar_list);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Toast.makeText(GoodsCarActivity.this, "我是:"+position, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
 
@@ -165,7 +173,7 @@ public class GoodsCarActivity extends AppCompatActivity implements HttpDataListe
      */
     public void UserLogin(){
         SharedPreferences sharedPreferences=getSharedPreferences("login_user_im", MODE_PRIVATE);
-        String str=sharedPreferences.getString("phone",null);
+        String str=sharedPreferences.getString("phone", null);
         String name=sharedPreferences.getString("name",null);
         if(str==null&&name==null){
             AlertDialog.Builder builder=new AlertDialog.Builder(this);
@@ -182,7 +190,7 @@ public class GoodsCarActivity extends AppCompatActivity implements HttpDataListe
                     })
                     .show();
         }else{
-            NetConnection.RequestShopCar("http://192.168.191.1:8080/Eshop/shopingcart",str,this);
+            NetConnection.RequestShopCar(GoodsCarActivity.this, "http://192.168.191.1:8080/Eshop/shopingcart", str, this);
         }
     }
 
@@ -200,7 +208,7 @@ public class GoodsCarActivity extends AppCompatActivity implements HttpDataListe
         String str=sharedPreferences.getString("phone",null);
 
         if(requestCode==1 && resultCode==RESULT_OK){
-            NetConnection.RequestShopCar("http://192.168.191.1:8080/Eshop/shopingcart", str, this);
+            NetConnection.RequestShopCar(GoodsCarActivity.this,"http://192.168.191.1:8080/Eshop/shopingcart", str, this);
         }else{
             Toast.makeText(GoodsCarActivity.this, "请先登入!", Toast.LENGTH_SHORT).show();
         }
@@ -210,5 +218,4 @@ public class GoodsCarActivity extends AppCompatActivity implements HttpDataListe
         intent.setClass(GoodsCarActivity.this, ClassifyResultActivity.class);
         startActivity(intent);
     }
-
 }
