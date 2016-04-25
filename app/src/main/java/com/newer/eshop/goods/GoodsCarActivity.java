@@ -14,6 +14,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -164,10 +165,29 @@ public class GoodsCarActivity extends AppCompatActivity implements HttpDataListe
         String name=sharedPreferences.getString("name",null);
         if(str==null&&name==null){
             Intent it=new Intent(GoodsCarActivity.this,LoginActivity.class);
-            startActivity(it);
+            startActivityForResult(it,1);
         }else{
             NetConnection.RequestShopCar("http://192.168.191.1:8080/Eshop/shopingcart",str,this);
         }
     }
 
+    /**
+     * 登入成功了，你要去请求购物车的数据
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        SharedPreferences sharedPreferences=getSharedPreferences("login_user_im", MODE_PRIVATE);
+        String str=sharedPreferences.getString("phone",null);
+
+        if(requestCode==1 && resultCode==RESULT_OK){
+            NetConnection.RequestShopCar("http://192.168.191.1:8080/Eshop/shopingcart",str,this);
+        }else{
+            Toast.makeText(GoodsCarActivity.this, "请先登入!", Toast.LENGTH_SHORT).show();
+        }
+    }
 }
