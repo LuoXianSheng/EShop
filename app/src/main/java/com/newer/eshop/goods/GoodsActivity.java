@@ -43,6 +43,7 @@ public class GoodsActivity extends AppCompatActivity implements HttpDataListener
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_goods);
         EventBus.getDefault().register(this);
 
@@ -95,9 +96,10 @@ public class GoodsActivity extends AppCompatActivity implements HttpDataListener
     public void ShopAddCar(View view){
         EventBus.getDefault().post("get");
     }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void a(Integer count) {
-        //NetConnection.SendService("http://192.168.191.1:8080/Eshop/tocart", String.valueOf(goodsId), name, this);
+        NetConnection.SendService("http://192.168.191.1:8080/Eshop/tocart", String.valueOf(goodsId), name, this);
     }
 
     @Override

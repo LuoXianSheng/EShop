@@ -1,6 +1,8 @@
 package com.newer.eshop.goods;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Environment;
@@ -10,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -22,6 +25,7 @@ import com.newer.eshop.R;
 import com.newer.eshop.account.LoginActivity;
 import com.newer.eshop.bean.Goods;
 import com.newer.eshop.bean.ShaoCar;
+import com.newer.eshop.classify.ClassifyResultActivity;
 import com.newer.eshop.net.HttpDataListener;
 import com.newer.eshop.net.NetConnection;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -164,8 +168,19 @@ public class GoodsCarActivity extends AppCompatActivity implements HttpDataListe
         String str=sharedPreferences.getString("phone",null);
         String name=sharedPreferences.getString("name",null);
         if(str==null&&name==null){
-            Intent it=new Intent(GoodsCarActivity.this,LoginActivity.class);
-            startActivityForResult(it,1);
+            AlertDialog.Builder builder=new AlertDialog.Builder(this);
+            builder.setTitle("请先登入!")
+                    .setMessage("温馨提示：请先登入!")
+                    .setIcon(R.mipmap.ic_launcher)
+                    .setNeutralButton("取消",null)
+                    .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Intent it = new Intent(GoodsCarActivity.this, LoginActivity.class);
+                            startActivityForResult(it, 1);
+                        }
+                    })
+                    .show();
         }else{
             NetConnection.RequestShopCar("http://192.168.191.1:8080/Eshop/shopingcart",str,this);
         }
@@ -185,9 +200,15 @@ public class GoodsCarActivity extends AppCompatActivity implements HttpDataListe
         String str=sharedPreferences.getString("phone",null);
 
         if(requestCode==1 && resultCode==RESULT_OK){
-            NetConnection.RequestShopCar("http://192.168.191.1:8080/Eshop/shopingcart",str,this);
+            NetConnection.RequestShopCar("http://192.168.191.1:8080/Eshop/shopingcart", str, this);
         }else{
             Toast.makeText(GoodsCarActivity.this, "请先登入!", Toast.LENGTH_SHORT).show();
         }
     }
+    public void backs(View view){
+        Intent intent=new Intent();
+        intent.setClass(GoodsCarActivity.this, ClassifyResultActivity.class);
+        startActivity(intent);
+    }
+
 }
