@@ -18,6 +18,7 @@ import com.newer.eshop.App;
 import com.newer.eshop.R;
 import com.newer.eshop.bean.Goods;
 import com.newer.eshop.goods.GoodsActivity;
+import com.newer.eshop.goods.GoodsCarActivity;
 import com.newer.eshop.net.HttpDataListener;
 import com.newer.eshop.net.NetConnection;
 
@@ -47,7 +48,7 @@ public class ClassifyResultActivity extends AppCompatActivity implements HttpDat
         mFabButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(ClassifyResultActivity.this, "浮动按钮", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(ClassifyResultActivity.this, GoodsCarActivity.class));
             }
         });
 
