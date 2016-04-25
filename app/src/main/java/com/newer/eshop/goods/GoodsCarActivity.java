@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
@@ -15,40 +14,42 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.newer.eshop.R;
 import com.newer.eshop.account.LoginActivity;
 import com.newer.eshop.bean.Goods;
-import com.newer.eshop.bean.ShaoCar;
 import com.newer.eshop.classify.ClassifyResultActivity;
 import com.newer.eshop.net.HttpDataListener;
 import com.newer.eshop.net.NetConnection;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.File;
+import java.security.PublicKey;
 import java.util.ArrayList;
-import java.util.zip.Inflater;
+import java.util.HashMap;
 
 public class GoodsCarActivity extends AppCompatActivity implements HttpDataListener{
 
     ListView listView;
     ArrayList<Goods> list;
+    CheckBox checkBox;
+    HashMap<Integer,Boolean> map;
+    TextView shopcar_count;
+    ArrayList<Float> text_count;
+    ShaoMyadapter shaoMyadapter;
+
 
     private Handler handler=new Handler(){
         @Override
         public void handleMessage(Message msg) {
            if(msg.what==0){
-               ShaoMyadapter shaoMyadapter=new ShaoMyadapter(list,GoodsCarActivity.this);
+              shaoMyadapter=new ShaoMyadapter(list,GoodsCarActivity.this);
                listView.setAdapter(shaoMyadapter);
 
            }
@@ -62,6 +63,8 @@ public class GoodsCarActivity extends AppCompatActivity implements HttpDataListe
         setContentView(R.layout.activity_goods_car);
         initID();
         UserLogin();
+        map=new HashMap<>();
+        text_count=new ArrayList<>();
     }
 
     /**
@@ -69,10 +72,12 @@ public class GoodsCarActivity extends AppCompatActivity implements HttpDataListe
      */
     private void initID() {
         listView=(ListView)findViewById(R.id.goods_shopcar_list);
+        checkBox=(CheckBox)findViewById(R.id.goods_shapcar_check);
+        shopcar_count=(TextView)findViewById(R.id.goods_shopcar_count);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(GoodsCarActivity.this, "我是:"+position, Toast.LENGTH_SHORT).show();
+                Toast.makeText(GoodsCarActivity.this, "我是:" + position, Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -94,7 +99,11 @@ public class GoodsCarActivity extends AppCompatActivity implements HttpDataListe
 
          @Override
          public int getCount() {
-             return list.size();
+             if(list == null){
+                 return 0;
+             }else{
+                 return list.size();
+             }
          }
 
          @Override
@@ -108,9 +117,9 @@ public class GoodsCarActivity extends AppCompatActivity implements HttpDataListe
          }
 
          @Override
-         public View getView(int position, View convertView, ViewGroup parent) {
-             View view;
-             ViewHolder viewHolder;
+         public View getView(final int position, View convertView, ViewGroup parent) {
+             final View view;
+             final ViewHolder viewHolder;
              if(convertView==null){
                  view=View.inflate(context,R.layout.goos_shap_layout,null);
                  viewHolder=new ViewHolder();
@@ -118,6 +127,7 @@ public class GoodsCarActivity extends AppCompatActivity implements HttpDataListe
                  viewHolder.textView1=(TextView)view.findViewById(R.id.shap_layout_name);
                  viewHolder.textView2=(TextView)view.findViewById(R.id.shap_layout_id);
                  viewHolder.textView3=(TextView)view.findViewById(R.id.shap_layout_price);
+                 viewHolder.box=(CheckBox)view.findViewById(R.id.shap_layout_btn);
                  view.setTag(viewHolder);
              }else{
                  view=convertView;
@@ -126,12 +136,49 @@ public class GoodsCarActivity extends AppCompatActivity implements HttpDataListe
              String[] str=list.get(position).getImage_path().split(",");
              ImageLoader.getInstance().displayImage("http://192.168.191.1:8080/Eshop/images/" + str[0] + ".jpg"
                      , viewHolder.imageView);
-             viewHolder.textView1.setText("商品名字:"+list.get(position).getName());
-             viewHolder.textView2.setText("商品编号:"+list.get(position).getId());
-             viewHolder.textView3.setText("商品价格:"+list.get(position).getPrice());
-             return view;
+             viewHolder.textView1.setText("商品名字:" + list.get(position).getName());
+             viewHolder.textView2.setText("商品编号:" + list.get(position).getId());
+             viewHolder.textView3.setText("商品价格:" + list.get(position).getPrice());
+             viewHolder.box.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                 @Override
+                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                     if (isChecked == true) {
+                         map.remove(position);
+                         map.put(position, true);
+                         viewHolder.box.setChecked(map.get(position));
+                         text_count.add(list.get(position).getPrice());
+                         float s=0;
+                         for(int i=0;i<text_count.size();i++){
+                            s+=text_count.get(i);
+                         }
+                         shopcar_count.setText(s+"元");
+                     } else {
+                         map.remove(position);
+                         map.put(position, false);
+                         viewHolder.box.setChecked(map.get(position));
+                         text_count.remove(list.get(position).getPrice());
+                         float s=0;
+                         for(int i=0;i<text_count.size();i++){
+                             s+=text_count.get(i);
+                         }
+                         shopcar_count.setText(s+"元");
+                     }
+                 }
+             });
+             /**
+              * 如果此映射包含指定的包含关系将返回true,
+              */
+             if(map.containsKey(position)){
+                viewHolder.box.setChecked(map.get(position));
+             }else{
+                 viewHolder.box.setChecked(false);
+             }
+                 return view;
          }
 
+       public void ischecke(){
+
+       }
         /**
          * 保存所有控件的ID
          */
@@ -141,6 +188,7 @@ public class GoodsCarActivity extends AppCompatActivity implements HttpDataListe
             TextView textView2;
             TextView textView3;
             TextView textView4;
+             CheckBox box;
         }
      }
     /**
@@ -149,7 +197,6 @@ public class GoodsCarActivity extends AppCompatActivity implements HttpDataListe
      */
     @Override
     public void succeseful(String str) {
-        System.out.println(str);
         Gson gson=new Gson();
         list=new ArrayList<>();
         list=gson.fromJson(str,new TypeToken<ArrayList<Goods>>(){}.getType());
@@ -175,7 +222,7 @@ public class GoodsCarActivity extends AppCompatActivity implements HttpDataListe
         SharedPreferences sharedPreferences=getSharedPreferences("login_user_im", MODE_PRIVATE);
         String str=sharedPreferences.getString("phone", null);
         String name=sharedPreferences.getString("name",null);
-        if(str==null&&name==null){
+        if(str==null && name==null){
             AlertDialog.Builder builder=new AlertDialog.Builder(this);
             builder.setTitle("请先登入!")
                     .setMessage("温馨提示：请先登入!")
@@ -208,14 +255,31 @@ public class GoodsCarActivity extends AppCompatActivity implements HttpDataListe
         String str=sharedPreferences.getString("phone",null);
 
         if(requestCode==1 && resultCode==RESULT_OK){
-            NetConnection.RequestShopCar(GoodsCarActivity.this,"http://192.168.191.1:8080/Eshop/shopingcart", str, this);
+            NetConnection.RequestShopCar(GoodsCarActivity.this, "http://192.168.191.1:8080/Eshop/shopingcart", str, this);
         }else{
             Toast.makeText(GoodsCarActivity.this, "请先登入!", Toast.LENGTH_SHORT).show();
         }
     }
+
+    /**
+     * 点击返回分类的首页
+     * @param view
+     */
     public void backs(View view){
         Intent intent=new Intent();
         intent.setClass(GoodsCarActivity.this, ClassifyResultActivity.class);
         startActivity(intent);
     }
+    /**
+     * checkBox的点击事件
+     */
+     public void check_text(View view){
+        //如果点击了的话就所有的checkbox所有的选项选中，否则就不选中
+         if(checkBox.isChecked()){
+             System.out.println(map.size());
+
+         }else{
+             System.out.println(map.size());
+         }
+     }
 }

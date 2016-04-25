@@ -45,19 +45,23 @@
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:orientation="horizontal">
-        <RadioButton
+        <CheckBox
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="全选"
+            android:onClick="check_text"
+            android:id="@+id/goods_shapcar_check"
             android:layout_centerVertical="true"
             />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="合计:"
+            android:onClick="goods_shapcar_adds"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
             android:id="@+id/goods_shopcar_add"/>
+
         <TextView android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"

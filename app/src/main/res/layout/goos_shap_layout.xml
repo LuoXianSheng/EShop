@@ -12,10 +12,11 @@
             android:layout_width="wrap_content"
             android:layout_height="150dp"
             android:orientation="horizontal">
-        <RadioButton
+        <CheckBox
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:id="@+id/shap_layout_btn"
             android:focusable="false"
             />
         <ImageView
