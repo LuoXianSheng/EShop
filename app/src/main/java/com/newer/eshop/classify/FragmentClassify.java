@@ -27,7 +27,7 @@ public class FragmentClassify extends Fragment implements AdapterView.OnItemClic
     private RightFragment rightFragment;
     private ListView listView;
     private ArrayList<String> data;
-    private ArrayAdapter<String> adapter;
+    private LeftListAdapter adapter;
     private HashMap<Integer, Fragment> fragments = new HashMap<>();
     FragmentTransaction transaction;
 
@@ -40,16 +40,18 @@ public class FragmentClassify extends Fragment implements AdapterView.OnItemClic
         for (int i = 0; i < 10; i++) {
             data.add("test" + i);
         }
-        adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, data);
+        adapter = new LeftListAdapter(getContext(), data);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(this);
-
         manager = getFragmentManager();
+        listView.performItemClick(listView.getAdapter().getView(0, null, null),
+                0, listView.getItemIdAtPosition(0));//模拟list点击
         return view;
     }
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        adapter.changeSelected(position);
         transaction = manager.beginTransaction();
         hideAll(transaction);
         if (fragments.containsKey(position)) {

@@ -17,18 +17,18 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".MainActivity"
-            android:launchMode="singleTask">
+            android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".goods.GoodsActivity"/>
-        <activity android:name=".account.LoginActivity" />
-        <activity android:name=".account.RegistActivity"/>
-        <activity android:name=".classify.ClassifyResultActivity" />
+
+        <activity android:name=".goods.GoodsActivity" android:theme="@style/OtherAppTheme"/>
+        <activity android:name=".account.LoginActivity" android:theme="@style/OtherAppTheme"/>
+        <activity android:name=".account.RegistActivity" android:theme="@style/OtherAppTheme"/>
+        <activity android:name=".classify.ClassifyResultActivity" android:theme="@style/AppThemeBlue"/>
 
         <!-- QQ的 -->
         <activity

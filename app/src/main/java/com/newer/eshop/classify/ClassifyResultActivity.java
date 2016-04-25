@@ -1,15 +1,19 @@
 package com.newer.eshop.classify;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.GridView;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.DecelerateInterpolator;
+import android.widget.FrameLayout;
+import android.widget.ImageButton;
+import android.widget.Toast;
 
-import com.etsy.android.grid.StaggeredGridView;
-import com.google.gson.Gson;
 import com.newer.eshop.App;
 import com.newer.eshop.R;
 import com.newer.eshop.bean.Goods;
@@ -23,41 +27,77 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class ClassifyResultActivity extends AppCompatActivity implements HttpDataListener {
+public class ClassifyResultActivity extends AppCompatActivity implements HttpDataListener, RecyclerAdapter.OnItemClickLitener {
 
-    private StaggeredGridView gridView;
     private ArrayList<Goods> list;
-    private ClassifyResultGridAdapter adapter;
     private int type_1, type_2;
     private Handler handler;
+
+    private RecyclerAdapter recyclerAdapter;
+    private Toolbar mToolbar;
+    private ImageButton mFabButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_classify_result);
 
+        initToolbar();
+        mFabButton = (ImageButton) findViewById(R.id.fabButton);
+        mFabButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(ClassifyResultActivity.this, "浮动按钮", Toast.LENGTH_SHORT).show();
+            }
+        });
+
         Intent intent = getIntent();
         type_1 = intent.getIntExtra("type_1", -1);
         type_2 = intent.getIntExtra("type_2", -1);
 
-        initView();
+        initRecyclerView();
     }
 
-    private void initView() {
+    private void initToolbar() {
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(mToolbar);
+        setTitle(getString(R.string.app_name));
+        mToolbar.setTitleTextColor(getResources().getColor(android.R.color.white));
+    }
+
+    private void initRecyclerView() {
         handler = new Handler();
-        gridView = (StaggeredGridView) findViewById(R.id.classifyresult_grid_view);
         list = new ArrayList<>();
-        adapter = new ClassifyResultGridAdapter(this, list);
-        gridView.setAdapter(adapter);
-        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
+        recyclerAdapter = new RecyclerAdapter(list);
+        recyclerView.setAdapter(recyclerAdapter);
+        recyclerView.addOnScrollListener(new HidingScrollListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(ClassifyResultActivity.this, GoodsActivity.class);
-                intent.putExtra("goodsId", list.get(position).getId());
-                startActivity(intent);
+            public void onHide() {
+                hideViews();
+            }
+
+            @Override
+            public void onShow() {
+                showViews();
             }
         });
+        recyclerAdapter.setOnItemClickLitener(this);
         getData();// 请求网络数据
+    }
+
+    private void hideViews() {
+        mToolbar.animate().translationY(-mToolbar.getHeight()).setInterpolator(new AccelerateInterpolator(2));
+
+        FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) mFabButton.getLayoutParams();
+        int fabBottomMargin = lp.bottomMargin;
+        mFabButton.animate().translationY(mFabButton.getHeight()+fabBottomMargin).setInterpolator(new AccelerateInterpolator(2)).start();
+    }
+
+    private void showViews() {
+        mToolbar.animate().translationY(0).setInterpolator(new DecelerateInterpolator(2));
+        mFabButton.animate().translationY(0).setInterpolator(new DecelerateInterpolator(2)).start();
     }
 
     private void getData() {
@@ -66,7 +106,8 @@ public class ClassifyResultActivity extends AppCompatActivity implements HttpDat
 
     @Override
     public void succeseful(String str) {
-        System.out.println("----------" + str);
+        list.add(new Goods());
+        list.add(new Goods());//添加两个header，作占位子的
         try {
             JSONArray array = new JSONArray(str);
             for (int i = 0; i < array.length(); i++) {
@@ -82,7 +123,7 @@ public class ClassifyResultActivity extends AppCompatActivity implements HttpDat
             handler.post(new Runnable() {
                 @Override
                 public void run() {
-                    adapter.notifyDataSetChanged();
+                    recyclerAdapter.notifyDataSetChanged();
                 }
             });
         } catch (JSONException e) {
@@ -93,5 +134,12 @@ public class ClassifyResultActivity extends AppCompatActivity implements HttpDat
     @Override
     public void loser(String str) {
 
+    }
+
+    @Override
+    public void onItemClick(View view, int position) {
+        Intent intent = new Intent(ClassifyResultActivity.this, GoodsActivity.class);
+        intent.putExtra("goodsId", list.get(position).getId());
+        startActivity(intent);
     }
 }

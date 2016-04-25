@@ -14,7 +14,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1.5px"
-        android:background="#ea8010"/>
+        android:background="#33475f"/>
 
     <LinearLayout
         android:id="@+id/ly_tab_bar"
@@ -29,7 +29,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:drawablePadding="3dp"
-            android:drawableTop="@drawable/tab_menu_recom_ic"
+            android:drawableTop="@drawable/tab_menu_index_ic"
             android:gravity="center"
             android:padding="5dp"
             android:text="首页"
@@ -42,7 +42,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:drawablePadding="3dp"
-            android:drawableTop="@drawable/tab_menu_bbs_ic"
+            android:drawableTop="@drawable/tab_menu_classify_ic"
             android:gravity="center"
             android:padding="5dp"
             android:text="分类"
@@ -55,7 +55,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:drawablePadding="3dp"
-            android:drawableTop="@drawable/tab_menu_bbs_ic"
+            android:drawableTop="@drawable/tab_menu_cart_ic"
             android:gravity="center"
             android:padding="5dp"
             android:text="购物车"

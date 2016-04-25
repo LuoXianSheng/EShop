@@ -59,7 +59,6 @@ public class RightFragment extends Fragment implements HttpDataListener, Adapter
         handler.post(new Runnable() {
             @Override
             public void run() {
-                System.out.println("+++++" + str);
                 try {
                     JSONArray array = new JSONArray(str);
                     for (int i = 0; i < array.length(); i++) {

@@ -5,27 +5,44 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.Window;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.newer.eshop.classify.FragmentClassify;
 import com.newer.eshop.me.FragmentMe;
 import com.newer.eshop.shopingcat.FragmentShopingCart;
-
-import org.greenrobot.eventbus.EventBus;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private TextView tv_index, tv_classify, tv_shopingcart, tv_me;
     private Fragment fragmentIndex, fragmentClassify, fragmentShopingCart, fragmentMe;
     private FragmentManager manager;
+    private ActionBar bar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        requestWindowFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        initActionBar();
         initView();
+    }
+
+    private void initActionBar() {
+        bar = getSupportActionBar();
+        bar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        bar.setCustomView(R.layout.actionbar);
+        bar.getCustomView().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(MainActivity.this, "Action被点击了", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void initView() {
@@ -50,6 +67,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         resetAllSelector();
         switch (v.getId()) {
             case R.id.main_tv_index:
+                bar.show();
                 tv_index.setSelected(true);
                 if (fragmentIndex == null) {
                     fragmentIndex = new FragmentIndex();
@@ -59,6 +77,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
                 break;
             case R.id.main_tv_classify:
+                bar.hide();
                 tv_classify.setSelected(true);
                 if (fragmentClassify == null) {
                     fragmentClassify = new FragmentClassify();
@@ -68,6 +87,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
                 break;
             case R.id.main_tv_shopingcart:
+                bar.hide();
                 tv_shopingcart.setSelected(true);
                 if (fragmentShopingCart == null) {
                     fragmentShopingCart = new FragmentShopingCart();
@@ -77,6 +97,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
                 break;
             case R.id.main_tv_me:
+                bar.hide();
                 tv_me.setSelected(true);
                 if (fragmentMe == null) {
                     fragmentMe = new FragmentMe();
