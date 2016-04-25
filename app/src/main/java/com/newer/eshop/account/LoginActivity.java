@@ -65,6 +65,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         mTencent = Tencent.createInstance(APP_ID, getApplicationContext());
         iUiListener = new MyListener();
+
+
+
     }
 
     public void initView() {
@@ -99,6 +102,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 .post(body)
                 .build();
 
+
+
+
         okHttpClient.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
@@ -127,6 +133,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+                setResult(RESULT_OK);
+
                 LoginActivity.this.finish();
             }
 
@@ -138,6 +146,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void exit(String xxx) {
         EventBus.getDefault().unregister(this);
+        setResult(RESULT_OK);
         LoginActivity.this.finish();
     }
 
@@ -186,6 +195,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             try {
                 Log.w("用户信息：", object.toString());
                 String openid = object.getString("openid");
+                Log.w("口令",object.toString());
+                String token=object.getString("access_token");
 
             } catch (JSONException e) {
                 e.printStackTrace();
