@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.newer.eshop.goods.good_product_Fragment">
+    tools:context="com.newer.eshop.goods.good_product_Fragment"
+    android:focusable="false">
 
 <android.support.v4.view.ViewPager
     android:layout_width="match_parent"
@@ -73,17 +74,28 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_gravity="center">
         <Button
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_weight="1"
             android:id="@+id/good_fragment_load"
-            android:text="加载更多的详情"/>
+            android:text="(数量)+"/>
+       <EditText
+           android:layout_width="50dp"
+           android:layout_height="match_parent"
+           android:id="@+id/good_fragment_count"
+           android:textAlignment="center"
+           android:focusable="false"/>
         <Button
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_weight="1"
             android:id="@+id/good_fragment_close"
-            android:text="关闭"/>
+            android:text="(数量)-"/>
+        </LinearLayout>
     </LinearLayout>
 </LinearLayout>

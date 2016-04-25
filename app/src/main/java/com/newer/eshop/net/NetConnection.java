@@ -7,6 +7,7 @@ import okhttp3.Callback;
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 
 /**
@@ -107,5 +108,55 @@ public class NetConnection {
                 listener.succeseful(response.body().string());
             }
         });
+    }
+
+    /**
+     * 请求购物车
+     */
+      public static void RequestShopCar(String url,String body,final HttpDataListener listener){
+          client=getOkHttpClientInstance();
+          FormBody formBody=new FormBody.Builder()
+                  .add("phone", body)
+                  .build();
+          Request request= new Request.Builder()
+                  .url(url)
+                 .post(formBody)
+                  .build();
+          client.newCall(request).enqueue(new Callback() {
+              @Override
+              public void onFailure(Call call, IOException e) {
+                  listener.loser("请求失败");
+              }
+
+              @Override
+              public void onResponse(Call call, Response response) throws IOException {
+                  listener.succeseful(response.body().string());
+              }
+          });
+      }
+    /**
+     * 点击加入购物车 将发送一个ID给服务器
+     */
+    public static void SendService(String url,String body,String user,final HttpDataListener listener){
+        client=getOkHttpClientInstance();
+        FormBody formBody=new FormBody.Builder()
+                .add("goodsid",body)
+                .add("phone",user)
+                .build();
+        Request request=new Request.Builder()
+                .url(url)
+                .post(formBody)
+                .build();
+           client.newCall(request).enqueue(new Callback() {
+               @Override
+               public void onFailure(Call call, IOException e) {
+                   listener.loser("请求失败");
+               }
+
+               @Override
+               public void onResponse(Call call, Response response) throws IOException {
+                   listener.succeseful(response.body().string());
+               }
+           });
     }
 }

@@ -1,6 +1,8 @@
 package com.newer.eshop.goods;
 
 
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -15,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
@@ -30,26 +33,28 @@ import com.newer.eshop.net.HttpDataListener;
 import com.newer.eshop.net.NetConnection;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 
 
-public class good_product_Fragment extends Fragment implements HttpDataListener{
+public class good_product_Fragment extends Fragment implements HttpDataListener,View.OnClickListener{
 
-     GoodsActivity good;
+
      ViewPager pager;
      int path;
-     TextView good_name;
-     TextView good_price;
-     TextView good_type;
-     TextView good_id;
-     TextView good_sell;
+     TextView good_name,good_price,good_type,good_id,good_sell;
+     Button add_btn,delete_btn;
+     EditText count_text;
      ArrayList<String> list;
      AdvVPagerAdapter adapter;
      ArrayList<Fragment> arrayList;
      Goods goods;
+     int count=0;
 
     Handler handler = new Handler() {
         @Override
@@ -61,7 +66,6 @@ public class good_product_Fragment extends Fragment implements HttpDataListener{
                 good_sell.setText("商品售量:" + goods.getSell());
                 good_id.setText("商品编号:" + goods.getId());
                 for (int i = 0; i < list.size(); i++) {
-                    System.out.println(list.get(i));
                     arrayList.add(new AdvFragment(list.get(i)));
                 }
                 adapter.notifyDataSetChanged();
@@ -75,18 +79,24 @@ public class good_product_Fragment extends Fragment implements HttpDataListener{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        EventBus.getDefault().register(this);
     }
 
     /**
      * 初始化ID
      */
     private void initID(View view) {
-       good_id=(TextView)view.findViewById(R.id.goods_produt_id);
+        good_id=(TextView)view.findViewById(R.id.goods_produt_id);
         good_sell=(TextView)view.findViewById(R.id.goods_produt_sell);
         good_name=(TextView)view.findViewById(R.id.goods_produt_name);
         good_price=(TextView)view.findViewById(R.id.goods_produt_price);
         good_type=(TextView)view.findViewById(R.id.goods_produt_type);
         pager=(ViewPager)view.findViewById(R.id.good_fragment_product);
+        add_btn=(Button)view.findViewById(R.id.good_fragment_load);
+        delete_btn=(Button)view.findViewById(R.id.good_fragment_close);
+        add_btn.setOnClickListener(this);
+        delete_btn.setOnClickListener(this);
+        count_text=(EditText)view.findViewById(R.id.good_fragment_count);
         list=new ArrayList<>();
         arrayList=new ArrayList<>();
         adapter=new AdvVPagerAdapter(getFragmentManager(),arrayList);
@@ -105,28 +115,12 @@ public class good_product_Fragment extends Fragment implements HttpDataListener{
                              Bundle savedInstanceState) {
         final View view=inflater.inflate(R.layout.fragment_good_product, container, false);
         initID(view);
-        Button b = (Button)view.findViewById(R.id.good_fragment_load);
-        b.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                good = (GoodsActivity) getActivity();
-                View view1 = View.inflate(good, R.layout.goods_fragment_popub, null);
-                final PopupWindow window = new PopupWindow(view1, 400, 200);
-                if (v.getId() == R.id.good_fragment_load) {
-                    window.showAsDropDown(view1);
-                    window.showAtLocation(view1, Gravity.CENTER, 20, 20);
-                } else if (v.getId() == R.id.good_fragment_close) {
-                    window.dismiss();
-                }
-            }
-        });
-        NetConnection.getOneGoods("http://192.168.191.1:8080/Eshop/onegoods?goodsId="+path , this);
+        NetConnection.getOneGoods("http://192.168.191.1:8080/Eshop/onegoods?goodsId=" + path, this);
         return view;
     }
 
     @Override
     public void succeseful(String str) {
-        System.out.println(str);
         Gson gson;
         try {
             JSONObject object=new JSONObject(str);
@@ -142,7 +136,6 @@ public class good_product_Fragment extends Fragment implements HttpDataListener{
                 message.what=0;
                 handler.sendMessage(message);
             }else{
-                System.out.println("请先连接网络!");
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -151,5 +144,42 @@ public class good_product_Fragment extends Fragment implements HttpDataListener{
 
     @Override
     public void loser(String str) {
+    }
+
+
+
+    @Override
+    public void onClick(View v) {
+        GoodsActivity goods=(GoodsActivity)getActivity();
+        if(v.getId()==R.id.good_fragment_load){
+            ++count;
+            count_text.setText("" + count);
+        }else{
+            if(count==0){
+                Toast.makeText(goods,"请先添加数量!", Toast.LENGTH_SHORT).show();
+            }else {
+                --count;
+                count_text.setText("" + count);
+            }
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
+
+    /**
+     * 添加减少数量的点击事件
+     * @param v
+     */
+
+    public void addAnddelete(View v){
+
+    }
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void bb(String str) {
+        EventBus.getDefault().post(count);
     }
 }
