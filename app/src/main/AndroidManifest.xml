@@ -24,7 +24,7 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-
+        <activity android:name=".goods.GoodsCarActivity" android:theme="@style/OtherAppTheme"/>
         <activity android:name=".goods.GoodsActivity" android:theme="@style/OtherAppTheme"/>
         <activity android:name=".account.LoginActivity" android:theme="@style/OtherAppTheme"/>
         <activity android:name=".account.RegistActivity" android:theme="@style/OtherAppTheme"/>
