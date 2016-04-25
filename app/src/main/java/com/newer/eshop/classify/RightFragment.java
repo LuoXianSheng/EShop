@@ -51,7 +51,7 @@ public class RightFragment extends Fragment implements HttpDataListener, Adapter
     }
 
     private void getClassifyData() {
-        NetConnection.getClassifyData(App.GOODSCLASSIFY_URL, type_1, this);
+        NetConnection.getClassifyData(getContext(), App.GOODSCLASSIFY_URL, type_1, this);
     }
 
     @Override

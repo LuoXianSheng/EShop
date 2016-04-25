@@ -19,6 +19,7 @@ import com.newer.eshop.R;
 import com.newer.eshop.bean.Goods;
 import com.newer.eshop.goods.GoodsActivity;
 import com.newer.eshop.goods.GoodsCarActivity;
+import com.newer.eshop.myview.MyProDialog;
 import com.newer.eshop.net.HttpDataListener;
 import com.newer.eshop.net.NetConnection;
 
@@ -102,7 +103,7 @@ public class ClassifyResultActivity extends AppCompatActivity implements HttpDat
     }
 
     private void getData() {
-        NetConnection.getClassifyResult(App.SERVICE_URL + "/classifyresult", type_1, type_2, this);
+        NetConnection.getClassifyResult(this, App.SERVICE_URL + "/classifyresult", type_1, type_2, this);
     }
 
     @Override

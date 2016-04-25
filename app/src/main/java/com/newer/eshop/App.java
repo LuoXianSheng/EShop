@@ -20,6 +20,8 @@ import java.io.File;
  */
 public class App extends Application {
 
+    public static final String DIALOG_TITLE = "正在加载...";
+
     public static final String SERVICE_URL = "http://192.168.191.1:8080/Eshop";
     public static final String SERVICE_CLASSIFY_IMAGES_URL = SERVICE_URL + "/images/classify";
     public static final String SERVICE_IMAGES_URL = SERVICE_URL + "/images/";
