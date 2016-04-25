@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.Window;
 import android.widget.TextView;
@@ -23,12 +24,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private FragmentManager manager;
     private ActionBar bar;
 
+    DisplayMetrics dm = new DisplayMetrics();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         requestWindowFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        getWindowManager().getDefaultDisplay().getMetrics(dm);
+        Toast.makeText(MainActivity.this, "" + dm.heightPixels, Toast.LENGTH_SHORT).show();
         initActionBar();
         initView();
     }
@@ -70,7 +75,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 bar.show();
                 tv_index.setSelected(true);
                 if (fragmentIndex == null) {
-                    fragmentIndex = new FragmentIndex();
+                    fragmentIndex = new FragmentIndex(dm.heightPixels);
                     transaction.add(R.id.main_frameLayout, fragmentIndex);
                 } else {
                     transaction.show(fragmentIndex);

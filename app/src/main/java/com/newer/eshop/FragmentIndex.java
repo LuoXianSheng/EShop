@@ -7,6 +7,7 @@ import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,6 +44,12 @@ public class FragmentIndex extends Fragment {
     private Handler handler;
     private ArrayList<String> data;
     private int viewPagerIndex = 0;
+
+    private int heightPixels;
+
+    public FragmentIndex(int heightPixels) {
+        this.heightPixels = heightPixels;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -142,7 +149,8 @@ public class FragmentIndex extends Fragment {
         View view = LayoutInflater.from(getContext()).inflate(R.layout.index_adv_viewpager, null);
         final ViewPager mViewPager = (ViewPager) view.findViewById(R.id.advVPager);
         mViewPager.getParent().requestDisallowInterceptTouchEvent(false);
-        mViewPager.setLayoutParams(new StaggeredGridView.LayoutParams(StaggeredGridView.LayoutParams.MATCH_PARENT, 600));
+        mViewPager.setLayoutParams(new StaggeredGridView.LayoutParams(
+                StaggeredGridView.LayoutParams.MATCH_PARENT, heightPixels / 4));
         mViewPager.setAdapter(new AdvVPagerAdapter(getFragmentManager(), advList));
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
