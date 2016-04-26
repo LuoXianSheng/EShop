@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -13,6 +12,7 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.newer.eshop.App;
 import com.newer.eshop.R;
+import com.newer.eshop.bean.MyEvent;
 import com.newer.eshop.bean.User;
 import com.tencent.tauth.IUiListener;
 import com.tencent.tauth.Tencent;
@@ -62,7 +62,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         editor = preferences.edit();
         initView();
 
-
         mTencent = Tencent.createInstance(APP_ID, getApplicationContext());
         iUiListener = new MyListener();
 
@@ -77,7 +76,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 finish();
             }
         });
-        findViewById(R.id.tv_regist).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.tv_regist).setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(LoginActivity.this, RegistActivity.class));
@@ -128,14 +127,25 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         editor.putString("address", user.getAddress());
                         editor.putString("phone", String.valueOf(user.getPhone()));
                         editor.commit();
+
+                        setResult(RESULT_OK);
+
+                        LoginActivity.this.finish();
+
+                    }
+                    else {
+                        MyEvent myEvent=new MyEvent();
+                        myEvent.setAction("response");
+                        myEvent.setData(data);
+
+                        EventBus.getDefault().post(myEvent);
+
                     }
 
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                setResult(RESULT_OK);
 
-                LoginActivity.this.finish();
             }
 
 
@@ -143,11 +153,23 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     }
 
+
+
+
+
+
+
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void exit(String xxx) {
-        EventBus.getDefault().unregister(this);
-        setResult(RESULT_OK);
-        LoginActivity.this.finish();
+    public void exit(MyEvent myEvent) {
+        if (myEvent.getAction().equals("response")){
+            setResult(RESULT_OK);
+
+        }else if (myEvent.getAction().equals("exit")){
+            EventBus.getDefault().unregister(this);
+            LoginActivity.this.finish();
+
+        }
+
     }
 
 
@@ -191,16 +213,52 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     "msg":"sucess",
                     "access_token":"xxxxxxxxxxxxxxxxxxxxx"
             }*/
-            JSONObject object = (JSONObject) o;
-            try {
-                Log.w("用户信息：", object.toString());
-                String openid = object.getString("openid");
-                Log.w("口令",object.toString());
-                String token=object.getString("access_token");
+            OkHttpClient okHttpClient =new OkHttpClient();
+            String url="http://192.168.191.1:8080/Eshop/oauth2reigst";
+            FormBody body =new FormBody.Builder()
+                    .add("time",System.currentTimeMillis()+"")
+                    .build();
+            Request request = new Request.Builder()
+                    .url(url)
+                    .post(body)
+                    .build();
+            okHttpClient.newCall(request).enqueue(new Callback() {
+                @Override
+                public void onFailure(Call call, IOException e) {
+                    System.out.println("失败");
+                }
 
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+                    System.out.println("成功");
+                    String qqdata =response.body().string();
+                    try {
+                        JSONObject jsonObject = new JSONObject(qqdata);
+                        if(jsonObject.getString("status").equals(App.STATUS_SUCCESS)){
+
+
+                            editor.putString(Key, jsonObject.getString("token"));
+                            editor.putString("phone", jsonObject.getString("phone"));
+                            editor.commit();
+
+                            System.out.println("++++++++++++++"+jsonObject.getString("token"));
+                            System.out.println("++++++++++++++++"+jsonObject.getString("phone"));
+
+
+                        }
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+
+
+
+            MyEvent myEvent=new MyEvent();
+            myEvent.setAction("exit");
+            EventBus.getDefault().post(myEvent);
+
         }
 
         @Override

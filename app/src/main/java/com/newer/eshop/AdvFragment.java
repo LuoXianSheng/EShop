@@ -16,7 +16,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 public class AdvFragment extends Fragment {
 
     private String imgPath;
-
+    public  AdvFragment(){}
     public AdvFragment(String imgPath) {
         this.imgPath = imgPath;
     }

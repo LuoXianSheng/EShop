@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
 
 
@@ -55,9 +57,11 @@
         />
 
 
-    <EditText
+    <com.rengwuxian.materialedittext.MaterialEditText
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="70dp"
+        app:met_minCharacters="11"
+        app:met_maxCharacters="11"
         android:background="#fff"
         android:drawableLeft="@drawable/regist_phone_im"
         android:id="@+id/edt_name"
@@ -65,10 +69,12 @@
         android:inputType="phone"
         />
 
-    <EditText
+    <com.rengwuxian.materialedittext.MaterialEditText
         android:layout_marginTop="2dp"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="70dp"
+       app:met_minCharacters="6"
+        app:met_maxCharacters="12"
         android:drawableLeft="@drawable/login_psw_im"
         android:background="#fff"
         android:id="@+id/edt_psw"

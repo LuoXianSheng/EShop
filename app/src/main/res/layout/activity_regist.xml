@@ -3,7 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-  android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
     tools:context="com.newer.eshop.account.RegistActivity">
 
 
@@ -42,44 +43,65 @@
     </LinearLayout>
 
 
-    <EditText
+    <com.rengwuxian.materialedittext.MaterialEditText
         android:id="@+id/edt_username"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="80dp"
+        app:met_floatingLabel="highlight"
+        app:met_baseColor="#0056d3"
+        app:met_maxCharacters="11"
+        app:met_primaryColor="#24d4e4"
         android:background="#fff"
         android:drawableLeft="@drawable/login_user_im"
         android:hint="账号/用户名/邮箱"
         />
 
-    <EditText
+    <com.rengwuxian.materialedittext.MaterialEditText
         android:layout_marginTop="2dp"
         android:id="@+id/edt_password"
+        app:met_baseColor="#0056d3"
+        app:met_primaryColor="#24d4e4"
+        app:met_minCharacters="6"
+        app:met_maxCharacters="12"
+        app:met_floatingLabel="highlight"
         android:drawableLeft="@drawable/login_psw_im"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="80dp"
         android:background="#fff"
         android:hint="请输入密码"
         />
 
-    <EditText
+    <com.rengwuxian.materialedittext.MaterialEditText
         android:layout_marginTop="2dp"
         android:id="@+id/edt_password2"
+        app:met_baseColor="#0056d3"
+        app:met_minCharacters="6"
+        app:met_maxCharacters="12"
+        android:layout_marginLeft="5dp"
+        app:met_primaryColor="#24d4e4"
         android:drawableLeft="@drawable/login_psw_im"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        app:met_floatingLabel="highlight"
+        android:layout_height="80dp"
         android:background="#fff"
         android:hint="请再次输入密码"
         />
-    <EditText
+    <com.rengwuxian.materialedittext.MaterialEditText
         android:layout_marginTop="2dp"
         android:id="@+id/edt_phone"
+        app:met_floatingLabel="highlight"
+        android:layout_marginLeft="5dp"
+        app:met_baseColor="#0056d3"
+        app:met_maxCharacters="11"
+        app:met_primaryColor="#24d4e4"
         android:drawableLeft="@drawable/regist_phone_im"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="80dp"
         android:background="#fff"
 
         android:hint="请输入手机"
         />
+
 
 
 
@@ -91,5 +113,7 @@
         android:gravity="center"
         android:id="@+id/btn_regist"
         android:layout_gravity="center_horizontal" />
+
+
 
 </LinearLayout>
