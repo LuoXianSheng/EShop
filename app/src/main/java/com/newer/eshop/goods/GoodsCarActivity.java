@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
@@ -29,8 +30,6 @@ import com.newer.eshop.classify.ClassifyResultActivity;
 import com.newer.eshop.net.HttpDataListener;
 import com.newer.eshop.net.NetConnection;
 import com.nostra13.universalimageloader.core.ImageLoader;
-
-import java.security.PublicKey;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
@@ -181,8 +180,10 @@ public class GoodsCarActivity extends AppCompatActivity implements HttpDataListe
         private void total() {
             //map中为true的值来找到对应的key，这个key就是checkbox中选中的那项，有了这个key就可以去list中拿到price
             Set<Integer> set = map.keySet();
+            //拿到map中所有的键
             float sum = 0;
             for (Integer i : set) {
+                //如果这个键等于true就是我想要的
                 if (map.get(i) == true) {
                     sum += list.get(i).getPrice();
                 }
@@ -214,8 +215,9 @@ public class GoodsCarActivity extends AppCompatActivity implements HttpDataListe
             TextView textView2;
             TextView textView3;
             TextView textView4;
-             CheckBox box;
+            CheckBox box;
         }
+
      }
 
     /**

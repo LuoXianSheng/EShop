@@ -41,14 +41,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="60dp"
                 android:text="商品名字:"
-                android:gravity="center"
                 android:id="@+id/shap_layout_name"
                 android:textSize="13sp"/>
             <TextView
                 android:layout_width="wrap_content"
-                android:layout_height="60dp"
+                android:layout_height="50dp"
                 android:text="商品ID:"
-                android:gravity="center"
                 android:id="@+id/shap_layout_id"
                 android:textSize="13sp"/>
         </LinearLayout>
@@ -59,14 +57,12 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="60dp"
-                    android:gravity="center"
                     android:id="@+id/shap_layout_price"
                     android:text="价格:"/>
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="60dp"
-                    android:gravity="center"
-                    android:text="商品数量:"
+                    android:text="数量:"
                     android:id="@+id/shap_layout_count"/>
             </LinearLayout>
         </LinearLayout>

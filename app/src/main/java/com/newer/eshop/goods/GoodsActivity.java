@@ -3,6 +3,7 @@ package com.newer.eshop.goods;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -24,8 +25,8 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.util.ArrayList;
+
 
 /**
  * Created by Administrator on 2016/4/21.
@@ -39,6 +40,16 @@ public class GoodsActivity extends AppCompatActivity implements HttpDataListener
      ArrayList<Fragment> list;
      int goodsId;
      String name;
+     Integer count;
+
+     android.os.Handler handler=new android.os.Handler(){
+         @Override
+         public void handleMessage(Message msg) {
+            if(msg.what==0){
+                count=(Integer)msg.obj;
+            }
+         }
+     };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +62,7 @@ public class GoodsActivity extends AppCompatActivity implements HttpDataListener
         goodsId=intent.getIntExtra("goodsId", -1);
         SharedPreferences sharedPreferences=getSharedPreferences("login_user_im",MODE_PRIVATE);
         name=sharedPreferences.getString("phone",null);
+
         initId();
         good_FragmentManger manger=new good_FragmentManger(getSupportFragmentManager()
                 ,list);
@@ -99,7 +111,10 @@ public class GoodsActivity extends AppCompatActivity implements HttpDataListener
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void a(Integer count) {
-        NetConnection.SendService(GoodsActivity.this,"http://192.168.191.1:8080/Eshop/tocart", String.valueOf(goodsId), name, this);
+        NetConnection.SendService(GoodsActivity.this, "http://192.168.191.1:8080/Eshop/tocart", String.valueOf(goodsId), name, this);
+        Message message=new Message();
+        message.what=0;
+        message.obj=count;
     }
 
     @Override
@@ -132,5 +147,19 @@ public class GoodsActivity extends AppCompatActivity implements HttpDataListener
     protected void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
+    }
+
+    /**
+     * 立即购买
+     * @param view
+     */
+
+    public void Buy(View view){
+        Intent intent=new Intent();
+        intent.putExtra("id", goodsId);
+        intent.putExtra("count", count);
+        System.out.println("你好!" + count);
+        intent.setClass(GoodsActivity.this,GoodsBuy.class);
+        startActivity(intent);
     }
 }
