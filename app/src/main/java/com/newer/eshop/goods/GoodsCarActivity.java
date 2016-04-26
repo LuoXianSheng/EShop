@@ -150,7 +150,7 @@ public class GoodsCarActivity extends AppCompatActivity implements HttpDataListe
                          map.put(position, false);
                      }
                      total();//每一次checkBox变化的时候都去统计下钱
-//                     ckCheckBoxStatus();
+                     ckCheckBoxStatus();
                  }
              });
              /**
@@ -164,22 +164,24 @@ public class GoodsCarActivity extends AppCompatActivity implements HttpDataListe
              return view;
          }
 
-//        private void ckCheckBoxStatus() {
-//            Set<Integer> set = map.keySet();
-//            boolean isTrue = false;
-//            for (Integer i : set) {
-//                if (!map.get(i)) {
-//                    continue;
-//                }
-//            }
-//            if (isTrue) {
-//                checkBox.setChecked(true);
-//                isCheckAll = true;
-//            } else {
-//                checkBox.setChecked(false);
-//                isCheckAll = false;
-//            }
-//        }
+        private void ckCheckBoxStatus() {
+            Set<Integer> set = map.keySet();
+            boolean isTrue = false;
+            for (Integer i : set) {
+                if (map.get(i)) {
+                    isTrue = true;
+                } else {
+                    isTrue = false;
+                }
+            }
+            if (isTrue) {
+                checkBox.setChecked(true);
+                isCheckAll = true;
+            } else {
+                checkBox.setChecked(false);
+                isCheckAll = false;
+            }
+        }
 
         private void total() {
             //map中为true的值来找到对应的key，这个key就是checkbox中选中的那项，有了这个key就可以去list中拿到price
