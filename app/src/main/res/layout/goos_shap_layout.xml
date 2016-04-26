@@ -49,6 +49,14 @@
                 android:text="商品ID:"
                 android:id="@+id/shap_layout_id"
                 android:textSize="13sp"/>
+
+            <TextView
+                android:textSize="13sp"
+                android:id="@+id/shap_layou_total"
+                android:text="小计"
+                android:layout_width="wrap_content"
+                android:layout_weight="1"
+                android:layout_height="0dp"/>
         </LinearLayout>
             <LinearLayout
                 android:layout_width="70dp"

@@ -53,6 +53,7 @@
             android:id="@+id/goods_shapcar_check"
             android:layout_centerVertical="true"
             />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -75,5 +76,15 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:text="结算"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="删除"
+            android:onClick="delete"
+            android:layout_marginLeft="5dp"
+            android:id="@+id/goods_car_delete"
+            android:layout_centerVertical="true"
+            android:layout_toEndOf="@+id/goods_shapcar_check"/>
     </RelativeLayout>
 </LinearLayout>

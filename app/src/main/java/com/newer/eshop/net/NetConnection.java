@@ -165,12 +165,14 @@ public class NetConnection {
     /**
      * 点击加入购物车 将发送一个ID给服务器
      */
-    public static void SendService(Context context, String url, String body, String user, final HttpDataListener listener) {
+    public static void SendService(Context context, String url, String body, String user,
+                                   String count, final HttpDataListener listener) {
         client = getOkHttpClientInstance();
         showDialog(context);
         FormBody formBody = new FormBody.Builder()
                 .add("goodsid", body)
                 .add("phone", user)
+                .add("count", count)
                 .build();
         Request request = new Request.Builder()
                 .url(url)
@@ -195,5 +197,31 @@ public class NetConnection {
         MyProDialog myProDialog = new MyProDialog(context, App.DIALOG_TITLE);
         dialog = myProDialog.create();
         dialog.show();
+    }
+
+    public static void deleteGoods(Context context, String url, String phone, String data, final HttpDataListener listener) {
+        client = getOkHttpClientInstance();
+        showDialog(context);
+        FormBody body = new FormBody.Builder()
+                .add("phone", phone)
+                .add("data", data)
+                .build();
+        Request request = new Request.Builder()
+                .url(url)
+                .post(body)
+                .build();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                dialog.dismiss();
+                listener.loser("请求失败");
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                dialog.dismiss();
+                listener.succeseful(response.body().string());
+            }
+        });
     }
 }

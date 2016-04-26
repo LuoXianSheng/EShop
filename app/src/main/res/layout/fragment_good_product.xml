@@ -86,6 +86,7 @@
             android:id="@+id/good_fragment_load"
             android:text="(数量)+"/>
        <EditText
+           android:text="1"
            android:layout_width="50dp"
            android:layout_height="match_parent"
            android:id="@+id/good_fragment_count"

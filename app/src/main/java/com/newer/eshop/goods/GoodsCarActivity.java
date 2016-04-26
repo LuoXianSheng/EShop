@@ -1,35 +1,41 @@
 package com.newer.eshop.goods;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.newer.eshop.App;
 import com.newer.eshop.R;
 import com.newer.eshop.account.LoginActivity;
+import com.newer.eshop.bean.Cart;
+import com.newer.eshop.bean.CBox;
 import com.newer.eshop.bean.Goods;
-import com.newer.eshop.classify.ClassifyResultActivity;
 import com.newer.eshop.net.HttpDataListener;
 import com.newer.eshop.net.NetConnection;
 import com.nostra13.universalimageloader.core.ImageLoader;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
@@ -37,22 +43,21 @@ import java.util.Set;
 public class GoodsCarActivity extends AppCompatActivity implements HttpDataListener{
 
     ListView listView;
-    ArrayList<Goods> list;
+    ArrayList<Cart> list;
     CheckBox checkBox;
-    HashMap<Integer,Boolean> map;
+    HashMap<Integer, Boolean> map;
     TextView shopcar_count;
-    ArrayList<Float> text_count;
     ShaoMyadapter shaoMyadapter;
+    String phone;
+    boolean isCheckAll = false;//判断全选状态
 
 
     private Handler handler=new Handler(){
         @Override
         public void handleMessage(Message msg) {
-           if(msg.what==0){
-              shaoMyadapter=new ShaoMyadapter(list,GoodsCarActivity.this);
-               listView.setAdapter(shaoMyadapter);
-
-           }
+            checkBox.setChecked(false);//初始化全选按钮
+            shopcar_count.setText(0.0 + "元");
+            shaoMyadapter.notifyDataSetChanged();
         }
     };
 
@@ -62,9 +67,6 @@ public class GoodsCarActivity extends AppCompatActivity implements HttpDataListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_goods_car);
         initID();
-        UserLogin();
-        map=new HashMap<>();
-        text_count=new ArrayList<>();
     }
 
     /**
@@ -72,6 +74,9 @@ public class GoodsCarActivity extends AppCompatActivity implements HttpDataListe
      */
     private void initID() {
         listView=(ListView)findViewById(R.id.goods_shopcar_list);
+        list = new ArrayList<>();
+        shaoMyadapter=new ShaoMyadapter();
+        listView.setAdapter(shaoMyadapter);
         checkBox=(CheckBox)findViewById(R.id.goods_shapcar_check);
         shopcar_count=(TextView)findViewById(R.id.goods_shopcar_count);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -80,6 +85,7 @@ public class GoodsCarActivity extends AppCompatActivity implements HttpDataListe
                 Toast.makeText(GoodsCarActivity.this, "我是:" + position, Toast.LENGTH_SHORT).show();
             }
         });
+        UserLogin();
     }
 
 
@@ -88,107 +94,103 @@ public class GoodsCarActivity extends AppCompatActivity implements HttpDataListe
      */
      class ShaoMyadapter extends BaseAdapter{
 
-        //商品的集合
-        ArrayList<Goods> list;
-        Context context;
 
-       public ShaoMyadapter(ArrayList<Goods> list,Context context){
-           this.list=list;
-           this.context=context;
+       public ShaoMyadapter(){
        }
 
          @Override
          public int getCount() {
-             if(list == null){
-                 return 0;
-             }else{
-                 return list.size();
-             }
+             return list.size();
          }
 
          @Override
          public Object getItem(int position) {
-             return null;
+             return list.get(position);
          }
 
          @Override
          public long getItemId(int position) {
-             return 0;
+             return position;
          }
 
          @Override
-         public View getView(final int position, View convertView, ViewGroup parent) {
-             final View view;
+         public View getView(final int position, View view, ViewGroup parent) {
              final ViewHolder viewHolder;
-             if(convertView==null){
-                 view=View.inflate(context,R.layout.goos_shap_layout,null);
+             if(view==null){
+                 view = LayoutInflater.from(GoodsCarActivity.this).inflate(R.layout.goos_shap_layout, null);
                  viewHolder=new ViewHolder();
                  viewHolder.imageView=(ImageView)view.findViewById(R.id.shap_layout_image);
                  viewHolder.textView1=(TextView)view.findViewById(R.id.shap_layout_name);
                  viewHolder.textView2=(TextView)view.findViewById(R.id.shap_layout_id);
                  viewHolder.textView3=(TextView)view.findViewById(R.id.shap_layout_price);
                  viewHolder.box=(CheckBox)view.findViewById(R.id.shap_layout_btn);
+                 viewHolder.textView4= (TextView) view.findViewById(R.id.shap_layout_count);
+                 viewHolder.shap_layou_total= (TextView) view.findViewById(R.id.shap_layou_total);
                  view.setTag(viewHolder);
              }else{
-                 view=convertView;
                  viewHolder=(ViewHolder)view.getTag();
              }
-             String[] str=list.get(position).getImage_path().split(",");
+             String[] str=list.get(position).getGoods().getImage_path().split(",");
              ImageLoader.getInstance().displayImage("http://192.168.191.1:8080/Eshop/images/" + str[0] + ".jpg"
                      , viewHolder.imageView);
-             viewHolder.textView1.setText("商品名字:" + list.get(position).getName());
-             viewHolder.textView2.setText("商品编号:" + list.get(position).getId());
-             viewHolder.textView3.setText("商品价格:" + list.get(position).getPrice());
+             viewHolder.textView1.setText("商品名字：" + list.get(position).getGoods().getName());
+             viewHolder.textView2.setText("商品编号：" + list.get(position).getGoods().getId());
+             viewHolder.textView3.setText("商品价格：" + list.get(position).getGoods().getPrice());
+             viewHolder.textView4.setText("数量：" + list.get(position).getCount());
+             viewHolder.shap_layou_total.setText("小计：" + (list.get(position).getGoods().getPrice() *
+                     list.get(position).getCount()) + "元");
              viewHolder.box.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                  @Override
                  public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                      if (isChecked == true) {
                          map.remove(position);
                          map.put(position, true);
-//                         viewHolder.box.setChecked(map.get(position));
-//                         text_count.add(list.get(position).getPrice());
-//                         float s=0;
-//                         for(int i=0;i<text_count.size();i++){
-//                            s+=text_count.get(i);
-//                         }
-//                         shopcar_count.setText(s+"元");
                      } else {
                          map.remove(position);
                          map.put(position, false);
-//                         viewHolder.box.setChecked(map.get(position));
-//                         text_count.remove(list.get(position).getPrice());
-//                         float s=0;
-//                         for(int i=0;i<text_count.size();i++){
-//                             s+=text_count.get(i);
-//                         }
-//                         shopcar_count.setText(s+"元");
                      }
                      total();//每一次checkBox变化的时候都去统计下钱
+//                     ckCheckBoxStatus();
                  }
              });
              /**
               * 如果此映射包含指定的包含关系将返回true,
               */
-             if(map.containsKey(position)){
-                viewHolder.box.setChecked(map.get(position));
-             }else{
+             if (map.containsKey(position)) {
+                 viewHolder.box.setChecked(true);
+             } else {
                  viewHolder.box.setChecked(false);
              }
-                 return view;
+             return view;
          }
+
+//        private void ckCheckBoxStatus() {
+//            Set<Integer> set = map.keySet();
+//            boolean isTrue = false;
+//            for (Integer i : set) {
+//                if (!map.get(i)) {
+//                    continue;
+//                }
+//            }
+//            if (isTrue) {
+//                checkBox.setChecked(true);
+//                isCheckAll = true;
+//            } else {
+//                checkBox.setChecked(false);
+//                isCheckAll = false;
+//            }
+//        }
 
         private void total() {
             //map中为true的值来找到对应的key，这个key就是checkbox中选中的那项，有了这个key就可以去list中拿到price
-            Set<Integer> set = map.keySet();
-            //拿到map中所有的键
             float sum = 0;
+            Set<Integer> set = map.keySet();
             for (Integer i : set) {
-                //如果这个键等于true就是我想要的
-                if (map.get(i) == true) {
-                    sum += list.get(i).getPrice();
+                if (map.get(i)) {
+                    sum += list.get(i).getGoods().getPrice() * list.get(i).getCount();
                 }
             }
-            shopcar_count.setText(sum+"元");
+            shopcar_count.setText(sum + "元");
         }
 
        public void ischecke(){
@@ -202,7 +204,7 @@ public class GoodsCarActivity extends AppCompatActivity implements HttpDataListe
         public void unIscheck() {
             map.clear();
             for (int i = 0; i < list.size(); i++) {
-                map.put(i, false);
+                map.put(i, true);
             }
             notifyDataSetChanged();
         }
@@ -215,9 +217,9 @@ public class GoodsCarActivity extends AppCompatActivity implements HttpDataListe
             TextView textView2;
             TextView textView3;
             TextView textView4;
-            CheckBox box;
+            TextView shap_layou_total;
+             CheckBox box;
         }
-
      }
 
     /**
@@ -226,13 +228,39 @@ public class GoodsCarActivity extends AppCompatActivity implements HttpDataListe
      */
     @Override
     public void succeseful(String str) {
-        Gson gson=new Gson();
-        list=new ArrayList<>();
-        list=gson.fromJson(str,new TypeToken<ArrayList<Goods>>(){}.getType());
-        Message message=new Message();
-        message.obj=list;
-        message.what=0;
-        handler.sendMessage(message);
+        if (str.length() <= 0) return;
+        try {
+            JSONObject object = new JSONObject(str);
+            String status = object.getString("status");
+            if (status.equals(App.STATUS_SUCCESS)) {
+                Gson gson = new Gson();
+                list = new ArrayList<>();
+                map = new HashMap<>();
+                list = gson.fromJson(object.getString("data"), new TypeToken<ArrayList<Cart>>() {
+                }.getType());
+            } else if (status.equals(App.STATUS_LOSE)) {
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(GoodsCarActivity.this, "空的购物车！", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            } else {
+                map.clear();
+                list.clear();
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        NetConnection.RequestShopCar(GoodsCarActivity.this, "http://192.168.191.1:8080/Eshop/shopingcart",
+                                phone, GoodsCarActivity.this);
+                    }
+                });
+            }
+            handler.sendEmptyMessage(1);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
     }
 
     /**
@@ -247,16 +275,16 @@ public class GoodsCarActivity extends AppCompatActivity implements HttpDataListe
     /**
      * 判断当前是那个用户登入的,否则就将物品加入购物车
      */
-    public void UserLogin(){
-        SharedPreferences sharedPreferences=getSharedPreferences("login_user_im", MODE_PRIVATE);
-        String str=sharedPreferences.getString("phone", null);
-        String name=sharedPreferences.getString("name",null);
-        if(str==null && name==null){
-            AlertDialog.Builder builder=new AlertDialog.Builder(this);
+    public void UserLogin() {
+        SharedPreferences sharedPreferences = getSharedPreferences("login_user_im", MODE_PRIVATE);
+        phone = sharedPreferences.getString("phone", null);
+        String name = sharedPreferences.getString("name", null);
+        if (phone == null && name == null) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("请先登入!")
                     .setMessage("温馨提示：请先登入!")
                     .setIcon(R.mipmap.ic_launcher)
-                    .setNeutralButton("取消",null)
+                    .setNeutralButton("取消", null)
                     .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
@@ -265,11 +293,11 @@ public class GoodsCarActivity extends AppCompatActivity implements HttpDataListe
                         }
                     })
                     .show();
-        }else{
-            NetConnection.RequestShopCar(GoodsCarActivity.this, "http://192.168.191.1:8080/Eshop/shopingcart", str, this);
+        } else {
+            NetConnection.RequestShopCar(GoodsCarActivity.this, "http://192.168.191.1:8080/Eshop/shopingcart",
+                    phone, this);
         }
     }
-
     /**
      * 登入成功了，你要去请求购物车的数据
      * @param requestCode
@@ -295,21 +323,12 @@ public class GoodsCarActivity extends AppCompatActivity implements HttpDataListe
      * @param view
      */
     public void backs(View view){
-        Intent intent=new Intent();
-        intent.setClass(GoodsCarActivity.this, ClassifyResultActivity.class);
-        startActivity(intent);
+        finish();
     }
     /**
      * checkBox的点击事件
      */
      public void check_text(View view){
-//        //如果点击了的话就所有的checkbox所有的选项选中，否则就不选中
-//         if(checkBox.isChecked()){
-//             System.out.println(map.size());
-//
-//         }else{
-//             System.out.println(map.size());
-//         }
          if (!isCheckAll) {
              shaoMyadapter.ischecke();
              isCheckAll = true;
@@ -320,5 +339,19 @@ public class GoodsCarActivity extends AppCompatActivity implements HttpDataListe
 
      }
 
-    boolean isCheckAll = false;//判断全选状态
+    public void delete(View v) {
+        SharedPreferences preferences = getSharedPreferences("login_user_im", MODE_PRIVATE);
+        String phone = preferences.getString("phone", null);
+        String url = App.SERVICE_URL + "/deletegoods";
+        StringBuilder sb = new StringBuilder();
+        Set<Integer> set = map.keySet();
+        sb.append("[");
+        for (Integer i : set) {
+            if (map.get(i)) {
+                sb.append("{\"goodsid\":").append(list.get(i).getGoods().getId()).append("},");
+            }
+        }
+        String data = sb.substring(0, sb.lastIndexOf(",")) + "]";
+        NetConnection.deleteGoods(GoodsCarActivity.this, url, phone, data, this);
+    }
 }

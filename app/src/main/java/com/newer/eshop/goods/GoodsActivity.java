@@ -3,7 +3,6 @@ package com.newer.eshop.goods;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -17,6 +16,7 @@ import com.google.gson.Gson;
 import com.newer.eshop.App;
 import com.newer.eshop.MainActivity;
 import com.newer.eshop.R;
+import com.newer.eshop.bean.MyEvent;
 import com.newer.eshop.net.HttpDataListener;
 import com.newer.eshop.net.NetConnection;
 
@@ -25,8 +25,8 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONException;
 import org.json.JSONObject;
-import java.util.ArrayList;
 
+import java.util.ArrayList;
 
 /**
  * Created by Administrator on 2016/4/21.
@@ -40,16 +40,6 @@ public class GoodsActivity extends AppCompatActivity implements HttpDataListener
      ArrayList<Fragment> list;
      int goodsId;
      String name;
-     Integer count;
-
-     android.os.Handler handler=new android.os.Handler(){
-         @Override
-         public void handleMessage(Message msg) {
-            if(msg.what==0){
-                count=(Integer)msg.obj;
-            }
-         }
-     };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +52,6 @@ public class GoodsActivity extends AppCompatActivity implements HttpDataListener
         goodsId=intent.getIntExtra("goodsId", -1);
         SharedPreferences sharedPreferences=getSharedPreferences("login_user_im",MODE_PRIVATE);
         name=sharedPreferences.getString("phone",null);
-
         initId();
         good_FragmentManger manger=new good_FragmentManger(getSupportFragmentManager()
                 ,list);
@@ -106,15 +95,17 @@ public class GoodsActivity extends AppCompatActivity implements HttpDataListener
      * 将商品加入购物车
      */
     public void ShopAddCar(View view){
-        EventBus.getDefault().post("get");
+        MyEvent myEvent = new MyEvent();
+        myEvent.setAction("Add");
+        EventBus.getDefault().post(myEvent);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void a(Integer count) {
-        NetConnection.SendService(GoodsActivity.this, "http://192.168.191.1:8080/Eshop/tocart", String.valueOf(goodsId), name, this);
-        Message message=new Message();
-        message.what=0;
-        message.obj=count;
+    public void a(MyEvent myEvent) {
+        if (myEvent.getAction().equals("getCount")) {
+            NetConnection.SendService(GoodsActivity.this, "http://192.168.191.1:8080/Eshop/tocart",
+                    String.valueOf(goodsId), name, myEvent.getData(), this);
+        }
     }
 
     @Override
@@ -147,19 +138,5 @@ public class GoodsActivity extends AppCompatActivity implements HttpDataListener
     protected void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
-    }
-
-    /**
-     * 立即购买
-     * @param view
-     */
-
-    public void Buy(View view){
-        Intent intent=new Intent();
-        intent.putExtra("id", goodsId);
-        intent.putExtra("count", count);
-        System.out.println("你好!" + count);
-        intent.setClass(GoodsActivity.this,GoodsBuy.class);
-        startActivity(intent);
     }
 }

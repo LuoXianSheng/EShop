@@ -29,6 +29,7 @@ import com.newer.eshop.AdvVPagerAdapter;
 import com.newer.eshop.App;
 import com.newer.eshop.R;
 import com.newer.eshop.bean.Goods;
+import com.newer.eshop.bean.MyEvent;
 import com.newer.eshop.net.HttpDataListener;
 import com.newer.eshop.net.NetConnection;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -54,7 +55,7 @@ public class good_product_Fragment extends Fragment implements HttpDataListener,
      AdvVPagerAdapter adapter;
      ArrayList<Fragment> arrayList;
      Goods goods;
-     int count=0;
+     int count=1;
 
     Handler handler = new Handler() {
         @Override
@@ -150,18 +151,16 @@ public class good_product_Fragment extends Fragment implements HttpDataListener,
 
     @Override
     public void onClick(View v) {
-        GoodsActivity goods=(GoodsActivity)getActivity();
         if(v.getId()==R.id.good_fragment_load){
             ++count;
-            count_text.setText("" + count);
         }else{
-            if(count==0){
-                Toast.makeText(goods,"请先添加数量!", Toast.LENGTH_SHORT).show();
+            if(count<=1){
+                return;
             }else {
                 --count;
-                count_text.setText("" + count);
             }
         }
+        count_text.setText("" + count);
     }
 
     @Override
@@ -170,16 +169,13 @@ public class good_product_Fragment extends Fragment implements HttpDataListener,
         EventBus.getDefault().unregister(this);
     }
 
-    /**
-     * 添加减少数量的点击事件
-     * @param v
-     */
-
-    public void addAnddelete(View v){
-
-    }
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void bb(String str) {
-        EventBus.getDefault().post(count);
+    public void bb(MyEvent event) {
+        if (event.getAction().equals("Add")) {
+            MyEvent myEvent = new MyEvent();
+            myEvent.setAction("getCount");
+            myEvent.setData(count + "");
+            EventBus.getDefault().post(myEvent);
+        }
     }
 }
