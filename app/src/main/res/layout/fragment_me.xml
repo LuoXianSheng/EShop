@@ -37,7 +37,7 @@
 
         </LinearLayout>
 
-        <Button
+        <TextView
             android:text="登录/注册"
             android:id="@+id/login"
             android:background="@android:color/transparent"
@@ -69,59 +69,20 @@
 
 
 
-
-
-    <TextView
-        android:layout_marginTop="2dp"
+    <GridView
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="#fff"
-        android:drawableLeft="@drawable/me_name_im"
-        android:id="@+id/tv_username"
-        android:textSize="25dp"
-        android:gravity="center"
-        android:text="用户名字显示"
-        />
-    <TextView
-        android:layout_marginTop="2dp"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="#fff"
-        android:drawableLeft="@drawable/me_address_im"
-        android:id="@+id/tv_phone"
-        android:textSize="25dp"
-        android:gravity="center"
-        android:text="用户的电话显示"
-        />
+        android:layout_height="250dp"
+        android:numColumns="auto_fit"
+        android:columnWidth="100dp"
+        android:stretchMode="columnWidth"
+        android:id="@+id/me_gridview"
 
-    <TextView
-        android:layout_marginTop="2dp"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="#fff"
-        android:drawableLeft="@drawable/me_phone_im"
-        android:textSize="25dp"
-        android:gravity="center"
-        android:id="@+id/tv_address"
-        android:text="用户的地址显示"
         />
-
-    <TextView
-        android:layout_marginTop="2dp"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="#fff"
-        android:drawableLeft="@drawable/me_report_im"
-        android:textSize="25dp"
-        android:gravity="center"
-        android:id="@+id/tv_report"
-        android:text="用户反馈"
-        />
-
 
     <Button
-        android:layout_marginLeft="50dp"
-        android:layout_marginTop="50dp"
+        android:layout_gravity="bottom"
+        android:layout_marginLeft="80dp"
+        android:layout_marginTop="30dp"
         android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:id="@+id/btn_login_out"
