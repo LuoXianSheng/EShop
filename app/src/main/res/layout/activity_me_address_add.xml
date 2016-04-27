@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+
+    <include
+        android:id="@+id/buy_toolbar"
+        layout="@layout/me_address_add_toolbar"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:padding="10dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="60dp"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="收货人："
+                android:textSize="15sp"/>
+
+            <com.rengwuxian.materialedittext.MaterialEditText
+                android:id="@+id/address_add_name"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="5dp"
+                android:layout_weight="1"
+                android:gravity="bottom"
+                android:hint="收货人的姓名"
+                android:textSize="15sp"
+                app:met_baseColor="#33475f"
+                app:met_floatingLabel="highlight"
+                app:met_primaryColor="#33475f"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="60dp"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="手机号："
+                android:textSize="15sp"/>
+
+            <com.rengwuxian.materialedittext.MaterialEditText
+                android:layout_width="0dp"
+                android:id="@+id/address_add_phone"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="5dp"
+                android:layout_weight="1"
+                android:gravity="bottom"
+                android:hint="收货人的手机号码"
+                android:textSize="15sp"
+                app:met_baseColor="#33475f"
+                app:met_floatingLabel="highlight"
+                app:met_primaryColor="#33475f"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="65dp"
+                android:layout_height="match_parent"
+                android:gravity="top"
+                android:paddingTop="20dp"
+                android:text="收货地址："
+                android:textSize="13sp"/>
+
+            <com.rengwuxian.materialedittext.MaterialEditText
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="top"
+                android:id="@+id/address_add_address"
+                android:hint="收货人的地址"
+                android:textSize="15sp"
+                app:met_baseColor="#33475f"
+                app:met_floatingLabel="highlight"
+                app:met_hideUnderline="true"
+                app:met_primaryColor="#33475f"/>
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/address_add_save"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:text="保存"/>
+</LinearLayout>

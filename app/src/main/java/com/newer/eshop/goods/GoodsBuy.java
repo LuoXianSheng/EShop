@@ -5,10 +5,8 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
@@ -20,10 +18,10 @@ import com.newer.eshop.App;
 import com.newer.eshop.R;
 import com.newer.eshop.bean.Cart;
 import com.newer.eshop.bean.Goods;
+import com.newer.eshop.me.address.AddressManagerActivity;
 import com.newer.eshop.net.HttpDataListener;
 import com.newer.eshop.net.NetConnection;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -51,19 +49,15 @@ public class GoodsBuy extends AppCompatActivity implements HttpDataListener, Vie
         setContentView(R.layout.goods_buy_layout);
         initToolbar();
         initView();
-        initData();
-        getData();//获取数据
+        initData();//获取本地数据
+        getData();//请求网络数据
     }
 
     private void initData() {
         Intent intent = getIntent();
         goodsids = intent.getStringExtra("goodsids").split(",");
         counts = intent.getStringExtra("counts").split(",");
-        SharedPreferences preferences = getSharedPreferences(App.USER_SP_NAME, MODE_PRIVATE);
-        phone = preferences.getString("phone", "");
-        tvName.setText(preferences.getString("name", ""));
-        tvPhone.setText(phone);
-        tvAddress.setText(preferences.getString("address", "(还没有收货地址，请新建!)"));
+        getSharedPreferencesData();
     }
 
     private void getData() {
@@ -146,11 +140,33 @@ public class GoodsBuy extends AppCompatActivity implements HttpDataListener, Vie
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.goods_buy_address:
-
+                startActivityForResult(new Intent(GoodsBuy.this, AddressManagerActivity.class), App.REQUESTCODE);
                 break;
             case R.id.goods_buy_submit:
 
                 break;
         }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == App.REQUESTCODE && resultCode == App.RESULTCODE) {
+            getSharedPreferencesData();
+        }
+    }
+
+    public void getSharedPreferencesData() {
+        SharedPreferences preferences = getSharedPreferences(App.USER_SP_NAME, MODE_PRIVATE);
+        String address = preferences.getString("address", "");
+        phone = preferences.getString("phone", "");
+        if ("".equals(address)) {
+            tvAddress.setText("还有收货地址，请新建！");
+        } else {
+            tvName.setText(preferences.getString("name", ""));
+            tvPhone.setText(phone);
+            tvAddress.setText(preferences.getString("address", "还有收货地址，请新建！"));
+        }
+
     }
 }

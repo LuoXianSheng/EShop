@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="vertical"
+              android:padding="10dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="horizontal"
+        android:padding="5dp">
+
+
+        <TextView
+            android:id="@+id/address_list_item_name"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="姓名"
+            android:textSize="14sp"/>
+
+        <TextView
+            android:id="@+id/address_list_item_phone"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="13333333333"
+            android:textSize="14sp"/>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/address_list_item_address"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:text="桑德兰分局阿斯利分级阿斯兰激发联asfasfasfasfafasfasfafasfasfasf赛积分"
+        android:textSize="13sp"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="5dp"
+        android:background="#c0c0c0"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
+        <CheckBox
+            android:id="@+id/address_list_item_checkbox"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="设为默认地址"/>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="right"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/address_list_item_edit"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="编辑"/>
+
+            <Button
+                android:id="@+id/address_list_item_delete"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="删除"/>
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

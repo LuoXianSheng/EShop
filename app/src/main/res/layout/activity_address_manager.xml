@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/address_toolbar"
+        layout="@layout/me_address_toolbar"/>
+
+    <ListView
+        android:id="@+id/me_address_listview"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+
+    <Button
+        android:id="@+id/me_address_add_newAddress"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:text="新增收货地址"/>
+
+</LinearLayout>

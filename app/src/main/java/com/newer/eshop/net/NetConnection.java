@@ -3,6 +3,7 @@ package com.newer.eshop.net;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.util.Log;
 
 import com.newer.eshop.App;
 import com.newer.eshop.myview.MyProDialog;
@@ -76,28 +77,10 @@ public class NetConnection {
      * @param listener
      */
     public static void getClassifyData(Context context, String url, int type_1, final HttpDataListener listener) {
-        client = getOkHttpClientInstance();
-        showDialog(context);
         FormBody body = new FormBody.Builder()
                 .add("type_1", type_1 + "")
                 .build();
-        final Request request = new Request.Builder()
-                .url(url)
-                .post(body)
-                .build();
-        client.newCall(request).enqueue(new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                dialog.dismiss();
-                listener.loser("请求失败！");
-            }
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                dialog.dismiss();
-                listener.succeseful(response.body().string());
-            }
-        });
+        addToEnqueue(context, url, body, listener);
     }
 
     /**
@@ -109,88 +92,34 @@ public class NetConnection {
      * @param listener
      */
     public static void getClassifyResult(Context context, String url, int type_1, int type_2, final HttpDataListener listener) {
-        client = getOkHttpClientInstance();
-        showDialog(context);
         FormBody body = new FormBody.Builder()
                 .add("type_1", type_1 + "")
                 .add("type_2", type_2 + "")
                 .build();
-        final Request request = new Request.Builder()
-                .url(url)
-                .post(body)
-                .build();
-        client.newCall(request).enqueue(new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                dialog.dismiss();
-                listener.loser("失败！");
-            }
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                dialog.dismiss();
-                listener.succeseful(response.body().string());
-            }
-        });
+        addToEnqueue(context, url, body, listener);
     }
 
     /**
      * 请求购物车
      */
-    public static void RequestShopCar(Context context, String url, String body, final HttpDataListener listener) {
-        client = getOkHttpClientInstance();
-        showDialog(context);
-        FormBody formBody = new FormBody.Builder()
-                .add("phone", body)
+    public static void RequestShopCar(Context context, String url, String phone, final HttpDataListener listener) {
+        FormBody body = new FormBody.Builder()
+                .add("phone", phone)
                 .build();
-        Request request = new Request.Builder()
-                .url(url)
-                .post(formBody)
-                .build();
-        client.newCall(request).enqueue(new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                dialog.dismiss();
-                listener.loser("请求失败");
-            }
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                dialog.dismiss();
-                listener.succeseful(response.body().string());
-            }
-        });
+        addToEnqueue(context, url, body, listener);
     }
 
     /**
      * 点击加入购物车 将发送一个ID给服务器
      */
-    public static void SendService(Context context, String url, String body, String user,
+    public static void SendService(Context context, String url, String goodsid, String user,
                                    String count, final HttpDataListener listener) {
-        client = getOkHttpClientInstance();
-        showDialog(context);
-        FormBody formBody = new FormBody.Builder()
-                .add("goodsid", body)
+        FormBody body = new FormBody.Builder()
+                .add("goodsid", goodsid)
                 .add("phone", user)
                 .add("count", count)
                 .build();
-        Request request = new Request.Builder()
-                .url(url)
-                .post(formBody)
-                .build();
-        client.newCall(request).enqueue(new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                dialog.dismiss();
-                listener.loser("请求失败");
-            }
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                dialog.dismiss();
-                listener.succeseful(response.body().string());
-            }
-        });
+        addToEnqueue(context, url, body, listener);
     }
 
     public static void showDialog(Context context) {
@@ -209,29 +138,11 @@ public class NetConnection {
      * @param listener
      */
     public static void deleteGoods(Context context, String url, String phone, String data, final HttpDataListener listener) {
-        client = getOkHttpClientInstance();
-        showDialog(context);
         FormBody body = new FormBody.Builder()
                 .add("phone", phone)
                 .add("data", data)
                 .build();
-        Request request = new Request.Builder()
-                .url(url)
-                .post(body)
-                .build();
-        client.newCall(request).enqueue(new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                dialog.dismiss();
-                listener.loser("请求失败");
-            }
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                dialog.dismiss();
-                listener.succeseful(response.body().string());
-            }
-        });
+        addToEnqueue(context, url, body, listener);
     }
 
     /**
@@ -243,13 +154,52 @@ public class NetConnection {
      * @param listener
      */
     public static void buyGoods(Context context, String url, String phone, String goodsid, String count, final HttpDataListener listener) {
-        client = getOkHttpClientInstance();
-        showDialog(context);
         FormBody body = new FormBody.Builder()
                 .add("phone", phone)
                 .add("goodsid", goodsid)
                 .add("count", count)
                 .build();
+        addToEnqueue(context, url, body, listener);
+    }
+
+    public static void getAddress(Context context, String url, String phone, final HttpDataListener listener) {
+        FormBody body = new FormBody.Builder()
+                .add("phone", phone)
+                .build();
+        addToEnqueue(context, url, body, listener);
+    }
+
+    /**
+     * 保存收货地址
+     * @param context
+     * @param url
+     * @param userPhone
+     * @param phone
+     * @param name
+     * @param address
+     * @param listener
+     */
+    public static void saveAddress(Context context, String url, String userPhone, String phone,
+                                   String name, String address, final HttpDataListener listener) {
+        FormBody body = new FormBody.Builder()
+                .add("userPhone", userPhone)
+                .add("phone", phone)
+                .add("name", name)
+                .add("address", address)
+                .build();
+        addToEnqueue(context, url, body, listener);
+    }
+
+    /**
+     * 请求队列
+     * @param context
+     * @param url
+     * @param body
+     * @param listener
+     */
+    public static void addToEnqueue(Context context, String url, FormBody body, final HttpDataListener listener) {
+        client = getOkHttpClientInstance();
+        showDialog(context);
         Request request = new Request.Builder()
                 .url(url)
                 .post(body)

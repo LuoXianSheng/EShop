@@ -333,6 +333,7 @@ public class GoodsCarActivity extends AppCompatActivity implements HttpDataListe
      * checkBox的点击事件
      */
      public void check_text(View view){
+         if (map == null) return;
          if (!isCheckAll) {
              shaoMyadapter.ischecke();
              isCheckAll = true;
