@@ -12,6 +12,7 @@ import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -41,6 +42,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Enumeration;
 
 
 public class good_product_Fragment extends Fragment implements HttpDataListener,View.OnClickListener{
@@ -101,6 +103,7 @@ public class good_product_Fragment extends Fragment implements HttpDataListener,
         list=new ArrayList<>();
         arrayList=new ArrayList<>();
         adapter=new AdvVPagerAdapter(getFragmentManager(),arrayList);
+        pager.setOffscreenPageLimit(5);
         pager.setAdapter(adapter);
     }
 
@@ -171,11 +174,17 @@ public class good_product_Fragment extends Fragment implements HttpDataListener,
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void bb(MyEvent event) {
-        if (event.getAction().equals("Add")) {
+        if ("Add".equals(event.getAction())) {
             MyEvent myEvent = new MyEvent();
-            myEvent.setAction("getCount");
             myEvent.setData(count + "");
+            myEvent.setAction("getCount");
+            EventBus.getDefault().post(myEvent);
+        } else if ("buy".equals(event.getAction())) {
+            MyEvent myEvent = new MyEvent();
+            myEvent.setData(count + "");
+            myEvent.setAction("toBuy");
             EventBus.getDefault().post(myEvent);
         }
+        Log.e("获取count:", count + "");
     }
 }

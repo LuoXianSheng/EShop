@@ -199,12 +199,56 @@ public class NetConnection {
         dialog.show();
     }
 
+
+    /**
+     * s删除商品
+     * @param context
+     * @param url
+     * @param phone
+     * @param data
+     * @param listener
+     */
     public static void deleteGoods(Context context, String url, String phone, String data, final HttpDataListener listener) {
         client = getOkHttpClientInstance();
         showDialog(context);
         FormBody body = new FormBody.Builder()
                 .add("phone", phone)
                 .add("data", data)
+                .build();
+        Request request = new Request.Builder()
+                .url(url)
+                .post(body)
+                .build();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                dialog.dismiss();
+                listener.loser("请求失败");
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                dialog.dismiss();
+                listener.succeseful(response.body().string());
+            }
+        });
+    }
+
+    /**
+     * 购买商品
+     * @param context
+     * @param url
+     * @param goodsid
+     * @param count
+     * @param listener
+     */
+    public static void buyGoods(Context context, String url, String phone, String goodsid, String count, final HttpDataListener listener) {
+        client = getOkHttpClientInstance();
+        showDialog(context);
+        FormBody body = new FormBody.Builder()
+                .add("phone", phone)
+                .add("goodsid", goodsid)
+                .add("count", count)
                 .build();
         Request request = new Request.Builder()
                 .url(url)

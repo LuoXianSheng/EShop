@@ -30,6 +30,10 @@ public class App extends Application {
     public static final String STATUS_LOSE = "0";//失败状态码
     public static final String GOODSCLASSIFY_URL = SERVICE_URL + "/goodsclassify";
 
+    public static final String USER_SP_NAME = "login_user_im";
+
+    private static DisplayImageOptions options = null;
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -45,12 +49,19 @@ public class App extends Application {
 
     public static DisplayImageOptions initOptions() {
         //初始化显示图片的配置
-        return new DisplayImageOptions.Builder()
-                .cacheInMemory(true)
-                .cacheOnDisk(true)
-                .imageScaleType(ImageScaleType.EXACTLY_STRETCHED)
-                .bitmapConfig(Bitmap.Config.RGB_565)
-                .build();
+        if (options == null) {
+            synchronized (new String()) {
+                if (options == null) {
+                    options = new DisplayImageOptions.Builder()
+                            .cacheInMemory(true)
+                            .cacheOnDisk(true)
+                            .imageScaleType(ImageScaleType.EXACTLY_STRETCHED)
+                            .bitmapConfig(Bitmap.Config.RGB_565)
+                            .build();
+                }
+            }
+        }
+        return options;
     }
 
 }

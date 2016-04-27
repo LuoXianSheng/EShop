@@ -5,7 +5,7 @@
               android:background="#FFF"
               android:orientation="vertical">
 
-    <include layout="@layout/index_toolbar" />
+    <include layout="@layout/index_toolbar" android:id="@+id/index_toolbar" />
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/refresh"

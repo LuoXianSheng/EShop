@@ -29,7 +29,8 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class ClassifyResultActivity extends AppCompatActivity implements HttpDataListener, RecyclerAdapter.OnItemClickLitener {
+public class ClassifyResultActivity extends AppCompatActivity implements
+        HttpDataListener, RecyclerAdapter.OnItemClickLitener {
 
     private ArrayList<Goods> list;
     private int type_1, type_2;
@@ -61,7 +62,7 @@ public class ClassifyResultActivity extends AppCompatActivity implements HttpDat
     }
 
     private void initToolbar() {
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        mToolbar = (Toolbar) findViewById(R.id.result_toolbar);
         setSupportActionBar(mToolbar);
     }
 

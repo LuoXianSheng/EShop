@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -16,6 +17,7 @@ import com.google.gson.Gson;
 import com.newer.eshop.App;
 import com.newer.eshop.MainActivity;
 import com.newer.eshop.R;
+import com.newer.eshop.account.LoginActivity;
 import com.newer.eshop.bean.MyEvent;
 import com.newer.eshop.net.HttpDataListener;
 import com.newer.eshop.net.NetConnection;
@@ -95,16 +97,33 @@ public class GoodsActivity extends AppCompatActivity implements HttpDataListener
      * 将商品加入购物车
      */
     public void ShopAddCar(View view){
+        checkUser();
         MyEvent myEvent = new MyEvent();
         myEvent.setAction("Add");
         EventBus.getDefault().post(myEvent);
     }
 
+    public void buy(View v) {
+        checkUser();
+        MyEvent myEvent = new MyEvent();
+        myEvent.setAction("buy");
+        Log.e("商品界面", "点击了购买");
+        EventBus.getDefault().post(myEvent);
+    }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void a(MyEvent myEvent) {
-        if (myEvent.getAction().equals("getCount")) {
+        String data = myEvent.getData();
+        Log.e("拿到count", data + "");
+        if ("getCount".equals(myEvent.getAction())) {
             NetConnection.SendService(GoodsActivity.this, "http://192.168.191.1:8080/Eshop/tocart",
-                    String.valueOf(goodsId), name, myEvent.getData(), this);
+                    String.valueOf(goodsId), name, data, this);
+        } else if ("toBuy".equals(myEvent.getAction())) {
+            Log.e("eshop", "准备跳转");
+            Intent intent = new Intent(GoodsActivity.this, GoodsBuy.class);
+            intent.putExtra("goodsids", goodsId + ",");
+            intent.putExtra("counts", data + ",");
+            startActivity(intent);
         }
     }
 
@@ -133,6 +152,13 @@ public class GoodsActivity extends AppCompatActivity implements HttpDataListener
         System.out.println("发给服务器失败!");
     }
 
+    public void checkUser() {
+        SharedPreferences preferences = getSharedPreferences("login_user_im", MODE_PRIVATE);
+        String token = preferences.getString("Mytoken", "");
+        if ("".equals(token)) {
+            startActivity(new Intent(GoodsActivity.this, LoginActivity.class));
+        }
+    }
 
     @Override
     protected void onDestroy() {

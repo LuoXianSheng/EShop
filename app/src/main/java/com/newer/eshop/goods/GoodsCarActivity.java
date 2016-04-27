@@ -142,7 +142,7 @@ public class GoodsCarActivity extends AppCompatActivity implements HttpDataListe
              viewHolder.box.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                  @Override
                  public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                     if (isChecked == true) {
+                     if (isChecked) {
                          map.remove(position);
                          map.put(position, true);
                      } else {
@@ -157,7 +157,7 @@ public class GoodsCarActivity extends AppCompatActivity implements HttpDataListe
               * 如果此映射包含指定的包含关系将返回true,
               */
              if (map.containsKey(position)) {
-                 viewHolder.box.setChecked(true);
+                 viewHolder.box.setChecked(map.get(position));
              } else {
                  viewHolder.box.setChecked(false);
              }
@@ -166,12 +166,12 @@ public class GoodsCarActivity extends AppCompatActivity implements HttpDataListe
 
         private void ckCheckBoxStatus() {
             Set<Integer> set = map.keySet();
-            boolean isTrue = false;
-            for (Integer i : set) {
-                if (map.get(i)) {
-                    isTrue = true;
-                } else {
+            if (set.isEmpty()) return;
+            boolean isTrue = true;
+            for (int i : set) {
+                if (!map.get(i)) {
                     isTrue = false;
+                    break;
                 }
             }
             if (isTrue) {
@@ -206,7 +206,7 @@ public class GoodsCarActivity extends AppCompatActivity implements HttpDataListe
         public void unIscheck() {
             map.clear();
             for (int i = 0; i < list.size(); i++) {
-                map.put(i, true);
+                map.put(i, false);
             }
             notifyDataSetChanged();
         }
@@ -237,9 +237,11 @@ public class GoodsCarActivity extends AppCompatActivity implements HttpDataListe
             if (status.equals(App.STATUS_SUCCESS)) {
                 Gson gson = new Gson();
                 list = new ArrayList<>();
+                list = gson.fromJson(object.getString("data"), new TypeToken<ArrayList<Cart>>() {}.getType());
                 map = new HashMap<>();
-                list = gson.fromJson(object.getString("data"), new TypeToken<ArrayList<Cart>>() {
-                }.getType());
+                for (int i = 0; i < list.size(); i++) {
+                    map.put(i, false);
+                }
             } else if (status.equals(App.STATUS_LOSE)) {
                 handler.post(new Runnable() {
                     @Override
@@ -341,6 +343,7 @@ public class GoodsCarActivity extends AppCompatActivity implements HttpDataListe
 
      }
 
+    //删除商品
     public void delete(View v) {
         SharedPreferences preferences = getSharedPreferences("login_user_im", MODE_PRIVATE);
         String phone = preferences.getString("phone", null);
@@ -355,5 +358,32 @@ public class GoodsCarActivity extends AppCompatActivity implements HttpDataListe
         }
         String data = sb.substring(0, sb.lastIndexOf(",")) + "]";
         NetConnection.deleteGoods(GoodsCarActivity.this, url, phone, data, this);
+    }
+
+    //结算
+    public void result(View v) {
+        checkUser();
+        StringBuilder goodsids = new StringBuilder();
+        StringBuilder counts = new StringBuilder();
+        Set<Integer> set = map.keySet();
+        if (map.isEmpty()) return;
+        for (Integer i : set) {
+            if (map.get(i)) {
+                goodsids.append(list.get(i).getGoods().getId()).append(",");
+                counts.append(list.get(i).getCount()).append(",");
+            }
+        }
+        Intent intent = new Intent(GoodsCarActivity.this, GoodsBuy.class);
+        intent.putExtra("goodsids", goodsids.toString());
+        intent.putExtra("counts", counts.toString());
+        startActivity(intent);
+    }
+
+    public void checkUser() {
+        SharedPreferences preferences = getSharedPreferences("login_user_im", MODE_PRIVATE);
+        String token = preferences.getString("Mytoken", "");
+        if ("".equals(token)) {
+            startActivity(new Intent(GoodsCarActivity.this, LoginActivity.class));
+        }
     }
 }
