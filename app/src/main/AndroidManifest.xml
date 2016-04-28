@@ -67,7 +67,11 @@
         <activity
             android:name=".goods.GoodsBuy"
             android:theme="@style/OtherAppTheme" />
-        <activity android:name=".me.address.MeAddressAddActivity" android:theme="@style/OtherAppTheme" />
+        <activity
+            android:name=".me.address.MeAddressAddActivity"
+            android:theme="@style/OtherAppTheme" />
+        <activity android:name=".me.address.SelectAddressActivity" android:theme="@style/OtherAppTheme">
+        </activity>
     </application>
 
 </manifest>

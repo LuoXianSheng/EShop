@@ -37,20 +37,7 @@
                 android:layout_marginLeft="5dp"
                 android:layout_weight="1"
                 android:gravity="center|left"
-                android:text="xxx"
                 android:textSize="15sp"/>
-
-            <!--<com.rengwuxian.materialedittext.MaterialEditText-->
-            <!--android:layout_width="0dp"-->
-            <!--android:textSize="15sp"-->
-            <!--android:gravity="bottom"-->
-            <!--app:met_floatingLabel="highlight"-->
-            <!--android:hint="收货人的姓名"-->
-            <!--app:met_baseColor="#33475f"-->
-            <!--app:met_primaryColor="#33475f"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:layout_marginLeft="5dp"-->
-            <!--android:layout_weight="1"/>-->
         </LinearLayout>
 
         <LinearLayout
@@ -73,19 +60,7 @@
                 android:layout_marginLeft="5dp"
                 android:layout_weight="1"
                 android:gravity="center|left"
-                android:text="xxxxxxx"
                 android:textSize="15sp"/>
-            <!--<com.rengwuxian.materialedittext.MaterialEditText-->
-            <!--android:layout_width="0dp"-->
-            <!--android:textSize="15sp"-->
-            <!--android:gravity="bottom"-->
-            <!--app:met_floatingLabel="highlight"-->
-            <!--android:hint="收货人的手机号码"-->
-            <!--app:met_baseColor="#33475f"-->
-            <!--app:met_primaryColor="#33475f"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:layout_marginLeft="5dp"-->
-            <!--android:layout_weight="1"/>-->
         </LinearLayout>
 
         <LinearLayout
@@ -109,7 +84,7 @@
                 android:gravity="center|left"
                 android:paddingLeft="10dp"
                 android:drawableRight="@mipmap/index_pressed"
-                android:text="我是收货地址"/>
+                android:text="没有收货地址，请新建！"/>
 
         </LinearLayout>
     </LinearLayout>

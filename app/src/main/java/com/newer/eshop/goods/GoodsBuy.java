@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
@@ -16,9 +17,11 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.newer.eshop.App;
 import com.newer.eshop.R;
+import com.newer.eshop.bean.Address;
 import com.newer.eshop.bean.Cart;
 import com.newer.eshop.bean.Goods;
 import com.newer.eshop.me.address.AddressManagerActivity;
+import com.newer.eshop.me.address.SelectAddressActivity;
 import com.newer.eshop.net.HttpDataListener;
 import com.newer.eshop.net.NetConnection;
 
@@ -37,11 +40,13 @@ public class GoodsBuy extends AppCompatActivity implements HttpDataListener, Vie
     private Button btnSubmit;
     private GoodsBuyListAdapter adapter;
     private ArrayList<Cart> list;
-
+    private Address address;//收货地址
     private String[] goodsids;
     private String[] counts;
     private String phone;
     private Handler handler;
+    private float sum = 0;//商品价格
+    private int count = 0;//商品计件
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +62,8 @@ public class GoodsBuy extends AppCompatActivity implements HttpDataListener, Vie
         Intent intent = getIntent();
         goodsids = intent.getStringExtra("goodsids").split(",");
         counts = intent.getStringExtra("counts").split(",");
-        getSharedPreferencesData();
+        SharedPreferences preferences = getSharedPreferences(App.USER_SP_NAME, MODE_PRIVATE);
+        phone = preferences.getString("phone", "");
     }
 
     private void getData() {
@@ -70,7 +76,8 @@ public class GoodsBuy extends AppCompatActivity implements HttpDataListener, Vie
             goodsid.append("{\"goodsid\":").append(goodsids[i]).append("},");
             count.append("{\"count\":").append(goodsids[i]).append("},");
         }
-        NetConnection.buyGoods(this,url, phone, goodsid.substring(0, goodsid.lastIndexOf(",")) + "]",
+        int type = 1;
+        NetConnection.buyGoods(this,url, phone, type, goodsid.substring(0, goodsid.lastIndexOf(",")) + "]",
                 count.substring(0, count.lastIndexOf(",")) + "]", this);
     }
 
@@ -96,8 +103,12 @@ public class GoodsBuy extends AppCompatActivity implements HttpDataListener, Vie
         handler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
-                Bundle bundle = msg.getData();
-                tvTotal.setText("总共：" + bundle.getInt("count") + "件，合计：" + bundle.getFloat("sum"));
+                if (address != null) {
+                    tvName.setText(address.getName());
+                    tvPhone.setText(address.getPhone() + "");
+                    tvAddress.setText(address.getAddress());
+                }
+                tvTotal.setText("总共：" + count + "件，合计：" + sum);
                 adapter.notifyDataSetChanged();
             }
         };
@@ -106,25 +117,22 @@ public class GoodsBuy extends AppCompatActivity implements HttpDataListener, Vie
 
     @Override
     public void succeseful(String str) {
-        float sum = 0;//商品价格
-        int count = 0;//商品计件
         try {
             JSONObject object = new JSONObject(str);
             if (object.getString("status").equals(App.STATUS_SUCCESS)) {
-                ArrayList<Goods> goodses;
                 Gson gson = new Gson();
-                goodses = gson.fromJson(object.getString("data"), new TypeToken<ArrayList<Goods>>(){}.getType());
+                ArrayList<Address> addresses = gson.fromJson(object.getString("addresses"),
+                        new TypeToken<ArrayList<Address>>(){}.getType());
+                ArrayList<Goods> goodses = gson.fromJson(object.getString("data"),
+                        new TypeToken<ArrayList<Goods>>(){}.getType());
                 for (int i = 0; i < goodses.size();  i++) {
                     sum += goodses.get(i).getPrice();
                     count++;
                     list.add(new Cart(goodses.get(i), Integer.valueOf(counts[i])));
                 }
-                Message message = Message.obtain();
-                Bundle bundle = new Bundle();
-                bundle.putFloat("sum", sum);
-                bundle.putInt("count", count);
-                message.setData(bundle);
-                handler.sendMessage(message);
+                if (addresses != null)
+                    address = addresses.get(0);
+                handler.sendEmptyMessage(1);
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -140,7 +148,8 @@ public class GoodsBuy extends AppCompatActivity implements HttpDataListener, Vie
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.goods_buy_address:
-                startActivityForResult(new Intent(GoodsBuy.this, AddressManagerActivity.class), App.REQUESTCODE);
+                startActivityForResult(new Intent(GoodsBuy.this, SelectAddressActivity.class)
+                        .putExtra("phone", phone), App.REQUESTCODE);
                 break;
             case R.id.goods_buy_submit:
 
@@ -151,22 +160,16 @@ public class GoodsBuy extends AppCompatActivity implements HttpDataListener, Vie
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == App.REQUESTCODE && resultCode == App.RESULTCODE) {
-            getSharedPreferencesData();
+        if (requestCode == App.REQUESTCODE && resultCode == RESULT_OK) {
+            address = new Address();
+            address.setId(data.getIntExtra("id", -1));
+            address.setName(data.getStringExtra("name"));
+            address.setPhone(data.getStringExtra("phone"));
+            address.setAddress(data.getStringExtra("address"));
+            tvName.setText(address.getName());
+            tvPhone.setText(address.getPhone());
+            tvAddress.setText(address.getAddress());
         }
     }
 
-    public void getSharedPreferencesData() {
-        SharedPreferences preferences = getSharedPreferences(App.USER_SP_NAME, MODE_PRIVATE);
-        String address = preferences.getString("address", "");
-        phone = preferences.getString("phone", "");
-        if ("".equals(address)) {
-            tvAddress.setText("还有收货地址，请新建！");
-        } else {
-            tvName.setText(preferences.getString("name", ""));
-            tvPhone.setText(phone);
-            tvAddress.setText(preferences.getString("address", "还有收货地址，请新建！"));
-        }
-
-    }
 }

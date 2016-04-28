@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/select_toolbar"
+        layout="@layout/me_address_selectadddress_toolbar"/>
+
+    <ListView
+        android:id="@+id/me_select_listview"
+        android:layout_width="match_parent"
+        android:layout_weight="1"
+        android:layout_height="0dp" />
+
+    <TextView
+        android:id="@+id/me_select_add"
+        android:layout_width="match_parent"
+        android:text="新增收货地址"
+        android:gravity="center"
+        android:background="#c0c0c0"
+        android:layout_height="50dp"/>
+</LinearLayout>

@@ -153,18 +153,26 @@ public class NetConnection {
      * @param count
      * @param listener
      */
-    public static void buyGoods(Context context, String url, String phone, String goodsid, String count, final HttpDataListener listener) {
+    public static void buyGoods(Context context, String url, String phone, int type, String goodsid, String count, final HttpDataListener listener) {
         FormBody body = new FormBody.Builder()
                 .add("phone", phone)
+                .add("type", type + "")
                 .add("goodsid", goodsid)
-                .add("count", count)
                 .build();
         addToEnqueue(context, url, body, listener);
     }
 
-    public static void getAddress(Context context, String url, String phone, final HttpDataListener listener) {
+    /**
+     * 获取收货地址
+     * @param context
+     * @param url
+     * @param phone
+     * @param listener
+     */
+    public static void getAddress(Context context, String url, String phone, int type, final HttpDataListener listener) {
         FormBody body = new FormBody.Builder()
                 .add("phone", phone)
+                .add("type", type + "")
                 .build();
         addToEnqueue(context, url, body, listener);
     }
@@ -180,12 +188,30 @@ public class NetConnection {
      * @param listener
      */
     public static void saveAddress(Context context, String url, String userPhone, String phone,
-                                   String name, String address, final HttpDataListener listener) {
+                                   String name, String address, int type, final HttpDataListener listener) {
         FormBody body = new FormBody.Builder()
                 .add("userPhone", userPhone)
                 .add("phone", phone)
                 .add("name", name)
                 .add("address", address)
+                .add("type", type + "")
+                .build();
+        addToEnqueue(context, url, body, listener);
+    }
+
+    /**
+     * 修改默认地址
+     * @param context
+     * @param url
+     * @param oldId 修改之前的默认地址的id
+     * @param newId
+     * @param listener
+     */
+    public static void updateAddressForType(Context context, String url, String oldId,
+                                            String newId, final HttpDataListener listener) {
+        FormBody body = new FormBody.Builder()
+                .add("oldId", oldId)
+                .add("newId", newId)
                 .build();
         addToEnqueue(context, url, body, listener);
     }
@@ -218,4 +244,5 @@ public class NetConnection {
             }
         });
     }
+
 }

@@ -1,7 +1,6 @@
 package com.newer.eshop.me.address;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +13,7 @@ import android.widget.TextView;
 import com.newer.eshop.R;
 import com.newer.eshop.bean.Address;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -23,10 +23,27 @@ public class AddressListAdapter extends BaseAdapter {
 
     private Context context;
     private List<Address> list;
+    private MyListener listener;//获取点击的position的监听
+    private HashMap<Integer, CheckBox> map;
+    private int idx;
 
-    public AddressListAdapter(Context context, List<Address> list) {
+    public AddressListAdapter(Context context, List<Address> list, MyListener listener) {
         this.context = context;
         this.list = list;
+        this.listener = listener;
+        map = new HashMap<>();
+    }
+
+    public int getIdx() {
+        return idx;
+    }
+
+    public void setIdx(int idx) {
+        this.idx = idx;
+    }
+
+    public HashMap<Integer, CheckBox> getMap() {
+        return map;
     }
 
     @Override
@@ -59,19 +76,19 @@ public class AddressListAdapter extends BaseAdapter {
             holder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    Log.e("checkbox---", position + "");
+                    listener.callBackCheckBox(position);
                 }
             });
             holder.edit.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Log.e("edit---", position + "");
+                    listener.callBackEdit(position);
                 }
             });
             holder.delete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Log.e("delete---", position + "");
+                    listener.callBackDelete(position);
                 }
             });
             convertView.setTag(holder);
@@ -80,9 +97,13 @@ public class AddressListAdapter extends BaseAdapter {
         }
         holder.name.setText(list.get(position).getName());
         holder.phone.setText(list.get(position).getPhone());
-        holder.address.setText(list.get(position).getAddress());
+        map.put(position, holder.checkBox);
         if (list.get(position).getType() == 1) {
-            holder.checkBox.setChecked(true);
+            idx = position;//记录当前选择的position
+            map.get(position).setChecked(true);
+            holder.address.setText("[默认地址]" + list.get(position).getAddress());
+        } else {
+            holder.address.setText(list.get(position).getAddress());
         }
         return convertView;
     }
@@ -94,5 +115,11 @@ public class AddressListAdapter extends BaseAdapter {
         public CheckBox checkBox;
         public Button edit;
         public Button delete;
+    }
+
+    public interface MyListener {
+        void callBackCheckBox(int position);
+        void callBackEdit(int position);
+        void callBackDelete(int position);
     }
 }
