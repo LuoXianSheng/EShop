@@ -35,7 +35,7 @@ public class PersonalActivity extends AppCompatActivity implements View.OnClickL
                   builder.setPositiveButton("确认",null);
                   builder.setNegativeButton("取消",null);
 
-                  View Veditext=getLayoutInflater().inflate(R.layout.change_editext,null);
+                 View Veditext =getLayoutInflater().inflate(R.layout.change_editext,null);
                     builder.setView(Veditext);
                     alertDialog=builder.create();
                   alertDialog.show();

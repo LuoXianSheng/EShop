@@ -3,7 +3,10 @@ package com.newer.eshop.me;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,14 +36,18 @@ import java.util.Map;
  */
 public class FragmentMe extends Fragment implements View.OnClickListener {
     private static final String APP_ID = "1105291740";
+    private static final int PHOTO_REQUEST_CUT = 1;
     private Tencent mTencent;
     Context context;
+    public static final int TAKE_PHOTO = 1;
+    public static final int CROP_PHOTO = 2;
     SharedPreferences preferences;
     SharedPreferences.Editor editor;
     String Key = "Mytoken";
     GridView  gridView;
     private List<Map<String,Object>> mylist;
     private SimpleAdapter griadadpter;
+    CircleImageView imageView;
     String phone;
     String name;
 
@@ -59,7 +66,7 @@ public class FragmentMe extends Fragment implements View.OnClickListener {
         phone=sharedPreferences.getString("phone",null);
         name =sharedPreferences.getString("name",null);
 
-
+        imageView= (CircleImageView) view.findViewById(R.id.im_head);
         if (name==null && phone==null){
             tv_name.setText("请登录/注册");
             tv_name.setOnClickListener(new View.OnClickListener() {
@@ -70,7 +77,8 @@ public class FragmentMe extends Fragment implements View.OnClickListener {
             });
 
         }else {
-            tv_name.setText(preferences.getString("name",""));
+//            User user =new User();
+//            tv_name.setText(preferences.getString("name",user.getName()));
 
         }
 
@@ -80,7 +88,7 @@ public class FragmentMe extends Fragment implements View.OnClickListener {
                 startActivity(new Intent(getContext(), GoodsActivity.class));
             }
         });
-
+        imageView.setOnClickListener(this);
         view.findViewById(R.id.me_top_setting).setOnClickListener(this);
         view.findViewById(R.id.me_top_login).setOnClickListener(this);
         view.findViewById(R.id.btn_login_out).setOnClickListener(this);
@@ -161,14 +169,58 @@ public class FragmentMe extends Fragment implements View.OnClickListener {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode==1 && resultCode == 1){
             Toast.makeText(getContext(), "登录成功", Toast.LENGTH_SHORT).show();
-
-
         }
+
+        Uri selectedImage = data.getData();
+        crop(selectedImage);
+        String[] filePathColumns={MediaStore.Images.Media.DATA};
+        Cursor c = getContext().getContentResolver().query(selectedImage, filePathColumns, null,null, null);
+        c.moveToFirst();
+        int columnIndex = c.getColumnIndex(filePathColumns[0]);
+        String picturePath= c.getString(columnIndex);
+        c.close();
+        //获取图片并显示
+
+
+
     }
+
+
+    private void crop(Uri uri) {
+        // 裁剪图片意图
+        Intent intent = new Intent("com.android.camera.action.CROP");
+        intent.setDataAndType(uri, "image/*");
+        intent.putExtra("crop", "true");
+        // 裁剪框的比例，1：1
+        intent.putExtra("aspectX", 1);
+        intent.putExtra("aspectY", 1);
+        // 裁剪后输出图片的尺寸大小
+        intent.putExtra("outputX", 250);
+        intent.putExtra("outputY", 250);
+
+        intent.putExtra("outputFormat", "JPEG");// 图片格式
+        intent.putExtra("noFaceDetection", true);// 取消人脸识别
+        intent.putExtra("return-data", true);
+        // 开启一个带有返回值的Activity，请求码为PHOTO_REQUEST_CUT
+        startActivityForResult(intent, PHOTO_REQUEST_CUT);
+    }
+
+
+
 
     @Override
     public void onClick(View v) {
         switch (v.getId()){
+
+            case R.id.im_head:
+                startActivity(new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI));
+
+
+
+
+
+                break;
+
             case  R.id.me_top_setting:
                 startActivity(new Intent(getContext(),SettingActivity.class));
                 break;

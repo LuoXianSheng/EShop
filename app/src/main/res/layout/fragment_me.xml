@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/com.newer.eshop.me"
+    android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="match_parent">
 
@@ -16,7 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:orientation="horizontal"
-            >
+            android:id="@+id/linearLayout">
             <ImageButton
                 android:layout_width="50dp"
                 android:layout_height="50dp"
@@ -36,6 +37,19 @@
 
 
         </LinearLayout>
+        <com.newer.eshop.me.CircleImageView
+            android:id="@+id/im_head"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:src="@drawable/header"
+            app:border_color="@color/color_shadow"
+            app:border_width="2dp"
+
+
+            android:layout_below="@+id/linearLayout"
+            android:layout_toRightOf="@+id/goods"
+            android:layout_toEndOf="@+id/goods" />
+
 
         <TextView
             android:text="登录/注册"

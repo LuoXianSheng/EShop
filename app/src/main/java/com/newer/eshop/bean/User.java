@@ -1,5 +1,7 @@
 package com.newer.eshop.bean;
 
+import android.graphics.Bitmap;
+
 /**
  * Created by Mr_LUO on 2016/4/20.
  */
@@ -10,6 +12,7 @@ public class User {
     private String password;
     private String address;
     private long phone;
+    private Bitmap icon;
     private String token;
 
 
@@ -57,5 +60,13 @@ public class User {
 
     public void setPhone(long phone) {
         this.phone = phone;
+    }
+
+    public Bitmap getIcon() {
+        return icon;
+    }
+
+    public void setIcon(Bitmap icon) {
+        this.icon = icon;
     }
 }

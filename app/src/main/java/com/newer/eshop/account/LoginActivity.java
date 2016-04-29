@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -46,8 +48,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     String Key = "Mytoken";
     public static String Appid;
     SharedPreferences preferences;
+    Button btn_login;
     SharedPreferences.Editor editor;
-
+    CheckBox ck;
     private Tencent mTencent;
     private MyListener iUiListener;
 
@@ -82,10 +85,39 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 startActivity(new Intent(LoginActivity.this, RegistActivity.class));
             }
         });
-        findViewById(R.id.btn_login).setOnClickListener(this);
+       btn_login = (Button) findViewById(R.id.btn_login);
+
         findViewById(R.id.btn_login_qq).setOnClickListener(this);
         edt_name = (EditText) findViewById(R.id.edt_name);
         edt_psw = (EditText) findViewById(R.id.edt_psw);
+         ck= (CheckBox) findViewById(R.id.checkBox);
+
+
+        String name =preferences.getString("name2","");
+        String psw =preferences.getString("pass","");
+
+        edt_name.setText(name);
+        edt_psw.setText(psw);
+
+
+        if (TextUtils.isEmpty(edt_name.getText().toString()) || TextUtils.isEmpty(edt_psw.getText().toString())){
+            Toast.makeText(LoginActivity.this, "账号密码为空", Toast.LENGTH_SHORT).show();
+            btn_login.setClickable(false);
+        }else {
+            btn_login.setClickable(true);
+
+        }
+        btn_login.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                    LoginToServer();
+
+
+            }
+        });
+
+
 
     }
 
@@ -145,6 +177,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+                String name =edt_name.getText().toString();
+                String psw =edt_name.getText().toString();
+                if (ck.isChecked()){
+                    editor.putString("name2",name);
+                    editor.putString("pass",psw);
+                    editor.commit();
+
+                }
 
             }
 
@@ -179,14 +219,18 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         switch (v.getId()) {
 
-            case R.id.btn_login:
-                if (TextUtils.isEmpty(edt_name.getText().toString()) || TextUtils.isEmpty(edt_psw.getText().toString())) {
-                    Toast.makeText(LoginActivity.this, "用户名或者密码不能为空", Toast.LENGTH_SHORT).show();
-                }
-                LoginToServer();
+//            case R.id.btn_login:
+//
+//                if (TextUtils.isEmpty(edt_name.getText().toString()) || TextUtils.isEmpty(edt_psw.getText().toString())) {
+//                    Toast.makeText(LoginActivity.this, "用户名或者密码不能为空", Toast.LENGTH_SHORT).show();
+//
+//                }else {
+//                    btn_login.setEnabled(false);
+//
+//                    LoginToServer();
+//                }
 
-
-                break;
+//                break;
             case R.id.btn_login_qq:
                 LoginToqq();
                 break;

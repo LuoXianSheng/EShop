@@ -81,15 +81,33 @@
         android:inputType="textPassword"
         android:hint="|请输入密码"
         />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="right"
+        android:orientation="horizontal"
+        android:weightSum="1">
+
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="记住账号密码"
+        android:id="@+id/checkBox"
+        android:checked="false"
+        android:layout_weight="0.95" />
 
     <Button
         android:layout_marginTop="20dp"
-        android:layout_width="300dp"
+        android:layout_width="200dp"
         android:layout_height="wrap_content"
-
+        android:clickable="false"
         android:text="登录"
+
+
         android:id="@+id/btn_login"
         android:layout_gravity="center_horizontal" />
+
+        </LinearLayout>
     <LinearLayout
         android:layout_marginTop="20dp"
         android:layout_width="match_parent"
