@@ -2,11 +2,12 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    >
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="40dp">
-
+        android:layout_height="40dp"
+        android:background="#ede9e6">
         <ImageButton
             android:layout_width="40dp"
             android:layout_height="30dp"
@@ -16,6 +17,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="商品详情"
+            android:textColor="#FF232222"
             android:textSize="17sp"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"/>
@@ -23,7 +25,7 @@
             android:layout_width="40dp"
             android:layout_height="30dp"
             android:layout_marginTop="5dp"
-            android:background="@mipmap/goods_car"
+            android:background="@mipmap/goods_shopcar"
             android:layout_marginRight="5dp"
             android:id="@+id/goods_shopcar"
             android:onClick="changes"
@@ -39,6 +41,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="商品"
+            android:textSize="15sp"
             android:gravity="center"
             android:clickable="true"
             android:onClick="changes"
@@ -49,6 +52,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="详情"
+            android:textSize="15sp"
             android:gravity="center"
             android:onClick="changes"
             android:clickable="true"
@@ -59,6 +63,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="评价"
+            android:textSize="15sp"
             android:onClick="changes"
             android:gravity="center"
             android:clickable="true"
@@ -67,60 +72,51 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1">
+        android:layout_weight="1"
+        >
         <android.support.v4.view.ViewPager
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:id="@+id/goods_pages">
         </android.support.v4.view.ViewPager>
     </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="60dp"
+        android:background="#ede9e6"
         android:orientation="horizontal">
+
         <LinearLayout
-            android:layout_width="180dp"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="客服"
-                android:gravity="center"
-                android:drawableTop="@mipmap/goods_kefu"
-                 android:layout_weight="1"
-                />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                 android:gravity="center"
-                android:drawableTop="@mipmap/goods_dianpu"
-                android:text="店铺"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:drawableTop="@mipmap/goods_shoucang"
-                android:text="收藏" />
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1">
+            android:layout_width="wrap_content"
+            android:layout_height="60dp"
+            android:layout_weight="1"
+            android:gravity="center"
+           >
             <Button
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
+                android:layout_width="100dp"
+                android:layout_height="50dp"
                 android:onClick="ShopAddCar"
-                android:text="加入购物车"/>
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:onClick="buy"
-                android:text="立即购买"/>
+                android:background="@drawable/goods_product_btn"
+                android:text="加入购物车"
+                android:gravity="center"
+                android:layout_gravity="center"
+                android:id="@+id/shopaddcar"/>
         </LinearLayout>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="60dp"
+                android:layout_weight="1"
+                android:gravity="center">
+            <Button
+                android:layout_width="100dp"
+                android:layout_height="50dp"
+                android:onClick="Buy"
+                android:gravity="center"
+                android:layout_gravity="center"
+                android:background="@drawable/goods_product_btn"
+                android:layout_marginLeft="5dp"
+                android:text="立即购买"/>
+            </LinearLayout>
     </LinearLayout>
 </LinearLayout>

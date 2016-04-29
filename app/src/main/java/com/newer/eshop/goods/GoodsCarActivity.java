@@ -186,7 +186,7 @@ public class GoodsCarActivity extends AppCompatActivity implements HttpDataListe
             //map中为true的值来找到对应的key，这个key就是checkbox中选中的那项，有了这个key就可以去list中拿到price
             float sum = 0;
             Set<Integer> set = map.keySet();
-            for (Integer i : set) {
+            for (int i : set) {
                 if (map.get(i)) {
                     sum += list.get(i).getGoods().getPrice() * list.get(i).getCount();
                 }

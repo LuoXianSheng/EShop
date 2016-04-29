@@ -17,7 +17,7 @@ public class MyProDialog extends AlertDialog.Builder {
         View v = LayoutInflater.from(context).inflate(R.layout.dialog_item, null);
         setView(v);
         setTitle(title);
-        setCancelable(false);
+        setCancelable(true);
     }
 
     public MyProDialog(Context context, int themeResId) {

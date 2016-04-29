@@ -25,8 +25,6 @@ public class Goods {
     //商品图片(返回图片的路径)
     String image_path;
 
-    //商品的所有评论
-    List<Conment> list;
 
     public Goods() {
     }
@@ -35,14 +33,13 @@ public class Goods {
         this.id = id;
     }
 
-    public Goods(int typeId, int id, String name, float price, int sell, String image_path, List<Conment> list) {
+    public Goods(int typeId, int id, String name, float price, int sell, String image_path) {
         this.typeId = typeId;
         this.id = id;
         this.name = name;
         this.price = price;
         this.sell = sell;
         this.image_path = image_path;
-        this.list = list;
     }
 
     public int getTypeId() {
@@ -94,11 +91,4 @@ public class Goods {
         this.image_path = image_path;
     }
 
-    public List<Conment> getList() {
-        return list;
-    }
-
-    public void setList(List<Conment> list) {
-        this.list = list;
-    }
 }

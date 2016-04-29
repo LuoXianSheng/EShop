@@ -21,12 +21,11 @@ import android.widget.Toast;
 import com.newer.eshop.App;
 import com.newer.eshop.R;
 import com.newer.eshop.account.LoginActivity;
-import com.newer.eshop.account.PersonalActivity;
 import com.newer.eshop.account.SettingActivity;
 import com.newer.eshop.goods.GoodsActivity;
 import com.newer.eshop.me.order.AllOrderActivity;
 import com.tencent.tauth.Tencent;
-
+import com.newer.eshop.account.PersonalActivity;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -115,7 +114,7 @@ public class FragmentMe extends Fragment implements View.OnClickListener {
                             startActivity(new Intent(getContext(),LoginActivity.class));
 
                         }else {
-                            startActivity(new Intent(getContext(), PersonalActivity.class));
+                            startActivity(new Intent(getContext(),PersonalActivity.class));
                         }
                         break;
                     case  4:

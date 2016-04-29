@@ -2,6 +2,7 @@ package com.newer.eshop.goods;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -59,6 +60,35 @@ public class GoodsActivity extends AppCompatActivity implements HttpDataListener
                 ,list);
         pager.setOffscreenPageLimit(3);
         pager.setAdapter(manger);
+        pager.setCurrentItem(0);
+        pager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+               if(position==0){
+                   textview1.setTextColor(getResources().getColor(R.color.color_shopcar));
+                   textview2.setTextColor(getResources().getColor(R.color.color_shadow));
+                   textview3.setTextColor(getResources().getColor(R.color.color_shadow));
+               }else if(position==1){
+                   textview2.setTextColor(getResources().getColor(R.color.color_shopcar));
+                   textview1.setTextColor(getResources().getColor(R.color.color_shadow));
+                   textview3.setTextColor(getResources().getColor(R.color.color_shadow));
+               }else if(position==2){
+                   textview3.setTextColor(getResources().getColor(R.color.color_shopcar));
+                   textview1.setTextColor(getResources().getColor(R.color.color_shadow));
+                   textview2.setTextColor(getResources().getColor(R.color.color_shadow));
+               }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
     }
 
     /**
@@ -73,8 +103,10 @@ public class GoodsActivity extends AppCompatActivity implements HttpDataListener
         list=new ArrayList<>();
         list.add(new good_product_Fragment(goodsId));
         list.add(new good_detail_Fragment());
-        list.add(new good_conmemt_Fragment());
+        list.add(new good_conmemt_Fragment(goodsId));
     }
+
+
 
     /**
      * 三个textview的点击事件，切换碎片
