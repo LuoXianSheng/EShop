@@ -31,6 +31,10 @@ public class Goods {
     public Goods() {
     }
 
+    public Goods(int id) {
+        this.id = id;
+    }
+
     public Goods(int typeId, int id, String name, float price, int sell, String image_path, List<Conment> list) {
         this.typeId = typeId;
         this.id = id;

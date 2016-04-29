@@ -24,6 +24,7 @@ import com.newer.eshop.account.LoginActivity;
 import com.newer.eshop.account.PersonalActivity;
 import com.newer.eshop.account.SettingActivity;
 import com.newer.eshop.goods.GoodsActivity;
+import com.newer.eshop.me.order.AllOrderActivity;
 import com.tencent.tauth.Tencent;
 
 import java.util.ArrayList;
@@ -106,6 +107,7 @@ public class FragmentMe extends Fragment implements View.OnClickListener {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 switch (position){
                     case 0:
+                        startActivity(new Intent(getActivity(), AllOrderActivity.class).putExtra("phone", phone));
                         break;
                     case 3:
                         if (phone==null && name==null){

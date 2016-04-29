@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.newer.eshop.App;
 import com.newer.eshop.R;
+import com.newer.eshop.bean.Address;
 import com.newer.eshop.net.HttpDataListener;
 import com.newer.eshop.net.NetConnection;
 import com.rengwuxian.materialedittext.MaterialEditText;
@@ -28,15 +29,28 @@ public class MeAddressAddActivity extends AppCompatActivity implements View.OnCl
     private String userPhone;
     private boolean isNull;//标志收货地址是否为空
     private Handler handler;
+    private int status;// 状态码，判断是新建地址，还是更新地址
+    private int id;//地址在服务中的唯一id;
+    private int position;//修改的项在listview中的position
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_me_address_add);
 
-        userPhone = getIntent().getStringExtra("phone");
-        isNull = getIntent().getBooleanExtra("isNull", false);
         initView();
+        Intent intent = getIntent();
+        status = intent.getIntExtra(App.STATUS, -1);
+        if (status == App.ADD_ADDRESS_STATUS) {
+            userPhone = getIntent().getStringExtra("phone");
+            isNull = getIntent().getBooleanExtra("isNull", false);
+        } else {
+            position = intent.getIntExtra("position", -1);
+            id = intent.getIntExtra("id", -1);
+            name.setText(intent.getStringExtra("name"));
+            phone.setText(intent.getStringExtra("phone"));
+            address.setText(intent.getStringExtra("address"));
+        }
     }
 
     private void initView() {
@@ -52,10 +66,15 @@ public class MeAddressAddActivity extends AppCompatActivity implements View.OnCl
     @Override
     public void onClick(View v) {
         if (!checkEdtData()) return;
-        int type = 0;
-        if (isNull) type = 1;
-        NetConnection.saveAddress(this, App.SERVICE_URL + "/saveaddress", userPhone, phone.getText().toString(),
-                name.getText().toString(), address.getText().toString(), type, this);
+        if (status == App.ADD_ADDRESS_STATUS) {
+            int type = 0;
+            if (isNull) type = 1;//如果是空，则是默认地址
+            NetConnection.saveAddress(this, App.SERVICE_URL + "/saveaddress", userPhone, phone.getText().toString(),
+                    name.getText().toString(), address.getText().toString(), type, this);
+        } else {
+            NetConnection.updateAddress(this, App.SERVICE_URL + "/updateaddress", id, name.getText().toString(),
+                    phone.getText().toString(), address.getText().toString(), this);
+        }
     }
 
     public boolean checkEdtData() {
@@ -79,21 +98,18 @@ public class MeAddressAddActivity extends AppCompatActivity implements View.OnCl
         try {
             JSONObject object = new JSONObject(str);
             if (object.getString(App.STATUS).equals(App.STATUS_SUCCESS)) {
-                Intent intent = new Intent();
-                intent.putExtra("id", object.getInt("id"));
-                intent.putExtra("name", name.getText().toString());
-                intent.putExtra("phone", phone.getText().toString());
-                intent.putExtra("address", address.getText().toString());
-                intent.putExtra("isNull", isNull);
-                setResult(RESULT_OK, intent);
+                setResult(RESULT_OK, getIntent(object.getInt("id")));
                 finish();
-            } else {
+            } else if (object.getString(App.STATUS).equals(App.STATUS_LOSE)){
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
                         Toast.makeText(MeAddressAddActivity.this, "服务器错误！", Toast.LENGTH_SHORT).show();
                     }
                 });
+            } else {//更新地址成功
+                setResult(RESULT_OK, getIntent(id));
+                finish();
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -104,4 +120,19 @@ public class MeAddressAddActivity extends AppCompatActivity implements View.OnCl
     public void loser(String str) {
 
     }
+
+    public Intent getIntent(int id) {
+        Intent intent = new Intent();
+        intent.putExtra("name", name.getText().toString());
+        intent.putExtra("phone", phone.getText().toString());
+        intent.putExtra("address", address.getText().toString());
+        if (status == App.ADD_ADDRESS_STATUS) {//如果是新建，则返回是否为空判断
+            intent.putExtra("id", id);
+            intent.putExtra("isNull", isNull);
+        } else {
+            intent.putExtra("position", position);
+        }
+        return intent;
+    }
+
 }

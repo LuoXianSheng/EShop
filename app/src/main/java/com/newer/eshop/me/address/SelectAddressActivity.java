@@ -33,7 +33,6 @@ public class SelectAddressActivity extends AppCompatActivity implements HttpData
     private ArrayList<Address> list;
     private Handler handler;
     private String phone;//用户手机号码
-    private int idx;//默认收货地址索引
     private boolean isNull;//标志收货地址是否为空
 
     private TextView tvManager;
@@ -113,11 +112,7 @@ public class SelectAddressActivity extends AppCompatActivity implements HttpData
                     address.setPhone(o.getString("phone"));
                     address.setName(o.getString("name"));
                     address.setAddress(o.getString("address"));
-                    int type = o.getInt("type");
-                    if (type == 1) {
-                        idx = type;
-                    }
-                    address.setType(type);
+                    address.setType(o.getInt("type"));
                     list.add(address);
                 }
                 handler.sendEmptyMessage(1);
@@ -159,6 +154,7 @@ public class SelectAddressActivity extends AppCompatActivity implements HttpData
         intent.putExtra("isNull", isNull);
         if (v.getId() == R.id.me_select_add) {
             intent.setClass(SelectAddressActivity.this, MeAddressAddActivity.class);//打开新建地址界面
+            intent.putExtra(App.STATUS, App.ADD_ADDRESS_STATUS);//新建状态码
             startActivityForResult(intent, App.REQUESTCODE);
         } else {
             intent.setClass(SelectAddressActivity.this, AddressManagerActivity.class);//打开地址管理界面

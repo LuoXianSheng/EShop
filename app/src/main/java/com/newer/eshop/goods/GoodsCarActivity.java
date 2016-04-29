@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +26,7 @@ import com.google.gson.reflect.TypeToken;
 import com.newer.eshop.App;
 import com.newer.eshop.R;
 import com.newer.eshop.account.LoginActivity;
+import com.newer.eshop.bean.Address;
 import com.newer.eshop.bean.Cart;
 import com.newer.eshop.net.HttpDataListener;
 import com.newer.eshop.net.NetConnection;
@@ -231,11 +233,11 @@ public class GoodsCarActivity extends AppCompatActivity implements HttpDataListe
         try {
             JSONObject object = new JSONObject(str);
             String status = object.getString("status");
+            map = new HashMap<>();
             if (status.equals(App.STATUS_SUCCESS)) {
                 Gson gson = new Gson();
                 list = new ArrayList<>();
                 list = gson.fromJson(object.getString("data"), new TypeToken<ArrayList<Cart>>() {}.getType());
-                map = new HashMap<>();
                 for (int i = 0; i < list.size(); i++) {
                     map.put(i, false);
                 }
@@ -308,15 +310,12 @@ public class GoodsCarActivity extends AppCompatActivity implements HttpDataListe
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-        SharedPreferences sharedPreferences=getSharedPreferences("login_user_im", MODE_PRIVATE);
-        String str=sharedPreferences.getString("phone",null);
-
-        if(requestCode==1 && resultCode==RESULT_OK){
-            NetConnection.RequestShopCar(GoodsCarActivity.this, "http://192.168.191.1:8080/Eshop/shopingcart", str, this);
-        }else{
-            Toast.makeText(GoodsCarActivity.this, "请先登入!", Toast.LENGTH_SHORT).show();
-        }
+        super.onActivityResult(requestCode, resultCode, data);
+        SharedPreferences sharedPreferences = getSharedPreferences("login_user_im", MODE_PRIVATE);
+        phone = sharedPreferences.getString("phone", null);
+        list.clear();
+        shaoMyadapter.notifyDataSetChanged();
+        NetConnection.RequestShopCar(GoodsCarActivity.this, "http://192.168.191.1:8080/Eshop/shopingcart", phone, this);
     }
 
     /**
@@ -343,40 +342,63 @@ public class GoodsCarActivity extends AppCompatActivity implements HttpDataListe
 
     //删除商品
     public void delete(View v) {
-        SharedPreferences preferences = getSharedPreferences("login_user_im", MODE_PRIVATE);
-        String phone = preferences.getString("phone", null);
-        String url = App.SERVICE_URL + "/deletegoods";
-        StringBuilder sb = new StringBuilder();
-        Set<Integer> set = map.keySet();
-        sb.append("[");
-        for (Integer i : set) {
-            if (map.get(i)) {
-                sb.append("{\"goodsid\":").append(list.get(i).getGoods().getId()).append("},");
+        if (checkBox()) {
+            Set<Integer> set = map.keySet();
+            if (set.isEmpty()) return;
+            SharedPreferences preferences = getSharedPreferences("login_user_im", MODE_PRIVATE);
+            String phone = preferences.getString("phone", null);
+            String url = App.SERVICE_URL + "/deletegoods";
+            StringBuilder sb = new StringBuilder();
+            sb.append("[");
+            for (Integer i : set) {
+                if (map.get(i)) {
+                    sb.append("{\"goodsid\":").append(list.get(i).getGoods().getId()).append("},");
+                }
             }
+            String data = sb.substring(0, sb.lastIndexOf(",")) + "]";
+            NetConnection.deleteGoods(GoodsCarActivity.this, url, phone, data, this);
         }
-        String data = sb.substring(0, sb.lastIndexOf(",")) + "]";
-        NetConnection.deleteGoods(GoodsCarActivity.this, url, phone, data, this);
     }
 
     //结算
     public void result(View v) {
         checkUser();
-        StringBuilder goodsids = new StringBuilder();
-        StringBuilder counts = new StringBuilder();
-        Set<Integer> set = map.keySet();
-        if (map.isEmpty()) return;
-        for (Integer i : set) {
-            if (map.get(i)) {
-                goodsids.append(list.get(i).getGoods().getId()).append(",");
-                counts.append(list.get(i).getCount()).append(",");
+        if (checkBox()) {
+            StringBuilder goodsids = new StringBuilder();
+            StringBuilder counts = new StringBuilder();
+            Set<Integer> set = map.keySet();
+            for (Integer i : set) {
+                if (map.get(i)) {
+                    goodsids.append(list.get(i).getGoods().getId()).append(",");
+                    counts.append(list.get(i).getCount()).append(",");
+                }
             }
+            Intent intent = new Intent(GoodsCarActivity.this, GoodsBuy.class);
+            intent.putExtra("goodsids", goodsids.toString());
+            intent.putExtra("counts", counts.toString());
+            startActivityForResult(intent, 1);
         }
-        Intent intent = new Intent(GoodsCarActivity.this, GoodsBuy.class);
-        intent.putExtra("goodsids", goodsids.toString());
-        intent.putExtra("counts", counts.toString());
-        startActivity(intent);
     }
 
+    /**
+     * 检测checkBox的选择状态，如果没有一个选择则删除、购买都不进行操作
+     * @return
+     */
+    public boolean checkBox() {
+        Set<Integer> set = map.keySet();
+        if (set.isEmpty()) return false;
+        for (int i : set) {
+            if (map.get(i)) {
+
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 检测用户是否登录
+     */
     public void checkUser() {
         SharedPreferences preferences = getSharedPreferences("login_user_im", MODE_PRIVATE);
         String token = preferences.getString("Mytoken", "");

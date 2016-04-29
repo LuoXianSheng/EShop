@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:background="#ffffff"
+              android:layout_height="match_parent">
+
+    <include layout="@layout/me_order_toolbar"
+             android:id="@+id/order_toolbar"/>
+
+    <com.newer.eshop.myview.PinnedSectionListView
+        android:id="@+id/pinnedSectionListView1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:listSelector="@drawable/selector_listview"
+        android:cacheColorHint="#000000"/>
+</LinearLayout>

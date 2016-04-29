@@ -20,8 +20,10 @@ import com.newer.eshop.R;
 import com.newer.eshop.bean.Address;
 import com.newer.eshop.bean.Cart;
 import com.newer.eshop.bean.Goods;
+import com.newer.eshop.bean.Order;
 import com.newer.eshop.me.address.AddressManagerActivity;
 import com.newer.eshop.me.address.SelectAddressActivity;
+import com.newer.eshop.me.order.SubmitResultActivity;
 import com.newer.eshop.net.HttpDataListener;
 import com.newer.eshop.net.NetConnection;
 
@@ -41,9 +43,9 @@ public class GoodsBuy extends AppCompatActivity implements HttpDataListener, Vie
     private GoodsBuyListAdapter adapter;
     private ArrayList<Cart> list;
     private Address address;//收货地址
-    private String[] goodsids;
-    private String[] counts;
-    private String phone;
+    private String[] goodsids;//商品ID
+    private String[] counts;//商品数量
+    private String phone;//用户手机号码
     private Handler handler;
     private float sum = 0;//商品价格
     private int count = 0;//商品计件
@@ -60,8 +62,8 @@ public class GoodsBuy extends AppCompatActivity implements HttpDataListener, Vie
 
     private void initData() {
         Intent intent = getIntent();
-        goodsids = intent.getStringExtra("goodsids").split(",");
-        counts = intent.getStringExtra("counts").split(",");
+        goodsids = intent.getStringExtra("goodsids").split(",");//获取立即购买时所有购买的商品的ID
+        counts = intent.getStringExtra("counts").split(",");//获取立即购买时所购买商品的数量
         SharedPreferences preferences = getSharedPreferences(App.USER_SP_NAME, MODE_PRIVATE);
         phone = preferences.getString("phone", "");
     }
@@ -77,7 +79,7 @@ public class GoodsBuy extends AppCompatActivity implements HttpDataListener, Vie
             count.append("{\"count\":").append(goodsids[i]).append("},");
         }
         int type = 1;
-        NetConnection.buyGoods(this,url, phone, type, goodsid.substring(0, goodsid.lastIndexOf(",")) + "]",
+        NetConnection.buyGoods(this, url, phone, type, goodsid.substring(0, goodsid.lastIndexOf(",")) + "]",
                 count.substring(0, count.lastIndexOf(",")) + "]", this);
     }
 
@@ -119,7 +121,8 @@ public class GoodsBuy extends AppCompatActivity implements HttpDataListener, Vie
     public void succeseful(String str) {
         try {
             JSONObject object = new JSONObject(str);
-            if (object.getString("status").equals(App.STATUS_SUCCESS)) {
+            String status = object.getString("status");
+            if (status.equals(App.STATUS_SUCCESS)) {
                 Gson gson = new Gson();
                 ArrayList<Address> addresses = gson.fromJson(object.getString("addresses"),
                         new TypeToken<ArrayList<Address>>(){}.getType());
@@ -133,6 +136,8 @@ public class GoodsBuy extends AppCompatActivity implements HttpDataListener, Vie
                 if (addresses != null)
                     address = addresses.get(0);
                 handler.sendEmptyMessage(1);
+            } else if (status.equals("2")) {//提交订单成功
+                startActivityForResult(new Intent(GoodsBuy.this, SubmitResultActivity.class), 2);
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -147,14 +152,33 @@ public class GoodsBuy extends AppCompatActivity implements HttpDataListener, Vie
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.goods_buy_address:
+            case R.id.goods_buy_address://选择收货地址
                 startActivityForResult(new Intent(GoodsBuy.this, SelectAddressActivity.class)
                         .putExtra("phone", phone), App.REQUESTCODE);
                 break;
-            case R.id.goods_buy_submit:
-
+            case R.id.goods_buy_submit://提交订单
+                submit();
                 break;
         }
+    }
+
+    /**
+     * 提交订单
+     */
+    private void submit() {
+        ArrayList<Goods> goodses = new ArrayList<>();
+        ArrayList<Integer> count = new ArrayList<>();//把数组转成集合
+        for (int i = 0; i < goodsids.length; i++) {
+            goodses.add(new Goods(Integer.valueOf(goodsids[i])));
+            count.add(Integer.valueOf(counts[i]));
+        }
+        Gson gson = new Gson();
+        Order order = new Order();
+        order.setPhone(phone);
+        order.setGoodses(goodses);
+        order.setCount(count);
+        String data = gson.toJson(order);
+        NetConnection.submitOrder(this, App.SERVICE_URL + "/submitorder", data, this);
     }
 
     @Override
@@ -169,7 +193,15 @@ public class GoodsBuy extends AppCompatActivity implements HttpDataListener, Vie
             tvName.setText(address.getName());
             tvPhone.setText(address.getPhone());
             tvAddress.setText(address.getAddress());
+        } else {
+            setResult(RESULT_OK);
+            finish();
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        setResult(RESULT_OK);
+    }
 }

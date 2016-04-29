@@ -59,7 +59,6 @@ public class AddressManagerActivity extends AppCompatActivity
         list = new ArrayList<>();
         adapter = new AddressListAdapter(this, list, this);
         listView.setAdapter(adapter);
-
         handler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
@@ -79,6 +78,7 @@ public class AddressManagerActivity extends AppCompatActivity
     @Override
     public void onClick(View v) {
         Intent intent = new Intent(AddressManagerActivity.this, MeAddressAddActivity.class);
+        intent.putExtra(App.STATUS, App.ADD_ADDRESS_STATUS);//新建状态码
         intent.putExtra("phone", phone);
         intent.putExtra("isNull", isNull);
         startActivityForResult(intent, App.REQUESTCODE);
@@ -99,8 +99,15 @@ public class AddressManagerActivity extends AppCompatActivity
                 isNull = false;
             }
             list.add(address);
-            adapter.notifyDataSetChanged();
+        } else {
+            if (data != null) {
+                int position = data.getIntExtra("position", -1);
+                list.get(position).setName(data.getStringExtra("name"));
+                list.get(position).setPhone(data.getStringExtra("phone"));
+                list.get(position).setAddress(data.getStringExtra("address"));
+            }
         }
+        adapter.notifyDataSetChanged();
     }
 
     @Override
@@ -109,18 +116,20 @@ public class AddressManagerActivity extends AppCompatActivity
             if (str.length() <- 0) return;
             JSONObject object = new JSONObject(str);
             String status = object.getString(App.STATUS);
-            if (status.equals(App.STATUS_SUCCESS)) {
+            if (status.equals(App.STATUS_SUCCESS)) {//获取所有地址成功
                 isNull = false;
                 JSONArray array = new JSONArray(object.getString("data"));
                 for (int i = 0; i < array.length(); i++) {
                     JSONObject o = array.getJSONObject(i);
-                    Address address = new Address(o.getInt("id"), o.getString("phone"),
-                            o.getString("name"), o.getString("address"), o.getInt("type"));
+                    Address address = new Address(o.getInt("id"), o.getString("name"),
+                            o.getString("phone"), o.getString("address"), o.getInt("type"));
                     list.add(address);
                 }
                 handler.sendEmptyMessage(1);
-            } else if (status.equals(App.STATUS_LOSE)) {
+            } else if (status.equals(App.STATUS_LOSE)) {//服务器找不到地址，就是用户的地址列表为空
                 isNull = true;
+            } else {//设置默认地址成功
+                handler.sendEmptyMessage(1);
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -143,8 +152,10 @@ public class AddressManagerActivity extends AppCompatActivity
         int old = adapter.getIdx();
         if (old != position) {
             adapter.getMap().get(old).setChecked(false);
+            list.get(old).setType(0);
             adapter.setIdx(position);
             adapter.getMap().get(position).setChecked(true);
+            list.get(position).setType(1);
             NetConnection.updateAddressForType(AddressManagerActivity.this, App.SERVICE_URL + "/updatefortype",
                     list.get(old).getId() + "", list.get(position).getId() + "", this);
         }
@@ -152,7 +163,15 @@ public class AddressManagerActivity extends AppCompatActivity
 
     @Override
     public void callBackEdit(int position) {
-
+        Address address = list.get(position);
+        Intent intent = new Intent(AddressManagerActivity.this, MeAddressAddActivity.class);
+        intent.putExtra(App.STATUS, App.UPDATE_ADDRESS_STATUS);
+        intent.putExtra("position", position);
+        intent.putExtra("id", address.getId());
+        intent.putExtra("phone", address.getPhone());
+        intent.putExtra("name", address.getName());
+        intent.putExtra("address", address.getAddress());
+        startActivityForResult(intent, 2);
     }
 
     @Override

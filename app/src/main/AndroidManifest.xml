@@ -70,7 +70,16 @@
         <activity
             android:name=".me.address.MeAddressAddActivity"
             android:theme="@style/OtherAppTheme" />
-        <activity android:name=".me.address.SelectAddressActivity" android:theme="@style/OtherAppTheme">
+        <activity
+            android:name=".me.address.SelectAddressActivity"
+            android:theme="@style/OtherAppTheme" >
+        </activity>
+        <activity
+            android:name=".me.order.AllOrderActivity"
+            android:theme="@style/OtherAppTheme" />
+        <activity
+            android:name=".me.order.SubmitResultActivity"
+            android:theme="@style/OtherAppTheme" >
         </activity>
     </application>
 

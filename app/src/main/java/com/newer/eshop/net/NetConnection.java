@@ -217,6 +217,48 @@ public class NetConnection {
     }
 
     /**
+     * 修改更新地址
+     * @param context
+     * @param url
+     * @param id
+     * @param name
+     * @param phone
+     * @param address
+     * @param listener
+     */
+    public static void updateAddress(Context context, String url, int id, String name, String phone,
+                                     String address, final HttpDataListener listener) {
+        FormBody body = new FormBody.Builder()
+                .add("id", id + "")
+                .add("name", name)
+                .add("phone", phone)
+                .add("address", address)
+                .build();
+        addToEnqueue(context, url, body, listener);
+    }
+
+    /**
+     * 提交订单
+     * @param context
+     * @param url
+     * @param date
+     * @param listener
+     */
+    public static void submitOrder(Context context, String url, String date, final HttpDataListener listener) {
+        FormBody body = new FormBody.Builder()
+                .add("data", date)
+                .build();
+        addToEnqueue(context, url, body, listener);
+    }
+
+    public static void getAllOrder(Context context, String url, String phone, final HttpDataListener listener) {
+        FormBody body = new FormBody.Builder()
+                .add("phone", phone)
+                .build();
+        addToEnqueue(context, url, body, listener);
+    }
+
+    /**
      * 请求队列
      * @param context
      * @param url

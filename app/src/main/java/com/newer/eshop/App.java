@@ -34,6 +34,10 @@ public class App extends Application {
     public static final String STATUS_LOSE = "0";//失败状态码
     public static final String GOODSCLASSIFY_URL = SERVICE_URL + "/goodsclassify";
 
+
+    public static final int ADD_ADDRESS_STATUS = 1001;
+    public static final int UPDATE_ADDRESS_STATUS = 1002;
+
     public static final String USER_SP_NAME = "login_user_im";
 
     private static DisplayImageOptions options = null;
