@@ -82,7 +82,10 @@ public class FragmentShopingCart extends Fragment implements HttpDataListener{
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void updateCart(MyEvent event) {
         if ("updateCart".equals(event.getAction())) {
-            NetConnection.RequestShopCar(getContext(), "http://192.168.191.1:8080/Eshop/shopingcart",phone,this);
+            list.clear();
+            if (checkUser()) {
+                NetConnection.RequestShopCar(getContext(), "http://192.168.191.1:8080/Eshop/shopingcart", phone, this);
+            }
         }
     }
 
@@ -95,8 +98,10 @@ public class FragmentShopingCart extends Fragment implements HttpDataListener{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_shopingcart, null);
-        phone=getActivity().getSharedPreferences("login_user_im", Context.MODE_PRIVATE).getString("phone",null);
-        NetConnection.RequestShopCar(getContext(), "http://192.168.191.1:8080/Eshop/shopingcart",phone,this);
+        if (checkUser()) {
+            phone = getActivity().getSharedPreferences("login_user_im", Context.MODE_PRIVATE).getString("phone", null);
+            NetConnection.RequestShopCar(getContext(), "http://192.168.191.1:8080/Eshop/shopingcart", phone, this);
+        }
         initID(view);
         return view;
     }
@@ -201,14 +206,7 @@ public class FragmentShopingCart extends Fragment implements HttpDataListener{
                 for (int i = 0; i < list.size(); i++) {
                     map.put(i, false);
                 }
-            } else if (status.equals(App.STATUS_LOSE)) {
-                handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(getContext(), "空的购物车！", Toast.LENGTH_SHORT).show();
-                    }
-                });
-            } else {
+            } else if (status.equals("2")){
                 map.clear();
                 list.clear();
                 handler.post(new Runnable() {
@@ -378,12 +376,15 @@ public class FragmentShopingCart extends Fragment implements HttpDataListener{
     /**
      * 检测用户是否登录
      */
-    public void checkUser() {
+    public boolean checkUser() {
         SharedPreferences preferences = getActivity().getSharedPreferences("login_user_im", Context.MODE_PRIVATE);
         String token = preferences.getString("Mytoken", "");
+        phone = preferences.getString("phone", "");
         if ("".equals(token)) {
             startActivity(new Intent(getContext(), LoginActivity.class));
+            return false;
         }
+        return true;
     }
 }
 

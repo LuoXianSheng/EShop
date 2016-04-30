@@ -9,7 +9,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
-    <include layout="@layout/classify_result_toolbar" android:id="@+id/result_toolbar"/>
+    <include layout="@layout/classify_result_toolbar"
+             android:id="@+id/result_toolbar"/>
 
     <ImageButton
         android:id="@+id/fabButton"

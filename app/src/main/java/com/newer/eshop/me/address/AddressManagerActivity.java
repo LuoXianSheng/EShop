@@ -10,6 +10,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -71,17 +72,23 @@ public class AddressManagerActivity extends AppCompatActivity
 
     private void initToolBar() {
         Toolbar bar = (Toolbar) findViewById(R.id.address_toolbar);
+        ImageView back = (ImageView) bar.findViewById(R.id.address_toolbar_back);
+        back.setOnClickListener(this);
         bar.setTitle("");
         setSupportActionBar(bar);
     }
 
     @Override
     public void onClick(View v) {
-        Intent intent = new Intent(AddressManagerActivity.this, MeAddressAddActivity.class);
-        intent.putExtra(App.STATUS, App.ADD_ADDRESS_STATUS);//新建状态码
-        intent.putExtra("phone", phone);
-        intent.putExtra("isNull", isNull);
-        startActivityForResult(intent, App.REQUESTCODE);
+        if (v.getId() == R.id.me_address_add_newAddress) {
+            Intent intent = new Intent(AddressManagerActivity.this, MeAddressAddActivity.class);
+            intent.putExtra(App.STATUS, App.ADD_ADDRESS_STATUS);//新建状态码
+            intent.putExtra("phone", phone);
+            intent.putExtra("isNull", isNull);
+            startActivityForResult(intent, App.REQUESTCODE);
+        } else if (v.getId() == R.id.address_toolbar_back) {
+            finish();
+        }
     }
 
     @Override

@@ -187,6 +187,7 @@ public class GoodsActivity extends AppCompatActivity implements HttpDataListener
     public void checkUser() {
         SharedPreferences preferences = getSharedPreferences("login_user_im", MODE_PRIVATE);
         String token = preferences.getString("Mytoken", "");
+        name = preferences.getString("phone", "");
         if ("".equals(token)) {
             startActivity(new Intent(GoodsActivity.this, LoginActivity.class));
         }

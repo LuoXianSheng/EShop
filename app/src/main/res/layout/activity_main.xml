@@ -19,7 +19,7 @@
     <LinearLayout
         android:id="@+id/ly_tab_bar"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="70dp"
         android:background="#fff"
         android:orientation="horizontal">
 

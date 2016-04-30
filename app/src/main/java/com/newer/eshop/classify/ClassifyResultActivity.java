@@ -12,6 +12,7 @@ import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.newer.eshop.App;
@@ -30,7 +31,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 public class ClassifyResultActivity extends AppCompatActivity implements
-        HttpDataListener, RecyclerAdapter.OnItemClickLitener {
+        HttpDataListener, RecyclerAdapter.OnItemClickLitener, View.OnClickListener {
 
     private ArrayList<Goods> list;
     private int type_1, type_2;
@@ -47,12 +48,7 @@ public class ClassifyResultActivity extends AppCompatActivity implements
 
         initToolbar();
         mFabButton = (ImageButton) findViewById(R.id.fabButton);
-        mFabButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(ClassifyResultActivity.this, GoodsCarActivity.class));
-            }
-        });
+        mFabButton.setOnClickListener(this);
 
         Intent intent = getIntent();
         type_1 = intent.getIntExtra("type_1", -1);
@@ -63,6 +59,8 @@ public class ClassifyResultActivity extends AppCompatActivity implements
 
     private void initToolbar() {
         mToolbar = (Toolbar) findViewById(R.id.result_toolbar);
+        ImageView back = (ImageView) mToolbar.findViewById(R.id.classify_result_toolbar_back);
+        back.setOnClickListener(this);
         setSupportActionBar(mToolbar);
     }
 
@@ -142,5 +140,17 @@ public class ClassifyResultActivity extends AppCompatActivity implements
         Intent intent = new Intent(ClassifyResultActivity.this, GoodsActivity.class);
         intent.putExtra("goodsId", list.get(position).getId());
         startActivity(intent);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.fabButton:
+                startActivity(new Intent(ClassifyResultActivity.this, GoodsCarActivity.class));
+                break;
+            case R.id.classify_result_toolbar_back:
+                finish();
+                break;
+        }
     }
 }

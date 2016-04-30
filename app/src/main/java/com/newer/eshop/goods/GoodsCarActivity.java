@@ -313,6 +313,7 @@ public class GoodsCarActivity extends AppCompatActivity implements HttpDataListe
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        Log.e("购物车", "被执行了");
         SharedPreferences sharedPreferences = getSharedPreferences("login_user_im", MODE_PRIVATE);
         phone = sharedPreferences.getString("phone", null);
         list.clear();

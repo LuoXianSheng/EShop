@@ -70,7 +70,33 @@ public class NetConnection {
     }
 
     /**
-     * 获取分类信息
+     * 获取一级分类数据
+     * @param context
+     * @param url
+     * @param listener
+     */
+    public static void getFirstClassifyTitle(Context context, String url, final HttpDataListener listener) {
+        OkHttpClient client = getOkHttpClientInstance();
+        showDialog(context);
+        Request request = new Request.Builder()
+                .url(url).build();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                listener.loser("请求失败！");
+                dialog.dismiss();
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                listener.succeseful(response.body().string());
+                dialog.dismiss();
+            }
+        });
+    }
+
+    /**
+     * 获取二级分类信息
      *
      * @param url
      * @param type_1

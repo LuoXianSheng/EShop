@@ -7,9 +7,11 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -17,9 +19,7 @@ import com.google.gson.reflect.TypeToken;
 import com.newer.eshop.App;
 import com.newer.eshop.R;
 import com.newer.eshop.account.LoginActivity;
-import com.newer.eshop.bean.Goods;
 import com.newer.eshop.bean.Order;
-import com.newer.eshop.bean.SubmitOrder;
 import com.newer.eshop.myview.PinnedSectionListView;
 import com.newer.eshop.net.HttpDataListener;
 import com.newer.eshop.net.NetConnection;
@@ -74,20 +74,21 @@ public class AllOrderActivity extends AppCompatActivity implements HttpDataListe
      * 获取网络数据
      */
     private void getNetData() {
-        checkUser();//检测用户是否登录
-        String phone = getSharedPreferences(App.USER_SP_NAME, MODE_PRIVATE).getString("phone", "");
-        NetConnection.getAllOrder(this, App.SERVICE_URL + "/getallorder", phone, this);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        String phone = getSharedPreferences(App.USER_SP_NAME, MODE_PRIVATE).getString("phone", "");
-        NetConnection.getAllOrder(this, App.SERVICE_URL + "/getallorder", phone, this);
+        if (checkUser()) {//检测用户是否登录
+            String phone = getSharedPreferences(App.USER_SP_NAME, MODE_PRIVATE).getString("phone", "");
+            NetConnection.getAllOrder(this, App.SERVICE_URL + "/getallorder", phone, this);
+        }
     }
 
     private void initToolBar() {
         Toolbar bar = (Toolbar) findViewById(R.id.order_toolbar);
+        ImageView back = (ImageView) bar.findViewById(R.id.all_toolvar_back);
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
         bar.setTitle("");
         setSupportActionBar(bar);
     }
@@ -127,12 +128,14 @@ public class AllOrderActivity extends AppCompatActivity implements HttpDataListe
     /**
      * 检测用户是否登录
      */
-    public void checkUser() {
-        SharedPreferences preferences = getSharedPreferences("login_user_im", MODE_PRIVATE);
+    public boolean checkUser() {
+        SharedPreferences preferences = getSharedPreferences(App.USER_SP_NAME, MODE_PRIVATE);
         String token = preferences.getString("Mytoken", "");
         if ("".equals(token)) {
-            startActivity(new Intent(this, LoginActivity.class));
+            startActivityForResult(new Intent(this, LoginActivity.class), 1);
+            return false;
         }
+        return true;
     }
 
     @Override
@@ -155,5 +158,16 @@ public class AllOrderActivity extends AppCompatActivity implements HttpDataListe
     @Override
     public void loser(String str) {
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1 && resultCode == RESULT_OK) {
+            Log.e("all", "回调");
+            list.clear();
+            adapter.notifyDataSetChanged();
+            getNetData();
+        }
     }
 }

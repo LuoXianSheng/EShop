@@ -10,6 +10,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -84,6 +85,8 @@ public class GoodsBuy extends AppCompatActivity implements HttpDataListener, Vie
 
     private void initToolbar() {
         Toolbar mToolbar = (Toolbar) findViewById(R.id.buy_toolbar);
+        ImageView back = (ImageView) mToolbar.findViewById(R.id.buy_toolvar_back);
+        back.setOnClickListener(this);
         mToolbar.setTitle("");
         setSupportActionBar(mToolbar);
     }
@@ -165,6 +168,9 @@ public class GoodsBuy extends AppCompatActivity implements HttpDataListener, Vie
                 break;
             case R.id.goods_buy_submit://提交订单
                 submit();
+                break;
+            case R.id.buy_toolvar_back:
+                finish();
                 break;
         }
     }

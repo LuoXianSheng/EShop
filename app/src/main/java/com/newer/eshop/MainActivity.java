@@ -27,8 +27,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private TextView tv_index, tv_classify, tv_shopingcart, tv_me;
     private Fragment fragmentIndex, fragmentClassify, fragmentShopingCart, fragmentMe;
     private FragmentManager manager;
-    private ActionBar bar;
-
     DisplayMetrics dm = new DisplayMetrics();
 
     @Override
@@ -38,21 +36,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
         EventBus.getDefault().register(this);
         getWindowManager().getDefaultDisplay().getMetrics(dm);
-        Toast.makeText(MainActivity.this, "" + dm.heightPixels, Toast.LENGTH_SHORT).show();
-        initActionBar();
         initView();
-    }
-
-    private void initActionBar() {
-//        bar = getSupportActionBar();
-//        bar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-//        bar.setCustomView(R.layout.actionbar);
-//        bar.getCustomView().setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Toast.makeText(MainActivity.this, "Action被点击了", Toast.LENGTH_SHORT).show();
-//            }
-//        });
     }
 
     private void initView() {
@@ -77,7 +61,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         resetAllSelector();
         switch (v.getId()) {
             case R.id.main_tv_index:
-//                bar.show();
                 tv_index.setSelected(true);
                 if (fragmentIndex == null) {
                     fragmentIndex = new FragmentIndex(dm.heightPixels);
@@ -87,7 +70,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
                 break;
             case R.id.main_tv_classify:
-//                bar.hide();
                 tv_classify.setSelected(true);
                 if (fragmentClassify == null) {
                     fragmentClassify = new FragmentClassify();
@@ -97,7 +79,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
                 break;
             case R.id.main_tv_shopingcart:
-//                bar.hide();
                 tv_shopingcart.setSelected(true);
                 if (fragmentShopingCart == null) {
                     fragmentShopingCart = new FragmentShopingCart();
@@ -110,7 +91,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
                 break;
             case R.id.main_tv_me:
-//                bar.hide();
                 tv_me.setSelected(true);
                 if (fragmentMe == null) {
                     fragmentMe = new FragmentMe();

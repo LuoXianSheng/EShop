@@ -1,26 +1,19 @@
 package com.newer.eshop.goods;
 
 
-import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,9 +24,9 @@ import com.newer.eshop.App;
 import com.newer.eshop.R;
 import com.newer.eshop.bean.Goods;
 import com.newer.eshop.bean.MyEvent;
+import com.newer.eshop.bean.Photo;
 import com.newer.eshop.net.HttpDataListener;
 import com.newer.eshop.net.NetConnection;
-import com.nostra13.universalimageloader.core.ImageLoader;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -42,7 +35,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Enumeration;
 
 
 public class good_product_Fragment extends Fragment implements HttpDataListener,View.OnClickListener{
@@ -58,6 +50,7 @@ public class good_product_Fragment extends Fragment implements HttpDataListener,
      ArrayList<Fragment> arrayList;
      Goods goods;
      int count=1;
+    private String imgPath;
 
     Handler handler = new Handler() {
         @Override
@@ -105,6 +98,35 @@ public class good_product_Fragment extends Fragment implements HttpDataListener,
         adapter=new AdvVPagerAdapter(getFragmentManager(),arrayList);
         pager.setOffscreenPageLimit(5);
         pager.setAdapter(adapter);
+        pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(final int position, float positionOffset, int positionOffsetPixels) {
+                if (arrayList.isEmpty()) return;
+                Fragment fragment = arrayList.get(position);
+                View v = fragment.getView();
+                ImageView img = (ImageView) v;
+                img.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent i = new Intent(getActivity(), PhotoViewActivity.class);
+                        i.putExtra("path", imgPath);
+                        i.putExtra("position", position);
+                        startActivity(i);
+                    }
+                });
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+
     }
 
     /**
@@ -131,6 +153,7 @@ public class good_product_Fragment extends Fragment implements HttpDataListener,
             if(object.getString("status").equals(App.STATUS_SUCCESS)){
                 gson=new Gson();
                 goods=gson.fromJson(object.getString("data"), Goods.class);
+                imgPath = goods.getImage_path();
                 String[] src=goods.getImage_path().split(",");
                 for (int i = 1; i < src.length; i++) {
                     list.add("http://192.168.191.1:8080/Eshop/images/" + src[i] + ".jpg");

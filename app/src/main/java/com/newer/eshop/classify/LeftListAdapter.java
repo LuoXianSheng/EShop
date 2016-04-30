@@ -9,6 +9,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.newer.eshop.R;
+import com.newer.eshop.bean.ClassifyTitle;
 
 import java.util.List;
 
@@ -18,10 +19,10 @@ import java.util.List;
 public class LeftListAdapter extends BaseAdapter {
 
     private Context context;
-    private List<String> list;
+    private List<ClassifyTitle> list;
     private int mSelect = 0;   //选中项
 
-    public LeftListAdapter(Context context, List<String> list) {
+    public LeftListAdapter(Context context, List<ClassifyTitle> list) {
         this.context = context;
         this.list = list;
     }
@@ -60,11 +61,11 @@ public class LeftListAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
         if (mSelect == position) {
-            convertView.setBackgroundColor(Color.parseColor("#ffc0c0c0"));
+            convertView.setBackgroundColor(Color.parseColor("#ffefefef"));
         } else {
             convertView.setBackgroundColor(Color.WHITE);
         }
-        holder.tv.setText(list.get(position));
+        holder.tv.setText(list.get(position).getTitle());
         return convertView;
     }
 

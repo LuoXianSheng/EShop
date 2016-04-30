@@ -9,6 +9,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -54,6 +55,12 @@ public class MeAddressAddActivity extends AppCompatActivity implements View.OnCl
     }
 
     private void initView() {
+        Toolbar bar = (Toolbar) findViewById(R.id.add_address_toolbar);
+        ImageView back = (ImageView) bar.findViewById(R.id.add_address_toolbar_back);
+        back.setOnClickListener(this);
+        bar.setTitle("");
+        setSupportActionBar(bar);
+
         name = (MaterialEditText) findViewById(R.id.address_add_name);
         phone = (MaterialEditText) findViewById(R.id.address_add_phone);
         address = (MaterialEditText) findViewById(R.id.address_add_address);
@@ -65,6 +72,10 @@ public class MeAddressAddActivity extends AppCompatActivity implements View.OnCl
 
     @Override
     public void onClick(View v) {
+        if (v.getId() == R.id.add_address_toolbar_back) {
+            finish();
+            return;
+        }
         if (!checkEdtData()) return;
         if (status == App.ADD_ADDRESS_STATUS) {
             int type = 0;

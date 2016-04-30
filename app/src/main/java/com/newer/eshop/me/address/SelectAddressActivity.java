@@ -9,6 +9,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -52,6 +53,8 @@ public class SelectAddressActivity extends AppCompatActivity implements HttpData
 
     private void initView() {
         Toolbar bar = (Toolbar) findViewById(R.id.select_toolbar);
+        ImageView back = (ImageView) bar.findViewById(R.id.select_toolbar_back);
+        back.setOnClickListener(this);
         tvManager = (TextView) bar.findViewById(R.id.select_address_manager);
         tvManager.setOnClickListener(this);
         setSupportActionBar(bar);
@@ -149,6 +152,10 @@ public class SelectAddressActivity extends AppCompatActivity implements HttpData
 
     @Override
     public void onClick(View v) {
+        if (v.getId() == R.id.select_toolbar_back) {
+            finish();
+            return;
+        }
         Intent intent = new Intent();
         intent.putExtra("phone", phone);
         intent.putExtra("isNull", isNull);
