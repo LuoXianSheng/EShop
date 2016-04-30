@@ -75,16 +75,12 @@ public class good_conmemt_Fragment extends Fragment implements HttpDataListener{
     @Override
     public void succeseful(String str) {
         Gson gson;
-        System.out.println(str);
         try {
             JSONObject object=new JSONObject(str);
             if(object.getString("status").equals(App.STATUS_SUCCESS)){
                 gson=new Gson();
                 list=gson.fromJson(object.getString("data"), new TypeToken<ArrayList<Conment>>() {
                 }.getType());
-                for(int i=0; i<list.size(); i++){
-                    image_list.add("http://192.168.191.1:8080/Eshop/images/"+list.get(i).getImgPath()+".jpg");
-                }
                 Message message=new Message();
                 message.what=0;
                 message.obj=list;
@@ -164,9 +160,14 @@ public class good_conmemt_Fragment extends Fragment implements HttpDataListener{
                         viewHolder.view1=(ImageView)convertView.findViewById(R.id.goods_comment_contentimage1);
                         viewHolder.view2=(ImageView)convertView.findViewById(R.id.goods_comment_contentimage2);
                         viewHolder.view3=(ImageView)convertView.findViewById(R.id.goods_comment_contentimage3);
+                        viewHolder.view4=(ImageView)convertView.findViewById(R.id.goods_comment_contentimage4);
+                        viewHolder.view5=(ImageView)convertView.findViewById(R.id.goods_comment_contentimage5);
+                        list_image.clear();
                         list_image.add(viewHolder.view1);
                         list_image.add(viewHolder.view2);
                         list_image.add(viewHolder.view3);
+                        list_image.add(viewHolder.view4);
+                        list_image.add(viewHolder.view5);
                         convertView.setTag(viewHolder);
                         break;
                 }
@@ -180,6 +181,14 @@ public class good_conmemt_Fragment extends Fragment implements HttpDataListener{
                 viewHolder.text_commnet.setText("评价:" + list.get(position).getContent());
                 viewHolder.text_date.setText("时间:" + list.get(position).getDate());
                 String[] src=list.get(position).getImgPath().split(",");
+                if(src.length!=0) {
+                        for (int i = 0; i < src.length; i++) {
+                            ImageLoader.getInstance().displayImage(
+                                    "http://192.168.191.1:8080/Eshop/images/" + src[i] + ".jpg",
+                                    list_image.get(i)
+                            );
+                        }
+                    }
             }else {
                 //content.text_user.setText(list.get(position).getUserId());
                 content.text_commnet.setText("用户名:"+list.get(position).getContent());
@@ -196,6 +205,8 @@ public class good_conmemt_Fragment extends Fragment implements HttpDataListener{
             ImageView view1;
             ImageView view2;
             ImageView view3;
+            ImageView view4;
+            ImageView view5;
         }
         class ViewHolderContent{
             TextView text_user;

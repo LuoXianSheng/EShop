@@ -66,13 +66,15 @@
             android:layout_centerVertical="true"
             android:id="@+id/goods_shopcar_add"/>
 
-        <TextView android:layout_width="wrap_content"
+        <TextView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:id="@+id/goods_shopcar_count"
             android:layout_toEndOf="@+id/goods_shopcar_add"
             android:layout_centerVertical="true">
         </TextView>
+
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

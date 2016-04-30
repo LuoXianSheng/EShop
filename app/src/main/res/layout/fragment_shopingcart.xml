@@ -14,7 +14,7 @@
             android:layout_width="40dp"
             android:layout_height="30dp"
             android:layout_marginTop="10dp"
-            android:onClick="backs"
+            android:id="@+id/Shoping_cart"
             android:background="@mipmap/goods_back"/>
         <TextView
             android:layout_width="wrap_content"
@@ -72,6 +72,7 @@
             android:layout_toEndOf="@+id/goods_shopcar_add"
             android:layout_centerVertical="true">
         </TextView>
+
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -79,13 +80,13 @@
             android:layout_centerVertical="true"
             android:layout_marginRight="20dp"
             android:background="@drawable/goods_product_btn"
+            android:id="@+id/goods_car_count"
             android:text="结算"/>
 
         <Button
             android:layout_width="35dp"
             android:layout_height="35dp"
             android:textAlignment="center"
-            android:onClick="delete"
             android:background="@mipmap/goods_car_delete"
             android:layout_marginLeft="25dp"
             android:id="@+id/goods_car_delete"

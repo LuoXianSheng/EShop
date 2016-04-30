@@ -12,8 +12,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -22,11 +24,13 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.newer.eshop.App;
+import com.newer.eshop.MainActivity;
 import com.newer.eshop.R;
 import com.newer.eshop.bean.Cart;
 import com.newer.eshop.bean.Goods;
 import com.newer.eshop.bean.MyEvent;
 import com.newer.eshop.goods.GoodsActivity;
+import com.newer.eshop.me.order.AllOrderActivity;
 import com.newer.eshop.net.HttpDataListener;
 import com.newer.eshop.net.NetConnection;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -54,6 +58,8 @@ public class FragmentShopingCart extends Fragment implements HttpDataListener{
     TextView text_add;
     HashMap<Integer,Boolean> map;
     boolean ischeckbox = false ;
+    ImageButton button,good_shopcar;
+    Button goods_car_delete,goods_car_count;
 
     Handler handler=new Handler(){
         @Override
@@ -65,7 +71,6 @@ public class FragmentShopingCart extends Fragment implements HttpDataListener{
             这个时候你的集合是空数据，你重新更新下适配器，将把新的数据布置上去
              */
             //初始化全选按钮
-            text_add.setText(0.0 + "元");
             car.notifyDataSetChanged();
         }
     };
@@ -85,7 +90,45 @@ public class FragmentShopingCart extends Fragment implements HttpDataListener{
     }
 
     private void initID(View view) {
+        good_shopcar=(ImageButton)view.findViewById(R.id.goods_shopcar);
+        good_shopcar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getContext(), AllOrderActivity.class));
+            }
+        });
+
+        button=(ImageButton)view.findViewById(R.id.Shoping_cart);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(v.getId()==R.id.Shoping_cart){
+                   getActivity().finish();
+                }
+            }
+        });
+
+        goods_car_delete=(Button)view.findViewById(R.id.goods_car_delete);
+        goods_car_delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                for(int i=0;i<map.size();i++){
+                    list.remove(i);
+                }
+                car.notifyDataSetChanged();
+            }
+        });
+
+        goods_car_count=(Button)view.findViewById(R.id.goods_car_count);
+        goods_car_count.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
         listView=(ListView)view.findViewById(R.id.goods_shopcar_list);
+
         checkBox=(CheckBox)view.findViewById(R.id.goods_shapcar_check);
         checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override

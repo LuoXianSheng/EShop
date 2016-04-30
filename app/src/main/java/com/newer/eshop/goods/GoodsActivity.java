@@ -135,7 +135,7 @@ public class GoodsActivity extends AppCompatActivity implements HttpDataListener
         EventBus.getDefault().post(myEvent);
     }
 
-    public void buy(View v) {
+    public void Buy(View v) {
         checkUser();
         MyEvent myEvent = new MyEvent();
         myEvent.setAction("buy");
@@ -196,5 +196,8 @@ public class GoodsActivity extends AppCompatActivity implements HttpDataListener
     protected void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
+    }
+    public void onclikdestroy(View view){
+        finish();
     }
 }

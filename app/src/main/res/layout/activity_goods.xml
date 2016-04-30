@@ -12,6 +12,7 @@
             android:layout_width="40dp"
             android:layout_height="30dp"
             android:layout_marginTop="5dp"
+            android:onClick="onclikdestroy"
             android:background="@mipmap/goods_back"/>
         <TextView
             android:layout_width="wrap_content"
