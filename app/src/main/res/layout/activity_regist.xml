@@ -3,9 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:ripple="http://schemas.android.com/apk/res-auto"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    tools:context="com.newer.eshop.account.RegistActivity">
+    android:background="#fafafa"
+    tools:context="com.newer.eshop.account.RegistActivity"
+    android:weightSum="1">
 
 
     <LinearLayout
@@ -105,13 +108,22 @@
 
 
 
-    <Button
-        android:layout_marginTop="50dp"
+
+
+
+    <com.newer.eshop.account.RippleView
+        android:layout_marginTop="20dp"
         android:layout_width="200dp"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
+        android:layout_centerInParent="true"
         android:text="注册"
-        android:gravity="center"
         android:id="@+id/btn_regist"
+     android:gravity="center"
+        android:background="@drawable/card_bk"
+
+        ripple:alphaFactor="0.7"
+        ripple:rippleColor="#58FAAC"
+        ripple:hover="true"
         android:layout_gravity="center_horizontal" />
 
 

@@ -3,11 +3,11 @@ package com.newer.eshop.me;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,11 +36,12 @@ import java.util.Map;
  */
 public class FragmentMe extends Fragment implements View.OnClickListener {
     private static final String APP_ID = "1105291740";
-    private static final int PHOTO_REQUEST_CUT = 1;
+    private static final int PHOTO_REQUEST_GALLERY = 1;// 从相册中选择
+    private static final int PHOTO_REQUEST_CUT = 2;// 结果
+
     private Tencent mTencent;
     Context context;
-    public static final int TAKE_PHOTO = 1;
-    public static final int CROP_PHOTO = 2;
+
     SharedPreferences preferences;
     SharedPreferences.Editor editor;
     String Key = "Mytoken";
@@ -62,12 +63,16 @@ public class FragmentMe extends Fragment implements View.OnClickListener {
         Button goods = (Button) view.findViewById(R.id.goods);
         TextView  tv_name = (TextView) view.findViewById(R.id.login);
         gridView= (GridView) view.findViewById(R.id.me_gridview);
+
+
+
         SharedPreferences sharedPreferences =getActivity().getSharedPreferences("login_user_im",Context.MODE_PRIVATE);
         phone=sharedPreferences.getString("phone",null);
         name =sharedPreferences.getString("name",null);
+        Log.i("phone"," phone:"+phone);
 
         imageView= (CircleImageView) view.findViewById(R.id.im_head);
-        if (name==null && phone==null){
+        if ( name==null  &&  phone==null){
             tv_name.setText("请登录/注册");
             tv_name.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -78,9 +83,13 @@ public class FragmentMe extends Fragment implements View.OnClickListener {
 
         }else {
 //            User user =new User();
-//            tv_name.setText(preferences.getString("name",user.getName()));
+            tv_name.setText("已登录");
 
         }
+
+
+
+
 
         goods.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -167,23 +176,26 @@ public class FragmentMe extends Fragment implements View.OnClickListener {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode==PHOTO_REQUEST_GALLERY){
+
+                Uri uri =data.getData();
+                crop(uri);
+
+        }else  if (requestCode==PHOTO_REQUEST_CUT){
+            Bitmap bitmap =data.getParcelableExtra("data");
+            this.imageView.setImageBitmap(bitmap);
+
+        }
+
+
+
+
+
+
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode==1 && resultCode == 1){
             Toast.makeText(getContext(), "登录成功", Toast.LENGTH_SHORT).show();
         }
-
-        Uri selectedImage = data.getData();
-        crop(selectedImage);
-        String[] filePathColumns={MediaStore.Images.Media.DATA};
-        Cursor c = getContext().getContentResolver().query(selectedImage, filePathColumns, null,null, null);
-        c.moveToFirst();
-        int columnIndex = c.getColumnIndex(filePathColumns[0]);
-        String picturePath= c.getString(columnIndex);
-        c.close();
-        //获取图片并显示
-
-
-
     }
 
 
@@ -214,11 +226,9 @@ public class FragmentMe extends Fragment implements View.OnClickListener {
         switch (v.getId()){
 
             case R.id.im_head:
-                startActivity(new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI));
-
-
-
-
+              Intent it =new Intent(Intent.ACTION_PICK);
+                it.setType("image/*");
+                startActivityForResult(it,PHOTO_REQUEST_GALLERY);
 
                 break;
 

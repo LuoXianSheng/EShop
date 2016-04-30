@@ -42,6 +42,9 @@
         <activity
             android:name=".account.SettingActivity"
             android:theme="@style/OtherAppTheme" />
+        <activity android:name=".account.PersonalActivity"
+            android:theme="@style/OtherAppTheme"
+            />
         <!-- QQ的 -->
         <activity
             android:name="com.tencent.tauth.AuthActivity"

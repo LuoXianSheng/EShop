@@ -100,22 +100,24 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         edt_psw.setText(psw);
 
 
-        if (TextUtils.isEmpty(edt_name.getText().toString()) || TextUtils.isEmpty(edt_psw.getText().toString())){
-            Toast.makeText(LoginActivity.this, "账号密码为空", Toast.LENGTH_SHORT).show();
-            btn_login.setClickable(false);
-        }else {
-            btn_login.setClickable(true);
+        btn_login.setOnClickListener(this);
 
-        }
-        btn_login.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                    LoginToServer();
-
-
-            }
-        });
+//        if (TextUtils.isEmpty(edt_name.getText().toString()) || TextUtils.isEmpty(edt_psw.getText().toString())){
+//            Toast.makeText(LoginActivity.this, "账号密码为空", Toast.LENGTH_SHORT).show();
+//            btn_login.setClickable(false);
+//        }else {
+//            btn_login.setClickable(true);
+//
+//        }
+//        btn_login.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//                    LoginToServer();
+//
+//
+//            }
+//        });
 
 
 
@@ -219,18 +221,18 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         switch (v.getId()) {
 
-//            case R.id.btn_login:
-//
-//                if (TextUtils.isEmpty(edt_name.getText().toString()) || TextUtils.isEmpty(edt_psw.getText().toString())) {
-//                    Toast.makeText(LoginActivity.this, "用户名或者密码不能为空", Toast.LENGTH_SHORT).show();
-//
-//                }else {
-//                    btn_login.setEnabled(false);
-//
-//                    LoginToServer();
-//                }
+            case R.id.btn_login:
 
-//                break;
+                if (TextUtils.isEmpty(edt_name.getText().toString()) || TextUtils.isEmpty(edt_psw.getText().toString())) {
+                    Toast.makeText(LoginActivity.this, "用户名或者密码不能为空", Toast.LENGTH_SHORT).show();
+
+                }
+
+
+                    LoginToServer();
+
+
+                break;
             case R.id.btn_login_qq:
                 LoginToqq();
                 break;
