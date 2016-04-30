@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -26,10 +27,13 @@ import com.google.gson.reflect.TypeToken;
 import com.newer.eshop.App;
 import com.newer.eshop.MainActivity;
 import com.newer.eshop.R;
+import com.newer.eshop.account.LoginActivity;
 import com.newer.eshop.bean.Cart;
 import com.newer.eshop.bean.Goods;
 import com.newer.eshop.bean.MyEvent;
 import com.newer.eshop.goods.GoodsActivity;
+import com.newer.eshop.goods.GoodsBuy;
+import com.newer.eshop.goods.GoodsCarActivity;
 import com.newer.eshop.me.order.AllOrderActivity;
 import com.newer.eshop.net.HttpDataListener;
 import com.newer.eshop.net.NetConnection;
@@ -57,9 +61,9 @@ public class FragmentShopingCart extends Fragment implements HttpDataListener{
     CheckBox checkBox;
     TextView text_add;
     HashMap<Integer,Boolean> map;
-    boolean ischeckbox = false ;
-    ImageButton button,good_shopcar;
+    ImageButton good_shopcar;
     Button goods_car_delete,goods_car_count;
+    boolean isCheckAll = false;
 
     Handler handler=new Handler(){
         @Override
@@ -75,9 +79,17 @@ public class FragmentShopingCart extends Fragment implements HttpDataListener{
         }
     };
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void updateCart(MyEvent event) {
+        if ("updateCart".equals(event.getAction())) {
+            NetConnection.RequestShopCar(getContext(), "http://192.168.191.1:8080/Eshop/shopingcart",phone,this);
+        }
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        EventBus.getDefault().register(this);
     }
 
     @Override
@@ -98,24 +110,27 @@ public class FragmentShopingCart extends Fragment implements HttpDataListener{
             }
         });
 
-        button=(ImageButton)view.findViewById(R.id.Shoping_cart);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(v.getId()==R.id.Shoping_cart){
-                   getActivity().finish();
-                }
-            }
-        });
 
         goods_car_delete=(Button)view.findViewById(R.id.goods_car_delete);
         goods_car_delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                for(int i=0;i<map.size();i++){
-                    list.remove(i);
-                }
-                car.notifyDataSetChanged();
+               if(checkBox()){
+                   Set<Integer> set = map.keySet();
+                   if (set.isEmpty()) return;
+                   SharedPreferences preferences=getActivity().getSharedPreferences("login_user_im", Context.MODE_PRIVATE);
+                   String phone = preferences.getString("phone", null);
+                   String url = App.SERVICE_URL + "/deletegoods";
+                   StringBuilder sb = new StringBuilder();
+                   sb.append("[");
+                   for (Integer i : set) {
+                       if (map.get(i)) {
+                           sb.append("{\"goodsid\":").append(list.get(i).getGoods().getId()).append("},");
+                       }
+                   }
+                   String data = sb.substring(0, sb.lastIndexOf(",")) + "]";
+                   NetConnection.deleteGoods(getContext(), url, phone, data, FragmentShopingCart.this);
+               }
             }
         });
 
@@ -123,7 +138,22 @@ public class FragmentShopingCart extends Fragment implements HttpDataListener{
         goods_car_count.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                checkUser();
+                if (checkBox()) {
+                    StringBuilder goodsids = new StringBuilder();
+                    StringBuilder counts = new StringBuilder();
+                    Set<Integer> set = map.keySet();
+                    for (Integer i : set) {
+                        if (map.get(i)) {
+                            goodsids.append(list.get(i).getGoods().getId()).append(",");
+                            counts.append(list.get(i).getCount()).append(",");
+                        }
+                    }
+                    Intent intent = new Intent(getContext(), GoodsBuy.class);
+                    intent.putExtra("goodsids", goodsids.toString());
+                    intent.putExtra("counts", counts.toString());
+                    startActivityForResult(intent, 1);
+                }
             }
         });
 
@@ -134,12 +164,12 @@ public class FragmentShopingCart extends Fragment implements HttpDataListener{
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (map == null) return;
-                if(!ischeckbox){
+                if(!isCheckAll){
                     car.ischecke();
-                    ischeckbox=true;
+                    isCheckAll=true;
                 }else{
                     car.unIscheck();
-                    ischeckbox=false;
+                    isCheckAll=false;
                 }
             }
         });
@@ -147,30 +177,49 @@ public class FragmentShopingCart extends Fragment implements HttpDataListener{
         list=new ArrayList<>();
         car=new ShapCar();
         listView.setAdapter(car);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent=new Intent(getContext(),GoodsActivity.class);
+                intent.putExtra("goodsId",list.get(position).getGoods().getId());
+                startActivity(intent);
+            }
+        });
     }
 
     @Override
     public void succeseful(String str) {
-        Gson gson;
+        if (str.length() <= 0) return;
         try {
-            JSONObject object=new JSONObject(str);
-            if(object.getString("status").equals(App.STATUS_SUCCESS)){
-                gson=new Gson();
-                map=new HashMap<>();
-                list = gson.fromJson(object.getString("data"), new TypeToken<ArrayList<Cart>>(){}.getType());
-                Message message=new Message();
-                message.obj=list;
-                message.what=0;
-                if(list==null){
-                    handler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast.makeText(getContext(),"空的购物车",Toast.LENGTH_SHORT).show();
-                        }
-                    });
+            JSONObject object = new JSONObject(str);
+            String status = object.getString("status");
+            map = new HashMap<>();
+            if (status.equals(App.STATUS_SUCCESS)) {
+                Gson gson = new Gson();
+                list = new ArrayList<>();
+                list = gson.fromJson(object.getString("data"), new TypeToken<ArrayList<Cart>>() {}.getType());
+                for (int i = 0; i < list.size(); i++) {
+                    map.put(i, false);
                 }
-                handler.sendMessage(message);
+            } else if (status.equals(App.STATUS_LOSE)) {
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(getContext(), "空的购物车！", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            } else {
+                map.clear();
+                list.clear();
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        NetConnection.RequestShopCar(getContext(), "http://192.168.191.1:8080/Eshop/shopingcart",
+                                phone, FragmentShopingCart.this);
+                    }
+                });
             }
+            handler.sendEmptyMessage(1);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -258,7 +307,6 @@ public class FragmentShopingCart extends Fragment implements HttpDataListener{
             if (set.isEmpty()) return;
             boolean isTrue = true;
             for (int i : set) {
-
                 if (!map.get(i)) {
                     isTrue = false;
                     break;
@@ -266,10 +314,10 @@ public class FragmentShopingCart extends Fragment implements HttpDataListener{
             }
             if (isTrue) {
                 checkBox.setChecked(true);
-                ischeckbox = true;
+                isCheckAll = true;
             } else {
                 checkBox.setChecked(false);
-                ischeckbox = false;
+                isCheckAll = false;
             }
         }
 
@@ -300,7 +348,6 @@ public class FragmentShopingCart extends Fragment implements HttpDataListener{
             }
             notifyDataSetChanged();
         }
-
         class ViewHolder{
             TextView text_name;
             TextView text_price;
@@ -309,6 +356,33 @@ public class FragmentShopingCart extends Fragment implements HttpDataListener{
             TextView text_total;
             ImageView imageView;
             CheckBox box;
+        }
+    }
+    public boolean checkBox() {
+        Set<Integer> set = map.keySet();
+        if (set.isEmpty()) return false;
+        for (int i : set) {
+            if (map.get(i)) {
+
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
+    /**
+     * 检测用户是否登录
+     */
+    public void checkUser() {
+        SharedPreferences preferences = getActivity().getSharedPreferences("login_user_im", Context.MODE_PRIVATE);
+        String token = preferences.getString("Mytoken", "");
+        if ("".equals(token)) {
+            startActivity(new Intent(getContext(), LoginActivity.class));
         }
     }
 }

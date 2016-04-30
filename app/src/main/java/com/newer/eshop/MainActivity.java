@@ -13,9 +13,14 @@ import android.view.Window;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.newer.eshop.bean.MyEvent;
 import com.newer.eshop.classify.FragmentClassify;
 import com.newer.eshop.me.FragmentMe;
 import com.newer.eshop.shopingcat.FragmentShopingCart;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -31,7 +36,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         requestWindowFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        EventBus.getDefault().register(this);
         getWindowManager().getDefaultDisplay().getMetrics(dm);
         Toast.makeText(MainActivity.this, "" + dm.heightPixels, Toast.LENGTH_SHORT).show();
         initActionBar();
@@ -98,6 +103,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     fragmentShopingCart = new FragmentShopingCart();
                     transaction.add(R.id.main_frameLayout, fragmentShopingCart);
                 } else {
+                    MyEvent event = new MyEvent();
+                    event.setAction("updateCart");
+                    EventBus.getDefault().post(event);
                     transaction.show(fragmentShopingCart);
                 }
                 break;
@@ -143,5 +151,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Intent it=getIntent();
         System.out.println(it.getIntExtra("fragment", 0));
     }
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void meiyongde(Boolean b) {}
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
 }

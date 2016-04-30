@@ -81,7 +81,9 @@ public class GoodsCarActivity extends AppCompatActivity implements HttpDataListe
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(GoodsCarActivity.this, "我是:" + position, Toast.LENGTH_SHORT).show();
+                Intent intent=new Intent(GoodsCarActivity.this,GoodsActivity.class);
+                intent.putExtra("goodsId",list.get(position).getGoods().getId());
+                startActivity(intent);
             }
         });
         UserLogin();
@@ -134,7 +136,7 @@ public class GoodsCarActivity extends AppCompatActivity implements HttpDataListe
                      , viewHolder.imageView);
              viewHolder.textView1.setText("商品名字：" + list.get(position).getGoods().getName());
              viewHolder.textView2.setText("商品编号：" + list.get(position).getGoods().getId());
-             viewHolder.textView3.setText("商品价格：" + list.get(position).getGoods().getPrice());
+             viewHolder.textView3.setText("价格：" + list.get(position).getGoods().getPrice());
              viewHolder.textView4.setText("数量：" + list.get(position).getCount());
              viewHolder.shap_layou_total.setText("小计：" + (list.get(position).getGoods().getPrice() *
                      list.get(position).getCount()) + "元");
@@ -405,5 +407,11 @@ public class GoodsCarActivity extends AppCompatActivity implements HttpDataListe
         if ("".equals(token)) {
             startActivity(new Intent(GoodsCarActivity.this, LoginActivity.class));
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        finish();
     }
 }

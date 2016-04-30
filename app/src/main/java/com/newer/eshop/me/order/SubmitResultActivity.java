@@ -8,6 +8,11 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 import com.newer.eshop.R;
+import com.newer.eshop.bean.MyEvent;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 public class SubmitResultActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -17,6 +22,7 @@ public class SubmitResultActivity extends AppCompatActivity implements View.OnCl
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        EventBus.getDefault().register(this);
         setContentView(R.layout.activity_me_submit_result);
 
         initToolbar();
@@ -43,8 +49,15 @@ public class SubmitResultActivity extends AppCompatActivity implements View.OnCl
         if (v.getId() == R.id.submit_result_up) {
 
         } else {
+            MyEvent event = new MyEvent();
+            event.setAction("updateCart");
+            EventBus.getDefault().post(event);
             setResult(RESULT_OK);
+            EventBus.getDefault().unregister(this);
             this.finish();
         }
     }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void meiyongde(Boolean t) {}
 }

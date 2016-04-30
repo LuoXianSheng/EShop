@@ -79,8 +79,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
+            android:onClick="result"
             android:layout_centerVertical="true"
-            android:layout_marginRight="20dp"
+            android:layout_marginRight="10dp"
             android:background="@drawable/goods_product_btn"
             android:text="结算"/>
 
@@ -88,10 +89,10 @@
             android:layout_width="35dp"
             android:layout_height="35dp"
             android:textAlignment="center"
-            android:onClick="delete"
             android:background="@mipmap/goods_car_delete"
             android:layout_marginLeft="25dp"
             android:id="@+id/goods_car_delete"
+            android:onClick="delete"
             android:layout_centerVertical="true"
             android:layout_toEndOf="@+id/goods_shapcar_check"/>
     </RelativeLayout>
