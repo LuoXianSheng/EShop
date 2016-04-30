@@ -9,8 +9,9 @@ import java.util.Date;
  */
 public class Tools {
 
-    public static String DateFormat (String date) {
+    public static String DateFormat (String str) {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        return format.format(new Date(date));
+        Date date = new Date(Long.valueOf(str));
+        return format.format(date);
     }
 }

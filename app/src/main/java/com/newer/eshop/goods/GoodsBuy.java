@@ -7,7 +7,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
@@ -20,8 +19,7 @@ import com.newer.eshop.R;
 import com.newer.eshop.bean.Address;
 import com.newer.eshop.bean.Cart;
 import com.newer.eshop.bean.Goods;
-import com.newer.eshop.bean.Order;
-import com.newer.eshop.me.address.AddressManagerActivity;
+import com.newer.eshop.bean.SubmitOrder;
 import com.newer.eshop.me.address.SelectAddressActivity;
 import com.newer.eshop.me.order.SubmitResultActivity;
 import com.newer.eshop.net.HttpDataListener;
@@ -173,7 +171,7 @@ public class GoodsBuy extends AppCompatActivity implements HttpDataListener, Vie
             count.add(Integer.valueOf(counts[i]));
         }
         Gson gson = new Gson();
-        Order order = new Order();
+        SubmitOrder order = new SubmitOrder();
         order.setPhone(phone);
         order.setGoodses(goodses);
         order.setCount(count);

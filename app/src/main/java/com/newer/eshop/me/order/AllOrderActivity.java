@@ -3,18 +3,23 @@ package com.newer.eshop.me.order;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.newer.eshop.App;
 import com.newer.eshop.R;
 import com.newer.eshop.account.LoginActivity;
+import com.newer.eshop.bean.Goods;
 import com.newer.eshop.bean.Order;
+import com.newer.eshop.bean.SubmitOrder;
 import com.newer.eshop.myview.PinnedSectionListView;
 import com.newer.eshop.net.HttpDataListener;
 import com.newer.eshop.net.NetConnection;
@@ -33,6 +38,7 @@ public class AllOrderActivity extends AppCompatActivity implements HttpDataListe
     private PinnedSectionListView listview;
     private OrderListAdapter adapter;
     private ArrayList<Order> list;
+    private Handler handler;
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
@@ -104,6 +110,12 @@ public class AllOrderActivity extends AppCompatActivity implements HttpDataListe
         adapter = new OrderListAdapter(this, list);
         listview.setAdapter(adapter);
         listview.setOnItemClickListener(getListenerForListView());
+        handler = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                adapter.notifyDataSetChanged();
+            }
+        };
     }
 
     private void initializePadding() {
@@ -126,8 +138,15 @@ public class AllOrderActivity extends AppCompatActivity implements HttpDataListe
     @Override
     public void succeseful(String str) {
         try {
-            Log.e("order", str);
             JSONObject object = new JSONObject(str);
+            if (object.getString(App.STATUS).equals(App.STATUS_SUCCESS)) {
+                Gson gson = new Gson();
+                ArrayList<Order> data = gson.fromJson(object.getString("data"), new TypeToken<ArrayList<Order>>(){}.getType());
+                for (int i = data.size() - 1; i >= 0; i--) {
+                    list.add(data.get(i));
+                }
+                handler.sendEmptyMessage(1);
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }

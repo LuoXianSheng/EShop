@@ -6,6 +6,7 @@ package com.newer.eshop.bean;
 public class Conment {
 
     private int id;//评论id
+    private int goodsid;//商品ID
     private int userId;//评论者ID
     private String content;
     private String imgPath;//评论的图片集合
